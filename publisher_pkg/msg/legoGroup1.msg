@@ -1,0 +1,2 @@
+string assigment_name
+legoDetection[] lego_vector
