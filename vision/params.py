@@ -1,7 +1,4 @@
-siummino
 
-
-ceiuciuefh
 
 import os
 import subprocess
