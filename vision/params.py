@@ -1,7 +1,5 @@
-siummino
+sono prova
 
-
-ceiuciuefh
 
 import os
 import subprocess
