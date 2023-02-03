@@ -10,6 +10,8 @@ out = subprocess.Popen(findCMD,shell=True,stdin=subprocess.PIPE,
 # Get standard out and error
 (stdout, stderr) = out.communicate()
  
+# commento di prova
+
 # Save found files to list
 filelist = stdout.decode().split()
 
