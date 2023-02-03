@@ -20,8 +20,6 @@
 #include <cmath>
 
 
-#define real_robot false
-
 
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
@@ -52,20 +50,17 @@ EulerVector ToEulerAngles(Quaternion q) {
 using namespace std;
 
 
-void send_des_jstate(const vector<double> & joint_pos)
+void send_des_jstate(const JointStateVector & joint_pos)
 {
 
 
-    for (int i = 0; i < joint_pos.size(); i++)
+    for (int i = 0; i < joint_pos.size() -2; i++)
     {
         jointState_msg_robot.data[i] = joint_pos[i];
     }
-    // if(! real_robot){
-    //     for (int i=6;i<8;i++){
-    //         jointState_msg_robot.data[i] = actual_gripper[i-6];
-    //     }
+    // for (int i=6;i<8;i++){
+    //     jointState_msg_robot.data[i] = actual_gripper[i-6];
     // }
-    cout << jointState_msg_robot << endl;
     pub_des_jstate.publish(jointState_msg_robot);
 
 
@@ -81,12 +76,20 @@ JointStateVecor return_joint_states(){
     JointStateVecor actual_pos ;
 
     boost::shared_ptr<const sensor_msgs::JointState_<std::allocator<void>>> msg = ros::topic::waitForMessage<sensor_msgs::JointState>("/ur5/joint_states",node_1, Timeout );
-    actual_pos[0]= msg->position[4];
-    actual_pos[1]= msg->position[3];
-    actual_pos[2]= msg->position[0]; // NEL ROBOT REALE NON EISITE IL GRIPPER TRAI I JOINT STATE
-    actual_pos[3]= msg->position[5];
-    actual_pos[4]= msg->position[6];
-    actual_pos[5]= msg->position[7];
+    // actual_pos[0]= msg->position[4];
+    // actual_pos[1]= msg->position[3];
+    // actual_pos[2]= msg->position[0];
+    // actual_pos[3]= msg->position[5];
+    // actual_pos[4]= msg->position[6];
+    // actual_pos[5]= msg->position[7];
+
+
+    actual_pos[0]= msg->position[2];
+    actual_pos[1]= msg->position[1];
+    actual_pos[2]= msg->position[0];
+    actual_pos[3]= msg->position[3];
+    actual_pos[4]= msg->position[4];
+    actual_pos[5]= msg->position[5];
 
     return actual_pos;
 }
@@ -108,7 +111,6 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
     DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
 
-
     PositionVecor i1 ;
     i1 = direct_res.pos;
     i1(2)=0.5;
@@ -121,15 +123,9 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
     double dt = 0.001;
     double DtP = 2;
     double DtA = 0.5;
-
-    vector<double> pos_send; //  SISTEMARE JOINSTATEVECOR IN JOINTSTATEREALROBOT TIPO
-    if(!real_robot){
-        pos_send = {0,0,0,0,0,0,0,0};
-    }else{
-
-        pos_send = {0,0,0,0,0,0};
-
-    }
+    JointStateVector pos_send;
+    PositionVecor pos_check;
+    pos_send<<0,0,0,0,0,0,0,0;
 
     ros::Rate loop_rate(loop_frequency);
 
@@ -144,20 +140,24 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout << "COLLISIONE CON DELLE SINGOLARITA' "<<endl;
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
+
+            break;
         }
     }
+
     for (vector<double> conf : res){
-        
+
         for(int i=1;i<7;i++){
 
-            pos_send[i-1]=conf[i];
+            pos_send(i-1)=conf[i];
 
         }
         //cout << pos_send << endl;
         send_des_jstate(pos_send);
         loop_rate.sleep();
-    
+
     }
+
 }
 
 void listen_lego_detection(ros::Rate rate){
@@ -252,62 +252,62 @@ bool check_point(PositionVecor _pos){
             for(int i=0;i<3;i++){
 
                 if ((float(res_d.pos[i]) - float(_pos[i])) < 0.001){
-                    return true;
+                    continue;
                 }else{
                     //cout << float(res_d.pos[i]) << " " << float(_pos[i]) << endl;
-                    continue;        
+                    return false;        
                 }
             }
     }
-    return false;
+    return true;
 
 
 }
 
-// void open_gripper(){
+void open_gripper(){
     
-//     JointStateVecor msg ;
-//     JointStateVecor actual_pos = return_joint_states();
-//     ros::Rate loop_rate(loop_frequency);
+    JointStateVector msg ;
+    JointStateVecor actual_pos = return_joint_states();
+    ros::Rate loop_rate(loop_frequency);
 
-//     actual_gripper = return_gripper_states();
-//     while(actual_gripper(0)< 0.3){
-//         for(int i=0;i<6;i++){
-//            msg(i)= actual_pos(i);
-//         }
-//         // for(int i=6;i<8;i++){
-//         //    msg(i)= actual_gripper(i-6);
-//         // }
-//         send_des_jstate(msg);
-//         actual_gripper(0)=actual_gripper(0)+0.01;
-//         actual_gripper(1)=actual_gripper(1)+0.01;
+    actual_gripper = return_gripper_states();
+    while(actual_gripper(0)< 0.3){
+        for(int i=0;i<6;i++){
+           msg(i)= actual_pos(i);
+        }
+        for(int i=6;i<8;i++){
+           msg(i)= actual_gripper(i-6);
+        }
+        send_des_jstate(msg);
+        actual_gripper(0)=actual_gripper(0)+0.01;
+        actual_gripper(1)=actual_gripper(1)+0.01;
 
-//         loop_rate.sleep();
-//     }
-// }
+        loop_rate.sleep();
+    }
+}
 
-// void close_gripper(){
+void close_gripper(){
     
 
-//     JointStateVecor msg ;
-//     JointStateVecor actual_pos = return_joint_states();
-//     ros::Rate loop_rate(loop_frequency);
+    JointStateVector msg ;
+    JointStateVecor actual_pos = return_joint_states();
+    ros::Rate loop_rate(loop_frequency);
 
-//     actual_gripper = return_gripper_states();
-//     while(actual_gripper(0)> -0.3){
-//         for(int i=0;i<6;i++){
-//            msg(i)= actual_pos(i);
-//         }
-//         // for(int i=6;i<8;i++){
-//         //    msg(i)= actual_gripper(i-6);
-//         // }
-//         send_des_jstate(msg);
-//         actual_gripper(0)=actual_gripper(0)-0.01;
-//         actual_gripper(1)=actual_gripper(1)-0.01;
+    actual_gripper = return_gripper_states();
+    while(actual_gripper(0)> -0.3){
+        for(int i=0;i<6;i++){
+           msg(i)= actual_pos(i);
+        }
+        for(int i=6;i<8;i++){
+           msg(i)= actual_gripper(i-6);
+        }
+        send_des_jstate(msg);
+        actual_gripper(0)=actual_gripper(0)-0.01;
+        actual_gripper(1)=actual_gripper(1)-0.01;
 
-//         loop_rate.sleep();
-//     }
-// }
+        loop_rate.sleep();
+    }
+}
 
 int main(int argc,char **argv){
 
@@ -355,4 +355,3 @@ int main(int argc,char **argv){
     
     return 0;
 }
-
