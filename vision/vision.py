@@ -45,7 +45,10 @@ from math import atan
 from math import tan
 from math import sqrt
 
+from params import *
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
+
+
 
 
 #Resources
@@ -203,24 +206,24 @@ def receive_image():
     
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
-    table = [[558, 278], [460, 552], [957,535], [777, 267]]
-    mask = np.array(table, dtype=np.int32)
+    # table = [[558*2, 278*2], [460*2, 552*2], [957*2,535*2], [777*2, 267*2]]
+    # mask = np.array(table, dtype=np.int32)
 
-    background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
-    cv2.fillPoly(background, [mask],255)
-    mask_background = cv2.inRange(background, 1, 255)
+    #background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
+    #cv2.fillPoly(background, [mask],255)
+    #mask_background = cv2.inRange(background, 1, 255)
 
-    img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
+    #img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
-    cv2.imwrite("prova.png", img)
+    cv2.imwrite(LAST_PHOTO_PATH, rgb)
     riconoscimento()
 
 
 
 def riconoscimento():
-    model = torch.hub.load('/home/mattia/yolov5', 'custom', path='/home/mattia/vision/best_v2.40.pt', source='local')  # local repo
+    model = torch.hub.load(YOLO_PATH, 'custom', path=BEST_PATH, source='local')  # local repo
     
-    im1 = cv2.imread('/home/mattia/vision/prova.png')[..., ::-1]
+    im1 = cv2.imread(LAST_PHOTO_PATH)[..., ::-1]
     results = model([im1], size=640) # batch of images
 
     # Results
