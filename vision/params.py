@@ -1,7 +1,8 @@
-
-
 import os
+sono una prova
+ihvjhvhj
 
+xwsxxws
 YOLO_PATH = os.system("find / -name 'yolov5'")
 VISION_PATH = os.path.dirname(os.path.abspath(__file__))
 LAST_PHOTO_PATH = VISION_PATH + "/last_photo.png"
