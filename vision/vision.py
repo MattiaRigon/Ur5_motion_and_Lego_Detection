@@ -206,14 +206,14 @@ def receive_image():
     
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
-    # table = [[558*2, 278*2], [460*2, 552*2], [957*2,535*2], [777*2, 267*2]]
-    # mask = np.array(table, dtype=np.int32)
+    table = [[558*1.5, 278*1.5], [460*1.5, 552*1.5], [957*1.5,535*1.5], [777*1.5, 267*1.5]]
+    mask = np.array(table, dtype=np.int32)
 
-    #background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
-    #cv2.fillPoly(background, [mask],255)
-    #mask_background = cv2.inRange(background, 1, 255)
+    background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
+    cv2.fillPoly(background, [mask],255)
+    mask_background = cv2.inRange(background, 1, 255)
 
-    #img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
+    img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
     cv2.imwrite(LAST_PHOTO_PATH, rgb)
     riconoscimento()
