@@ -48,9 +48,6 @@ from math import sqrt
 from params import *
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
-
-
-
 #Resources
 
 # native reading best explanation
@@ -215,7 +212,7 @@ def receive_image():
 
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
-    cv2.imwrite(LAST_PHOTO_PATH, rgb)
+    cv2.imwrite(LAST_PHOTO_PATH, img)
     riconoscimento()
 
 
