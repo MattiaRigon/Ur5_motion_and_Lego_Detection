@@ -19,6 +19,9 @@
 #include <spawnLego_pkg/legoGroup.h>
 #include <cmath>
 
+using namespace std;
+
+
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
 EulerVector ToEulerAngles(Quaternion q) {
@@ -45,23 +48,21 @@ EulerVector ToEulerAngles(Quaternion q) {
 }
 
 
-using namespace std;
-
-
 void send_des_jstate(const JointStateVector & joint_pos)
 {
 
-
-    for (int i = 0; i < joint_pos.size() -2; i++)
-    {
-        jointState_msg_robot.data[i] = joint_pos[i];
+    if(real_robot){
+        for (int i = 0; i < joint_pos.size() -2; i++)
+        {
+            jointState_msg_robot.data[i] = joint_pos[i];
+        }
+    }else{
+        for (int i=6;i<8;i++){
+            jointState_msg_robot.data[i] = actual_gripper[i-6];
+        }   
     }
-    // for (int i=6;i<8;i++){
-    //     jointState_msg_robot.data[i] = actual_gripper[i-6];
-    // }
+
     pub_des_jstate.publish(jointState_msg_robot);
-
-
 
 }
 
@@ -74,23 +75,27 @@ JointStateVecor return_joint_states(){
     JointStateVecor actual_pos ;
 
     boost::shared_ptr<const sensor_msgs::JointState_<std::allocator<void>>> msg = ros::topic::waitForMessage<sensor_msgs::JointState>("/ur5/joint_states",node_1, Timeout );
-    // actual_pos[0]= msg->position[4];
-    // actual_pos[1]= msg->position[3];
-    // actual_pos[2]= msg->position[0];
-    // actual_pos[3]= msg->position[5];
-    // actual_pos[4]= msg->position[6];
-    // actual_pos[5]= msg->position[7];
 
-
-    actual_pos[0]= msg->position[2];
-    actual_pos[1]= msg->position[1];
-    actual_pos[2]= msg->position[0];
-    actual_pos[3]= msg->position[3];
-    actual_pos[4]= msg->position[4];
-    actual_pos[5]= msg->position[5];
+    if(real_robot){
+        actual_pos[0]= msg->position[2];
+        actual_pos[1]= msg->position[1];
+        actual_pos[2]= msg->position[0];
+        actual_pos[3]= msg->position[3];
+        actual_pos[4]= msg->position[4];
+        actual_pos[5]= msg->position[5];
+    }else{
+        actual_pos[0]= msg->position[4];
+        actual_pos[1]= msg->position[3];
+        actual_pos[2]= msg->position[0];
+        actual_pos[3]= msg->position[5];
+        actual_pos[4]= msg->position[6];
+        actual_pos[5]= msg->position[7];
+    }
 
     return actual_pos;
 }
+
+
 void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
     //EulerVector e ;
@@ -161,10 +166,8 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 void listen_lego_detection(ros::Rate rate){
 
     ros::NodeHandle node_1;
-    //ros::Duration Timeout = ros::Duration(1);
-    //Json::Value msg_recived;
-
     spawnLego_pkg::legoGroup::ConstPtr msg = ros::topic::waitForMessage<spawnLego_pkg::legoGroup>("/lego_position",node_1 );
+    
     if(msg!=0){
         cout << "Arrivato messaggio" << endl;
         vector<spawnLego_pkg::legoDetection> vector = msg->lego_vector ;
