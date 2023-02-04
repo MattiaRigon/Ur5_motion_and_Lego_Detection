@@ -215,7 +215,7 @@ def receive_image():
 
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
-    cv2.imwrite(LAST_PHOTO_PATH, rgb)
+    cv2.imwrite(LAST_PHOTO_PATH, img)
     riconoscimento()
 
 

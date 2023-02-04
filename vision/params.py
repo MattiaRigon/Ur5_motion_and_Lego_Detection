@@ -1,5 +1,6 @@
 import os
 import subprocess
+#prova simo
  
 # Set up find command
 findCMD = 'find / -name "yolov5"'
