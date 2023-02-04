@@ -25,8 +25,6 @@ typedef struct Quaternion {
     double w, x, y, z;
 }Quaternion;
 
-
-
 // Methods
 void send_des_jstate(const vector<double> & joint_pos);
 JointStateVector secondOrderFilter(const JointStateVector & input, const double rate, const double settling_time);
@@ -38,8 +36,8 @@ double loop_time = 0.;
 double loop_frequency = 1000.;
 float position;
 bool first_msg = false;
-bool real_robot = false;
-
+bool real_robot = false;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
+                         // fasle : puoi comandare anche il gripper (soft) , quindi pubblica comandi di dimensione 8
 
 // Publishers
 ros::Publisher pub_des_jstate;
