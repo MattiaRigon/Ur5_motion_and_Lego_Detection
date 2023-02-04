@@ -15,10 +15,11 @@ using namespace std;
 
 RotationMatrix eul2rot(EulerVector th)
 {
-
-    // Returns the rotation matrix
-
-    // th[0] = roll , th[1] = pitch ,th[2] = yaw
+    /*
+    Returns the rotation matrix
+    th[0] = roll , th[1] = pitch ,th[2] = yaw
+    */
+    
 
     RotationMatrix R;
     R << cos(th[0]) * cos(th[1]), cos(th[0]) * sin(th[1]) * sin(th[2]) - sin(th[0]) * cos(th[2]), cos(th[0]) * sin(th[1]) * cos(th[2]) + sin(th[0]) * sin(th[2]),
@@ -60,20 +61,6 @@ bool check_angles(JointStateVecor Th)
     for (int i = 0; i < 6; i++)
     {
 
-        // if(i==1){
-        //     if(Th(i) > M_PI && Th(i)  < 2*M_PI ){
-        //         Th(i) = Th(i)-2*M_PI;
-        //     }
-        // }else{
-        //     if(Th(i) < max_angles_value(cont,0)){
-        //         Th(i) = Th(i) + max_angles_value(cont,0);
-        //     }else if (Th(i)  > max_angles_value(cont,1) )
-        //     {
-        //         Th(i) = Th(i) - max_angles_value(cont,1);
-        //     }
-
-        // }
-
         if (Th(i) > max_angles_value(cont, 0) && Th(i) < max_angles_value(cont, 1))
         {
             cont = cont + 1;
@@ -81,7 +68,6 @@ bool check_angles(JointStateVecor Th)
         }
         else
         {
-            // cout <<"NON VA BENE " << Th(i) << "fuori range " << max_angles_value(cont,0) << " - " << max_angles_value(cont,1) << endl;
             return false;
         }
     }
@@ -291,12 +277,9 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     qAll.push_back(qEs);
 
     JointStateVecor qInt;
-
     JointStateVecor last_q = qEs;
-    //cout << "PARTENZA : " << endl;
-    //cout << qEs << endl;
     EulerVector e(0, 0, 0);
-    // cout <<"punti di passaggio "<<endl;
+
     int i = 0;
     for (PositionVecor item : intermediate_points)
     {
@@ -305,9 +288,7 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
 
         if(qInt[0] > M_PI/2){
             qInt[0] =qInt[0] - 2*M_PI;
-      //      cout << "ho cambiato l'angolo 1" << endl;
         }
-        // cout << endl;
         qAll.push_back(qInt);
         last_q = qInt;
         i++;
@@ -315,9 +296,7 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     qInt = nearest(last_q, inverse_kinematics(xEf, eul2rot(phiEf)));
     if(qInt[0] > M_PI/2){
         qInt[0] =qInt[0] - 2*M_PI;
-        //cout << "ho cambiato l'angolo 2" << endl;
     }
-    //cout << "ARRIVO  : " << endl;
     cout << qInt << endl;
     qAll.push_back(qInt);
 
@@ -334,8 +313,8 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     for (int i : T)
     {
 
-        if (i + 1 < size)
-        { // controllo se ha un successivo
+        if (i + 1 < size) // controllo se ha un successivo
+        { 
             vector<vector<double>> res = thetaConnect2Points(i * DtP, qAll[i], qAll[i + 1], dt, DtP, DtA);
             th.insert(th.end(), res.begin(), res.end());
         }
