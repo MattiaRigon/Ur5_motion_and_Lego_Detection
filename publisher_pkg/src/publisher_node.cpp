@@ -19,8 +19,6 @@
 #include <spawnLego_pkg/legoGroup.h>
 #include <cmath>
 
-//commento di prova
-
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
 EulerVector ToEulerAngles(Quaternion q) {
