@@ -324,35 +324,35 @@ int main(int argc,char **argv){
     PositionVecor pos_des;
     jointState_msg_robot.data.resize(6);
 
-    float x,y,z;
-    while (ros::ok())
-    {   
-        //listen_lego_detection(loop_rate);
-        cout << " x " ;
-        cin >> x;
-        cout << " y " ;
-        cin >> y;
-        y=-y;
-        cout << " z " ;
-        cin >> z;
-        z=-z;
-        pos_des << x,y,z;    
-        EulerVector e ;
-        e << M_PI/2,0,0; // default braccio drittto 
+    // float x,y,z;
+    // while (ros::ok())
+    // {   
+        listen_lego_detection(loop_rate);
+        //cout << " x " ;
+        // cin >> x;
+        // cout << " y " ;
+        // cin >> y;
+        // y=-y;
+        // cout << " z " ;
+        // cin >> z;
+        // z=-z;
+        // pos_des << x,y,z;    
+        // EulerVector e ;
+        // e << M_PI/2,0,0; // default braccio drittto 
 
 
-        if(check_point(pos_des)){
-            cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-        }else{
-            cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-            continue;
-        }
+        // if(check_point(pos_des)){
+        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        // }else{
+        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+        //     continue;
+        // }
         //open_gripper();
-        move_to(pos_des,e,loop_rate);
+        //move_to(pos_des,e,loop_rate);
         //close_gripper();
 
         loop_rate.sleep();
-    }
+    //}
     
     return 0;
 }
