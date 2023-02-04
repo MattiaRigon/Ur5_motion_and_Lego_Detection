@@ -57,6 +57,10 @@ void send_des_jstate(const JointStateVector & joint_pos)
             jointState_msg_robot.data[i] = joint_pos[i];
         }
     }else{
+        for (int i = 0; i < joint_pos.size() -2; i++)
+        {
+            jointState_msg_robot.data[i] = joint_pos[i];
+        }
         for (int i=6;i<8;i++){
             jointState_msg_robot.data[i] = actual_gripper[i-6];
         }   
@@ -155,7 +159,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             pos_send(i-1)=conf[i];
 
         }
-        //cout << pos_send << endl;
+        cout << pos_send << endl;
         send_des_jstate(pos_send);
         loop_rate.sleep();
 
@@ -199,7 +203,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << endl ;
             cout << endl ;
 
-            
+
         }
 
 
@@ -209,8 +213,6 @@ void listen_lego_detection(ros::Rate rate){
 
 
 }
-
-
 
 
 GripperState return_gripper_states(){
@@ -237,6 +239,7 @@ bool check_point(PositionVecor _pos){
     EulerVector e(0,0,0);
     vector<JointStateVecor> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
     for(JointStateVecor res : inverseSolution){
+
             double th1 = res[0];
             double th2 = res[1];
             double th3 = res[2];
@@ -262,52 +265,56 @@ bool check_point(PositionVecor _pos){
     }
     return true;
 
-
 }
 
 void open_gripper(){
-    
-    JointStateVector msg ;
-    JointStateVecor actual_pos = return_joint_states();
-    ros::Rate loop_rate(loop_frequency);
 
-    actual_gripper = return_gripper_states();
-    while(actual_gripper(0)< 0.3){
-        for(int i=0;i<6;i++){
-           msg(i)= actual_pos(i);
-        }
-        for(int i=6;i<8;i++){
-           msg(i)= actual_gripper(i-6);
-        }
-        send_des_jstate(msg);
-        actual_gripper(0)=actual_gripper(0)+0.01;
-        actual_gripper(1)=actual_gripper(1)+0.01;
+    if(!real_robot){
+        JointStateVector msg ;
+        JointStateVecor actual_pos = return_joint_states();
+        ros::Rate loop_rate(loop_frequency);
 
-        loop_rate.sleep();
+        actual_gripper = return_gripper_states();
+        while(actual_gripper(0)< 0.3){
+            for(int i=0;i<6;i++){
+            msg(i)= actual_pos(i);
+            }
+            for(int i=6;i<8;i++){
+            msg(i)= actual_gripper(i-6);
+            }
+            send_des_jstate(msg);
+            actual_gripper(0)=actual_gripper(0)+0.01;
+            actual_gripper(1)=actual_gripper(1)+0.01;
+
+            loop_rate.sleep();
+        }
     }
+
 }
 
 void close_gripper(){
     
+    if(!real_robot){
+        JointStateVector msg ;
+        JointStateVecor actual_pos = return_joint_states();
+        ros::Rate loop_rate(loop_frequency);
 
-    JointStateVector msg ;
-    JointStateVecor actual_pos = return_joint_states();
-    ros::Rate loop_rate(loop_frequency);
+        actual_gripper = return_gripper_states();
+        while(actual_gripper(0)> -0.3){
+            for(int i=0;i<6;i++){
+            msg(i)= actual_pos(i);
+            }
+            for(int i=6;i<8;i++){
+            msg(i)= actual_gripper(i-6);
+            }
+            send_des_jstate(msg);
+            actual_gripper(0)=actual_gripper(0)-0.01;
+            actual_gripper(1)=actual_gripper(1)-0.01;
 
-    actual_gripper = return_gripper_states();
-    while(actual_gripper(0)> -0.3){
-        for(int i=0;i<6;i++){
-           msg(i)= actual_pos(i);
+            loop_rate.sleep();
         }
-        for(int i=6;i<8;i++){
-           msg(i)= actual_gripper(i-6);
-        }
-        send_des_jstate(msg);
-        actual_gripper(0)=actual_gripper(0)-0.01;
-        actual_gripper(1)=actual_gripper(1)-0.01;
-
-        loop_rate.sleep();
     }
+
 }
 
 int main(int argc,char **argv){
@@ -322,7 +329,12 @@ int main(int argc,char **argv){
     JointStateVector amp;
     JointStateVector freq;
     PositionVecor pos_des;
-    jointState_msg_robot.data.resize(6);
+    if(real_robot){
+        jointState_msg_robot.data.resize(6);
+    }else{
+        jointState_msg_robot.data.resize(8);
+
+    }
 
     float x,y,z;
     while (ros::ok())
