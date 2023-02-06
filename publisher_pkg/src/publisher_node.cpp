@@ -331,11 +331,19 @@ int main(int argc,char **argv){
 
     }
 
+<<<<<<< HEAD
+    // float x,y,z;
+    // while (ros::ok())
+    // {   
+        listen_lego_detection(loop_rate);
+        //cout << " x " ;
+=======
     float x,y,z;
     while (ros::ok())
     {   
         listen_lego_detection(loop_rate);
         // cout << " x " ;
+>>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
         // cin >> x;
         // cout << " y " ;
         // cin >> y;
@@ -354,12 +362,18 @@ int main(int argc,char **argv){
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
         //     continue;
         // }
+<<<<<<< HEAD
+        //open_gripper();
+        //move_to(pos_des,e,loop_rate);
+        //close_gripper();
+=======
         // //open_gripper();
         // move_to(pos_des,e,loop_rate);
         // //close_gripper();
+>>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
 
         loop_rate.sleep();
-    }
+    //}
     
     return 0;
 }
