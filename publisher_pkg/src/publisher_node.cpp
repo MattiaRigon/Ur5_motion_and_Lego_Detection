@@ -21,7 +21,6 @@
 
 using namespace std;
 
-
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
 EulerVector ToEulerAngles(Quaternion q) {
@@ -148,7 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            break;
+            return;
         }
     }
 
@@ -159,7 +158,6 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             pos_send(i-1)=conf[i];
 
         }
-        cout << pos_send << endl;
         send_des_jstate(pos_send);
         loop_rate.sleep();
 
@@ -202,10 +200,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << endl ;
             cout << endl ;
             cout << endl ;
-
-
         }
-
 
     }else{
         cout << "vuoto " << endl;
@@ -339,29 +334,29 @@ int main(int argc,char **argv){
     float x,y,z;
     while (ros::ok())
     {   
-        //listen_lego_detection(loop_rate);
-        cout << " x " ;
-        cin >> x;
-        cout << " y " ;
-        cin >> y;
-        y=-y;
-        cout << " z " ;
-        cin >> z;
-        z=-z;
-        pos_des << x,y,z;    
-        EulerVector e ;
-        e << M_PI/2,0,0; // default braccio drittto 
+        listen_lego_detection(loop_rate);
+        // cout << " x " ;
+        // cin >> x;
+        // cout << " y " ;
+        // cin >> y;
+        // y=-y;
+        // cout << " z " ;
+        // cin >> z;
+        // z=-z;
+        // pos_des << x,y,z;    
+        // EulerVector e ;
+        // e << M_PI/2,0,0; // default braccio drittto 
 
 
-        if(check_point(pos_des)){
-            cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-        }else{
-            cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-            continue;
-        }
-        //open_gripper();
-        move_to(pos_des,e,loop_rate);
-        //close_gripper();
+        // if(check_point(pos_des)){
+        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        // }else{
+        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+        //     continue;
+        // }
+        // //open_gripper();
+        // move_to(pos_des,e,loop_rate);
+        // //close_gripper();
 
         loop_rate.sleep();
     }
