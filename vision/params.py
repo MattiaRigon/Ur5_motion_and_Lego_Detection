@@ -1,7 +1,6 @@
 import os
 import subprocess
-#prova simo
- 
+
 # Set up find command
 findCMD = 'find / -name "yolov5"'
 out = subprocess.Popen(findCMD,shell=True,stdin=subprocess.PIPE, 
@@ -17,7 +16,9 @@ if(len(filelist)>0):
 else:
     print("ERROR DON'T FIND YOLOV5 PATH")
     YOLO_PATH = ""
+
+
 VISION_PATH = os.path.dirname(os.path.abspath(__file__))
 LAST_PHOTO_PATH = VISION_PATH + "/last_photo.png"
-BEST_PATH = VISION_PATH +"/best_v2.40.pt"
+BEST_PATH = VISION_PATH +"/best.pt"
 
