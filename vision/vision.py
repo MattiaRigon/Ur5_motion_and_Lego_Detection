@@ -61,7 +61,7 @@ pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 Objects = []
 point_count_for_item = []
 list=[]
-
+class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWINFILLET","X1-Y3-Z2","X1-Y1-Z2-FILLET","X1-Y4-Z1","X1-Y4-Z2","X2-Y2-Z2","X2-Y2-Z2-FILLET"]
 def distanza(p1,p2):
 
     return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
@@ -105,10 +105,12 @@ def trova_posizione_lego(num_lego,posizioni,pandino):  #
     
     h = zmax -0.866       
 
-    print("3 punti magici :")
-    print(v1)
-    print(v2)   
-    print(v3)
+    
+
+    # print("3 punti magici :")
+    # print(v1)
+    # print(v2)   
+    # print(v3)
 
     pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
     if(v2[0]-v1[0] != 0):
@@ -172,9 +174,7 @@ def receive_pointcloud(pandino):
         data_zed_rotation = np.array(data*Ry)*-1
         
         data_base_link =np.array(data_zed_rotation.tolist()[0]) + np.array(pos_zed)
-        #print(data_base_link)
 
-        #data_world = data_base_link + pos_base_link
         data_world = Ry.dot(data) + pos_zed + pos_base_link
         data_world = np.array(data_world)
 
@@ -184,14 +184,13 @@ def receive_pointcloud(pandino):
             print("IMMAGINE " + str(actual_detection+1))
             initial_pose = trova_posizione_lego(actual_detection,actual_lego,pandino)
 
-            list.append(legoDetection("prova",initial_pose))
+            list.append(legoDetection(class_list[int(pandino["class"][actual_detection]) -1 ],initial_pose))
             actual_detection = actual_detection +1
             cont = 1
             actual_lego = []
         
         cont = cont +1
         actual_lego.append(data_world[0])
-        #print(data_world[0])
     
     print()
 

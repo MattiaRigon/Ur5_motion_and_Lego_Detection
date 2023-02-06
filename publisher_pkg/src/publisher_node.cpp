@@ -21,7 +21,6 @@
 
 using namespace std;
 
-
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
 EulerVector ToEulerAngles(Quaternion q) {
@@ -148,7 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            break;
+            return;
         }
     }
 
@@ -159,7 +158,6 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             pos_send(i-1)=conf[i];
 
         }
-        cout << pos_send << endl;
         send_des_jstate(pos_send);
         loop_rate.sleep();
 
@@ -202,10 +200,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << endl ;
             cout << endl ;
             cout << endl ;
-
-
         }
-
 
     }else{
         cout << "vuoto " << endl;
@@ -336,11 +331,19 @@ int main(int argc,char **argv){
 
     }
 
+<<<<<<< HEAD
     // float x,y,z;
     // while (ros::ok())
     // {   
         listen_lego_detection(loop_rate);
         //cout << " x " ;
+=======
+    float x,y,z;
+    while (ros::ok())
+    {   
+        listen_lego_detection(loop_rate);
+        // cout << " x " ;
+>>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
         // cin >> x;
         // cout << " y " ;
         // cin >> y;
@@ -359,9 +362,15 @@ int main(int argc,char **argv){
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
         //     continue;
         // }
+<<<<<<< HEAD
         //open_gripper();
         //move_to(pos_des,e,loop_rate);
         //close_gripper();
+=======
+        // //open_gripper();
+        // move_to(pos_des,e,loop_rate);
+        // //close_gripper();
+>>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
 
         loop_rate.sleep();
     //}

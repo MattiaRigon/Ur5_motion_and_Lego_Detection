@@ -297,7 +297,6 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     if(qInt[0] > M_PI/2){
         qInt[0] =qInt[0] - 2*M_PI;
     }
-    cout << qInt << endl;
     qAll.push_back(qInt);
 
     vector<vector<double>> th;
