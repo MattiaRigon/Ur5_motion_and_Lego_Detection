@@ -64,15 +64,20 @@ class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWIN
 
 
 
+def correction_reconize(h,name,dim):
+    ret = name
+
+    return ret
+
+
 
 def distanza(p1,p2):
 
     return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
     
 
-def trova_posizione_lego(num_lego,posizioni,pandino):  
+def trova_posizione_lego(actual_detection,posizioni,results_data):  
 
-    cont = 0
     v1 = [0,0]
     v2 = [0,0]
     v3 = [0,0]
@@ -80,7 +85,6 @@ def trova_posizione_lego(num_lego,posizioni,pandino):
     ymin = 100000
     xmin = 100000
     zmax = 0
-    last_pos = [posizioni[0][0],posizioni[0][1]]
 
     for pos in posizioni:
         if(pos[2] > 0.8661):
@@ -96,16 +100,24 @@ def trova_posizione_lego(num_lego,posizioni,pandino):
             if(pos[2]>zmax):
                 zmax = pos[2]
 
+    h = zmax - 0.866
 
-    print(zmax)
-    if(zmax > 0.9 and zmax < 0.91):
-        print("sono in un lato")
-    elif(zmax > 0.93 and zmax < 0.94):
-        print("sono un Y2 in piedi")
-    elif(zmax > 0.96 and zmax < 0.97):
-        print("sono un Y3 in piedi")
-    elif(zmax > 0.98):
-        print("sono un Y4 in piedi")
+    #correction_reconize(h, results_data["name"][actual_detection])
+    
+    #altezza di un blocchetto Y1 piegato a terra = 0.035000936615467104
+    #altezza di un blocchetto Z2 in piedi = 0.06100125036597259
+    #altezza di un blocchetto Z1 in piedi = 0.04200111413598073
+    
+    print("Altezza Max --> " + str(h) + " ")
+
+    if(h < 0.04):
+        print("Posizione --> sono appoggiato in un fianco")
+    elif(h >= 0.04 and h < 0.045):
+        print("sono un Z1 in piedi")
+    elif(h >= 0.06 and h < 0.065):
+        print("sono un Z2 in piedi")
+    elif(h > 0.07):
+        print("sono un Y" + str(int(h/0.035)+1) + " in piedi")
         
 
     #find block center
@@ -130,9 +142,9 @@ def trova_posizione_lego(num_lego,posizioni,pandino):
     initial_pose = Pose()
     initial_pose.position.x = pos[0]
     initial_pose.position.y = pos[1]
-    initial_pose.position.z = 0.89
+    initial_pose.position.z = 0.92              #0.89
 
-    q = quaternion_from_euler(0, 0, alpha)
+    q = quaternion_from_euler(pi/2, 0, alpha)
 
     initial_pose.orientation.x = q[0]
     initial_pose.orientation.y = q[1]
@@ -167,9 +179,9 @@ def receive_pointcloud(results_data):
                         [-1.     ,  0.     ,  0.     ],
                         [-0.     , -0.86632, -0.49948]])
 
-        data_zed_rotation = np.array(data*Ry)*-1
+        data_zed_rotation = np.array( data * Ry ) * -1
         
-        data_base_link =np.array(data_zed_rotation.tolist()[0]) + np.array(pos_zed)
+        data_base_link = np.array(data_zed_rotation.tolist()[0]) + np.array(pos_zed)
 
         data_world = Ry.dot(data) + pos_zed + pos_base_link
         data_world = np.array(data_world)
