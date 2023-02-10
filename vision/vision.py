@@ -64,30 +64,51 @@ class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWIN
 
 
 
-def correction_reconize(h,name,dim):
+def correction_reconize(h,name,posizioni):
     ret = name
+
+    #altezza di un blocchetto Y1 piegato a terra = 0.035000936615467104
+    #altezza di un blocchetto Z2 in piedi = 0.06100125036597259
+    #altezza di un blocchetto Z1 in piedi = 0.04200111413598073
+    print("Altezza Max --> " + str(h) + " ")
+
+    if(h < 0.04):
+        print("Posizione --> sono appoggiato in un fianco")
+
+    elif(h >= 0.04 and h < 0.045):
+        print("sono un Z1 in piedi")
+    elif(h >= 0.06 and h < 0.07):
+        print("sono un Z2 in piedi")
+    elif(h >= 0.07):
+        print("sono un Y" + str(int(h/0.035)+1) + " in piedi")
 
     return ret
 
 
 
 def distanza(p1,p2):
-
     return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
-    
+
 
 def trova_posizione_lego(actual_detection,posizioni,results_data):  
 
     v1 = [0,0]
+    v11 = [0,0]
     v2 = [0,0]
+    v21 = [0,0]
     v3 = [0,0]
+    v31 = [0,0]
+
     ymax = 0
+    yMassima = 0
     ymin = 100000
+    yMinimo = 100000
     xmin = 100000
+    xMinimo = 100000
     zmax = 0
 
     for pos in posizioni:
-        if(pos[2] > 0.8661):
+        if(pos[2] > 0.8661 and pos[2] < 0.872):
             if(pos[1] > ymax):
                 ymax = pos[1]
                 v1 = np.copy(pos)
@@ -100,25 +121,57 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
             if(pos[2]>zmax):
                 zmax = pos[2]
 
+        if(pos[2] >= 0.872 and pos[2] <= 0.93):
+            if(pos[1] > yMassima):
+                yMassima = pos[1]
+                v11 = np.copy(pos)
+            if(pos[1] < yMinimo):
+                yMinimo = pos[1]
+                v31 = np.copy(pos)
+
+
+        
+    
     h = zmax - 0.866
 
-    #correction_reconize(h, results_data["name"][actual_detection])
-    
-    #altezza di un blocchetto Y1 piegato a terra = 0.035000936615467104
-    #altezza di un blocchetto Z2 in piedi = 0.06100125036597259
-    #altezza di un blocchetto Z1 in piedi = 0.04200111413598073
-    
+    #correction_reconize(h, results_data["name"][actual_detection],posizioni)
+
     print("Altezza Max --> " + str(h) + " ")
 
     if(h < 0.04):
         print("Posizione --> sono appoggiato in un fianco")
+        print(distanza(v1,v11))
+        print(distanza(v3,v31))
+        if(distanza(v1,v11)>0.01):
+            if(v1[0]>v11[0]):
+                print("ho il pisello a sinistra in alto")
+            else:
+                print("ho il pisello a sinistra in basso")
+        elif(distanza(v3,v31)>0.01):
+            if(v1[0]>v11[0]):
+                print("ho il pisello a destra in alto")
+            else:
+                print("ho il pisello a destra in basso")
     elif(h >= 0.04 and h < 0.045):
         print("sono un Z1 in piedi")
-    elif(h >= 0.06 and h < 0.065):
+    elif(h >= 0.06 and h < 0.07):
         print("sono un Z2 in piedi")
-    elif(h > 0.07):
+    elif(h >= 0.07):
         print("sono un Y" + str(int(h/0.035)+1) + " in piedi")
-        
+        print(distanza(v1,v11))
+        print(distanza(v3,v31))
+        if(distanza(v1,v11)>0.01):
+            if(v1[0]>v11[0]):
+                print("ho il pisello a sinistra in alto")
+            else:
+                print("ho il pisello a sinistra in basso")
+        elif(distanza(v3,v31)>0.01):
+            if(v1[0]>v11[0]):
+                print("ho il pisello a destra in alto")
+            else:
+                print("ho il pisello a destra in basso")
+
+    
 
     #find block center
     pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
