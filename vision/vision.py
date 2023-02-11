@@ -197,7 +197,7 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     initial_pose.position.y = pos[1]
     initial_pose.position.z = 0.92              #0.89
 
-    q = quaternion_from_euler(pi/2, 0, alpha)
+    q = quaternion_from_euler(0, 0, alpha)
 
     initial_pose.orientation.x = q[0]
     initial_pose.orientation.y = q[1]
