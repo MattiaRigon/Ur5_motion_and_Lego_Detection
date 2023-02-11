@@ -29,6 +29,13 @@ typedef struct Quaternion {
 void send_des_jstate(const vector<double> & joint_pos);
 JointStateVector secondOrderFilter(const JointStateVector & input, const double rate, const double settling_time);
 bool check_point(PositionVecor _pos);
+void close_gripper();
+void open_gripper();
+GripperState return_gripper_states();
+void listen_lego_detection(ros::Rate rate);
+void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate);
+JointStateVecor return_joint_states();
+EulerVector ToEulerAngles(Quaternion q);
 
 // Variables
 GripperState actual_gripper;
