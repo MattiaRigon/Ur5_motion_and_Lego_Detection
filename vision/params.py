@@ -7,7 +7,7 @@ out = subprocess.Popen(findCMD,shell=True,stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 # Get standard out and error
 (stdout, stderr) = out.communicate()
- 
+
 # Save found files to list
 filelist = stdout.decode().split()
 
@@ -21,5 +21,3 @@ else:
 VISION_PATH = os.path.dirname(os.path.abspath(__file__))
 LAST_PHOTO_PATH = VISION_PATH + "/last_photo.png"
 BEST_PATH = VISION_PATH +"/best.pt"
-
-#ciao 
