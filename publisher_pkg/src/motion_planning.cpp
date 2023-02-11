@@ -110,7 +110,7 @@ bool check_singularity_collision(const double th1, const double th2, const doubl
         Pos_y = Tn(1, 3);
         Pos_z = Tn(2, 3);
 
-        if (Pos_z < 0 or Pos_z > 0.745 or Pos_y > 0.25)
+        if (Pos_z < 0 or Pos_z > 0.745 + 0.15 or Pos_y > 0.25)
         {
             cout << Pos_z << " " << Pos_y << endl;
             cond = false;
@@ -283,11 +283,18 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     int i = 0;
     for (PositionVecor item : intermediate_points)
     {
+        // if(i == intermediate_points.size() -1){
+        //     qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
 
+        // }else{
+        //     qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
+        // }
         qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
+
 
         if(qInt[0] > M_PI/2){
             qInt[0] =qInt[0] - 2*M_PI;
+            cout << "cambiato angoli 1" << endl;
         }
         qAll.push_back(qInt);
         last_q = qInt;
@@ -296,6 +303,8 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     qInt = nearest(last_q, inverse_kinematics(xEf, eul2rot(phiEf)));
     if(qInt[0] > M_PI/2){
         qInt[0] =qInt[0] - 2*M_PI;
+        cout << "cambiato angoli 2" << endl;
+
     }
     qAll.push_back(qInt);
 

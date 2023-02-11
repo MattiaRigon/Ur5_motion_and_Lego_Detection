@@ -119,11 +119,11 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
     PositionVecor i1 ;
     i1 = direct_res.pos;
-    i1(2)=0.5;
+    i1(2)=0.5 + 0.14;
     intermediate.push_back(i1);
 
     PositionVecor i ;
-    i<< pos[0],pos[1],0.5;
+    i<< pos[0],pos[1],0.5+0.14;
     intermediate.push_back(i);
 
     double dt = 0.001;
@@ -147,7 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            return;
+            break;
         }
     }
 
@@ -178,7 +178,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << lego.model << endl;
             PositionVecor pos;
 
-            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75+0.14);
+            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
             Quaternion q ;
             q.x = lego.pose.orientation.x;
             q.y = lego.pose.orientation.y;
@@ -187,8 +187,7 @@ void listen_lego_detection(ros::Rate rate){
 
             EulerVector rot  = ToEulerAngles(q); 
             rot << -rot[2],0,0;
-            //cout << pos << endl;
-            //cout << rot << endl;
+
             if(check_point(pos)){
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
@@ -253,7 +252,6 @@ bool check_point(PositionVecor _pos){
                 if ((float(res_d.pos[i]) - float(_pos[i])) < 0.001){
                     continue;
                 }else{
-                    //cout << float(res_d.pos[i]) << " " << float(_pos[i]) << endl;
                     return false;        
                 }
             }
@@ -272,10 +270,10 @@ void open_gripper(){
         actual_gripper = return_gripper_states();
         while(actual_gripper(0)< 0.3){
             for(int i=0;i<6;i++){
-            msg(i)= actual_pos(i);
+                msg(i)= actual_pos(i);
             }
             for(int i=6;i<8;i++){
-            msg(i)= actual_gripper(i-6);
+                msg(i)= actual_gripper(i-6);
             }
             send_des_jstate(msg);
             actual_gripper(0)=actual_gripper(0)+0.01;
@@ -334,29 +332,33 @@ int main(int argc,char **argv){
     float x,y,z;
     while (ros::ok())
     {   
-        listen_lego_detection(loop_rate);
-        // cout << " x " ;
-        // cin >> x;
-        // cout << " y " ;
-        // cin >> y;
-        // y=-y;
-        // cout << " z " ;
-        // cin >> z;
-        // z=-z;
-        // pos_des << x,y,z;    
-        // EulerVector e ;
-        // e << M_PI/2,0,0; // default braccio drittto 
+        // listen_lego_detection(loop_rate);
+        cout << " x " ;
+        cin >> x;
+        cout << " y " ;
+        cin >> y;
+        y=-y;
+        cout << " z " ;
+        cin >> z;
+        z=-z;
+        pos_des << x,y,z;    
+        EulerVector e ;
+        e << M_PI/2,0,0; // default braccio drittto 
 
 
-        // if(check_point(pos_des)){
-        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-        // }else{
-        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-        //     continue;
-        // }
-        // //open_gripper();
-        // move_to(pos_des,e,loop_rate);
-        // //close_gripper();
+        if(check_point(pos_des)){
+            cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        }else{
+            cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            continue;
+        }
+        open_gripper();
+        move_to(pos_des,e,loop_rate);
+        close_gripper();
+        e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+        move_to(pos_des,e,loop_rate);
+        open_gripper();
+
 
         loop_rate.sleep();
     }
