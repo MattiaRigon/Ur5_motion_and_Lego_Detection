@@ -59,8 +59,8 @@ pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 # Objects=[(640,360),(630,350),(620,340),(650,380),(740,380)]
 Objects = []
 point_count_for_item = []
-list=[]
-
+list = []
+DIM_BLOCK = 0.03
 class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWINFILLET","X1-Y3-Z2","X1-Y1-Z2-FILLET","X1-Y4-Z1","X1-Y4-Z2","X2-Y2-Z2","X2-Y2-Z2-FILLET"]
 
 
@@ -141,19 +141,23 @@ def correction(dimension,nome):
     #Correction dimension   correction case of block is in the same direction of the camera and general correction dimension
     if(dimension[1] < 0.01):
         if(isUp):
-            if(dimension[0]<0.031):
-                dimension[1] = 0.03 * int(split[1][1])
+            if(dimension[0] < DIM_BLOCK):
+                dimension[1] = DIM_BLOCK * int(split[1][1])
             else:
-                dimension[1] = 0.03
+                dimension[1] = DIM_BLOCK
         else:
             if((dimension[0] >= 0.06 and dimension[0] < 0.07) or (dimension[0] >= 0.04 and dimension[0] < 0.045)):
-                dimension[1] = dimension[1] = 0.03 * int(split[1][1])
+                dimension[1] = dimension[1] = DIM_BLOCK * int(split[1][1])
             else:
                 if(int(split[2][1]) == 1):
                     dimension[1] = 0.041
                 else:
                     dimension[1] = 0.065    
 
+    if(int(split[1][1]) != int(dimension[0]/DIM_BLOCK)):
+        print("ERRORE DIM")
+    if(int(split[0][1]) != int(dimension[1]/DIM_BLOCK)):
+        print("ERRORE DIM")
 
     if(len(split)==4):
         retName = split[0] + "-" + split[1] + "-" + split[2] + "-" + split[3]
@@ -207,9 +211,8 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
                 yMaxright = pos[1]
                 v3_1 = np.copy(pos)
 
-
-    dimension = find_dimension(v1,v2,v3,zmax)
     orientation = find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    dimension = find_dimension(v1_1,v2,v3_1,zmax)
     print("PRIMA" + str(dimension))
     nome,dimension = correction(dimension, results_data["name"][actual_detection])
     print("DOPO" + str(dimension))
@@ -298,7 +301,6 @@ def receive_pointcloud(results_data):
         actual_lego.append(data_world[0])
 
 
-
 def receive_image():
 
     msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
@@ -318,8 +320,6 @@ def receive_image():
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
     cv2.imwrite(LAST_PHOTO_PATH, img)
-    
-
 
 
 def riconoscimento():
@@ -370,3 +370,4 @@ if __name__ == '__main__':
     message = legoGroup("Assigment 1",list)   
 
     pub.publish(message)
+
