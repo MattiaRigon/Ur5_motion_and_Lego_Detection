@@ -119,11 +119,11 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
     PositionVecor i1 ;
     i1 = direct_res.pos;
-    i1(2)=0.5;
+    i1(2)=0.5 + 0.14;
     intermediate.push_back(i1);
 
     PositionVecor i ;
-    i<< pos[0],pos[1],0.5;
+    i<< pos[0],pos[1],0.5+0.14;
     intermediate.push_back(i);
 
     double dt = 0.001;
@@ -147,7 +147,11 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
+<<<<<<< HEAD
             //return;
+=======
+            break;
+>>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
         }
     }
 
@@ -186,9 +190,14 @@ void listen_lego_detection(ros::Rate rate){
             q.w = lego.pose.orientation.w;
 
             EulerVector rot  = ToEulerAngles(q); 
+<<<<<<< HEAD
             rot << -rot[2],-rot[1],-rot[0];
             //cout << pos << endl;
             //cout << rot << endl;
+=======
+            rot << -rot[2],0,0;
+
+>>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
             if(check_point(pos)){
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
@@ -253,7 +262,6 @@ bool check_point(PositionVecor _pos){
                 if ((float(res_d.pos[i]) - float(_pos[i])) < 0.001){
                     continue;
                 }else{
-                    //cout << float(res_d.pos[i]) << " " << float(_pos[i]) << endl;
                     return false;        
                 }
             }
@@ -272,10 +280,10 @@ void open_gripper(){
         actual_gripper = return_gripper_states();
         while(actual_gripper(0)< 0.3){
             for(int i=0;i<6;i++){
-            msg(i)= actual_pos(i);
+                msg(i)= actual_pos(i);
             }
             for(int i=6;i<8;i++){
-            msg(i)= actual_gripper(i-6);
+                msg(i)= actual_gripper(i-6);
             }
             send_des_jstate(msg);
             actual_gripper(0)=actual_gripper(0)+0.01;
@@ -354,12 +362,24 @@ int main(int argc,char **argv){
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
         //     continue;
         // }
+<<<<<<< HEAD
         // //open_gripper();
         // move_to(pos_des,e,loop_rate);
         // //close_gripper();
 
         loop_rate.sleep();
     //
+=======
+        // open_gripper();
+        // move_to(pos_des,e,loop_rate);
+        // close_gripper();
+        // e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+        // move_to(pos_des,e,loop_rate);
+        // open_gripper();
+
+
+        loop_rate.sleep();
+>>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
     }
     
     return 0;
