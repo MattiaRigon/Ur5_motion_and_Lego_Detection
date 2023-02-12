@@ -147,7 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            return;
+            //return;
         }
     }
 
@@ -178,7 +178,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << lego.model << endl;
             PositionVecor pos;
 
-            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75+0.14);
+            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
             Quaternion q ;
             q.x = lego.pose.orientation.x;
             q.y = lego.pose.orientation.y;
@@ -186,7 +186,7 @@ void listen_lego_detection(ros::Rate rate){
             q.w = lego.pose.orientation.w;
 
             EulerVector rot  = ToEulerAngles(q); 
-            rot << -rot[2],0,0;
+            rot << -rot[2],-rot[1],-rot[0];
             //cout << pos << endl;
             //cout << rot << endl;
             if(check_point(pos)){
@@ -331,19 +331,11 @@ int main(int argc,char **argv){
 
     }
 
-<<<<<<< HEAD
-    // float x,y,z;
-    // while (ros::ok())
-    // {   
-        listen_lego_detection(loop_rate);
-        //cout << " x " ;
-=======
     float x,y,z;
     while (ros::ok())
     {   
         listen_lego_detection(loop_rate);
         // cout << " x " ;
->>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
         // cin >> x;
         // cout << " y " ;
         // cin >> y;
@@ -362,18 +354,13 @@ int main(int argc,char **argv){
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
         //     continue;
         // }
-<<<<<<< HEAD
-        //open_gripper();
-        //move_to(pos_des,e,loop_rate);
-        //close_gripper();
-=======
         // //open_gripper();
         // move_to(pos_des,e,loop_rate);
         // //close_gripper();
->>>>>>> aa7e6a40e3f5847097d9ee10ff3aab63a4689d68
 
         loop_rate.sleep();
-    //}
+    //
+    }
     
     return 0;
 }
