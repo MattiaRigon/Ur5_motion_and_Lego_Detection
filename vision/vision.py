@@ -44,6 +44,7 @@ from math import tan
 from math import sqrt
 
 from params import *
+
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 #Resources
@@ -63,27 +64,103 @@ list=[]
 class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWINFILLET","X1-Y3-Z2","X1-Y1-Z2-FILLET","X1-Y4-Z1","X1-Y4-Z2","X2-Y2-Z2","X2-Y2-Z2-FILLET"]
 
 
+def find_dimension(v1,v2,v3,zmax):
+    #find dimension of blocks
+    dimension = [0,0,0]
+    d12 = distanza(v1,v2)
+    d23 = distanza(v2,v3)
+    if(d12 >= d23):
+        dimension[0] = d12
+        dimension[1] = d23
+        dimension[2] = zmax - 0.866
+    else:
+        dimension[0] = d23
+        dimension[1] = d12
+        dimension[2] = zmax - 0.866
+    
+    return dimension
 
-def correction_reconize(dimensioni,nome):
+
+def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
+    if(dimension[2] < 0.04):
+        print("Posizione --> sono appoggiato in un fianco")
+        print(distanza(v1,v1_1))
+        print(distanza(v3,v3_1))
+        if(distanza(v1,v1_1)>0.01):
+            if(v1[0]>v1_1[0]):
+                print("ho il pisello a sinistra in basso")
+            else:
+                print("ho il pisello a sinistra in alto")
+        elif(distanza(v3,v3_1)>0.01):
+            if(v1[0]>v1_1[0]):
+                print("ho il pisello a destra in basso")
+            else:
+                print("ho il pisello a destra in alto")
+    # elif(dimension[2] >= 0.04 and dimension[2] < 0.045):
+    #     print("sono un Z1 in piedi")
+    # elif(dimension[2] >= 0.06 and dimension[2] < 0.07):
+    #     print("sono un Z2 in piedi")
+    elif(dimension[2] >= 0.07):
+        print("sono un Y" + str(int(dimension[2]/0.035)+1) + " in piedi")
+        print(distanza(v1,v1_1))
+        print(distanza(v3,v3_1))
+        if(distanza(v1,v1_1)>0.01):
+            if(v1[0]>v1_1[0]):
+                print("ho il pisello a sinistra in basso")
+            else:
+                print("ho il pisello a sinistra in alto")
+        elif(distanza(v3,v3_1)>0.01):
+            if(v1[0]>v1_1[0]):
+                print("ho il pisello a destra in basso")
+            else:
+                print("ho il pisello a destra in alto")
+
+
+def isUp(h):
+    ret = True
+    if(h < 0.04):
+        ret = False
+    return ret
+
+
+def correction(dimension,nome):
 
     #altezza di un blocchetto Y1 piegato a terra = 0.035000936615467104
     #altezza di un blocchetto Z2 in piedi = 0.06100125036597259
     #altezza di un blocchetto Z1 in piedi = 0.04200111413598073
-
     split = nome.split("-")
-    if(dimensioni[2] < 0.04):
-        print(str(dimensioni[0]) + " " + str(dimensioni[1]))
-    elif(dimensioni[2] >= 0.04 and dimensioni[2] < 0.045):
-        print(str(dimensioni[0]) + " " + str(dimensioni[1]))
-        split[2] = "Z1"
-    elif(dimensioni[2] >= 0.06 and dimensioni[2] < 0.07):
-        print(str(dimensioni[0]) + " " + str(dimensioni[1]))
-        split[2] = "Z2"
-    elif(dimensioni[2] >= 0.07):
-        print(str(dimensioni[0]) + " " + str(dimensioni[1]))
-        split[1] = "Y" + str(int(dimensioni[2]/0.035)+1)
 
-    return split[0] + "-" + split[1] + "-" + split[2]
+    #Correction name with height 
+    if(dimension[2] >= 0.04 and dimension[2] < 0.045):
+        split[2] = "Z1"
+    elif(dimension[2] >= 0.06 and dimension[2] < 0.07):
+        split[2] = "Z2"
+    elif(dimension[2] >= 0.07):
+        split[1] = "Y" + str(int(dimension[2]/0.035)+1)
+
+    #Correction dimension   correction case of block is in the same direction of the camera and general correction dimension
+    if(dimension[1] < 0.01):
+        if(isUp):
+            if(dimension[0]<0.031):
+                dimension[1] = 0.03 * int(split[1][1])
+            else:
+                dimension[1] = 0.03
+        else:
+            if((dimension[0] >= 0.06 and dimension[0] < 0.07) or (dimension[0] >= 0.04 and dimension[0] < 0.045)):
+                dimension[1] = dimension[1] = 0.03 * int(split[1][1])
+            else:
+                if(int(split[2][1]) == 1):
+                    dimension[1] = 0.041
+                else:
+                    dimension[1] = 0.065    
+
+
+    if(len(split)==4):
+        retName = split[0] + "-" + split[1] + "-" + split[2] + "-" + split[3]
+    else:
+        retName = split[0] + "-" + split[1] + "-" + split[2]
+    
+    return retName,dimension
 
 
 def distanza(p1,p2):
@@ -92,94 +169,53 @@ def distanza(p1,p2):
 
 def trova_posizione_lego(actual_detection,posizioni,results_data):  
 
-    dimensioni = [0, 0, 0]   #lato lungo, lato corto e altezza
-    v1 = [0,0]
-    v11 = [0,0]
-    v2 = [0,0]
-    v3 = [0,0]
-    v31 = [0,0]
+    orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
+    dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
+    v1 = [0,0]   #left point of block
+    v1_1 = [0,0] #leftmost point of block 
+    v2 = [0,0]   #lowest point of blocks
+    v3 = [0,0]   #right point of block
+    v3_1 = [0,0] #rightmost point of block
 
-    ymax = 0
-    yMassima = 0
-    ymin = 100000
-    yMinimo = 100000
+    yleft = 0
+    yMaxleft = 0
+    yright = 100000
+    yMaxright = 100000
     xmin = 100000
     zmax = 0
 
     for pos in posizioni:
-        if(pos[2] > 0.8661 and pos[2] < 0.872):
-            if(pos[1] > ymax):
-                ymax = pos[1]
+        if(pos[2] > 0.8661 and pos[2] < 0.872):  #find the three point of blocks
+            if(pos[1] > yleft):
+                yleft = pos[1]
                 v1 = np.copy(pos)
-            if(pos[1] < ymin):
-                ymin = pos[1]
+            if(pos[1] < yright):
+                yright = pos[1]
                 v3 = np.copy(pos)
             if(pos[0] < xmin):
                 xmin = pos[0]
                 v2 = np.copy(pos)
-            
-        if(pos[2] >= 0.872 and pos[2] <= 0.93):
-            if(pos[1] > yMassima):
-                yMassima = pos[1]
-                v11 = np.copy(pos)
-            if(pos[1] < yMinimo):
-                yMinimo = pos[1]
-                v31 = np.copy(pos)
         
-        if(pos[2]>zmax):
+        if(pos[2]>zmax):    #find z max
                 zmax = pos[2]
+        
+        if(pos[2] >= 0.872 and pos[2] <= 0.93): #find the three point in case the block is relaxed on one side
+            if(pos[1] > yMaxleft):
+                yMaxleft = pos[1]
+                v1_1 = np.copy(pos)
+            if(pos[1] < yMaxright):
+                yMaxright = pos[1]
+                v3_1 = np.copy(pos)
 
-    d12 = distanza(v1,v2)
-    d23 = distanza(v2,v3)
 
-    if(d12 >= d23):
-        dimensioni[0] = d12
-        dimensioni[1] = d23
-        dimensioni[2] = zmax - 0.866
-    else:
-        dimensioni[0] = d23
-        dimensioni[1] = d12
-        dimensioni[2] = zmax - 0.866
+    dimension = find_dimension(v1,v2,v3,zmax)
+    orientation = find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    print("PRIMA" + str(dimension))
+    nome,dimension = correction(dimension, results_data["name"][actual_detection])
+    print("DOPO" + str(dimension))
+    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+    print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
 
-    nome = correction_reconize(dimensioni, results_data["name"][actual_detection])
-    print(nome)
-
-    print("Altezza Max --> " + str(dimensioni[2]) + " ")
-
-    if(dimensioni[2] < 0.04):
-        print("Posizione --> sono appoggiato in un fianco")
-        print(distanza(v1,v11))
-        print(distanza(v3,v31))
-        if(distanza(v1,v11)>0.01):
-            if(v1[0]>v11[0]):
-                print("ho il pisello a sinistra in basso")
-            else:
-                print("ho il pisello a sinistra in alto")
-        elif(distanza(v3,v31)>0.01):
-            if(v1[0]>v11[0]):
-                print("ho il pisello a destra in basso")
-            else:
-                print("ho il pisello a destra in alto")
-    elif(dimensioni[2] >= 0.04 and dimensioni[2] < 0.045):
-        print("sono un Z1 in piedi")
-    elif(dimensioni[2] >= 0.06 and dimensioni[2] < 0.07):
-        print("sono un Z2 in piedi")
-    elif(dimensioni[2] >= 0.07):
-        print("sono un Y" + str(int(dimensioni[2]/0.035)+1) + " in piedi")
-        print(distanza(v1,v11))
-        print(distanza(v3,v31))
-        if(distanza(v1,v11)>0.01):
-            if(v1[0]>v11[0]):
-                print("ho il pisello a sinistra in basso")
-            else:
-                print("ho il pisello a sinistra in alto")
-        elif(distanza(v3,v31)>0.01):
-            if(v1[0]>v11[0]):
-                print("ho il pisello a destra in basso")
-            else:
-                print("ho il pisello a destra in alto")
-
-    
 
     #find block center
     pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
@@ -188,16 +224,16 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     else:
         alpha=0
 
+    d12 = distanza(v1,v2)
+    d23 = distanza(v2,v3)
     
     if(d12 > d23):
         alpha = alpha + pi/2
     
     rot = [0,0,alpha]
 
-    print("pos : ")
-    print(pos)
-    print("rot : ")
-    print(rot)
+    print("pos : " + str(pos))
+    print("rot : " + str(rot))
 
     initial_pose = Pose()
     initial_pose.position.x = pos[0]
@@ -302,10 +338,10 @@ def riconoscimento():
     for k in range(0,results_data.shape[0]):
         
         #Allargo scontorno
-        results_data.ymin[k] -= 10
-        results_data.ymax[k] += 10
-        results_data.xmin[k] -= 10
-        results_data.xmax[k] += 10
+        results_data.loc[k,"ymin"] -= 10
+        results_data.loc[k,"ymax"] += 10
+        results_data.loc[k,"xmin"] -= 10
+        results_data.loc[k,"xmax"] += 10
 
         cont = 0
         if(results_data.confidence[k]<0.5):
