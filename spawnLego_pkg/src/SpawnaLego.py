@@ -29,14 +29,15 @@ models_str = models_str [::-1]
 src_str = "src"
 src_str = src_str[::-1]
 models_path = models_path[::-1].replace(src_str, models_str, 1)[::-1]
-#models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2"] 
-models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2"] 
+models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2", "X1-Y3-Z2-FILLET"] 
 cont = 0
 colorList = ['Gazebo/Indigo', 'Gazebo/Gray', 'Gazebo/Orange','Gazebo/Red', 'Gazebo/Purple', 'Gazebo/SkyBlue','Gazebo/DarkYellow', 'Gazebo/White', 'Gazebo/Green']
 
 list = []
 
 spawned_lego = []
+
+models_spawned = []
 
 def get_random_model():
     return random.choice(models)
@@ -140,33 +141,32 @@ if __name__ == "__main__":
 			pos=random_position(lego)
 			print(spawn_model(lego, pos))
 			message = legoGroup("Assigment 1",list)   
-<<<<<<< HEAD
-
-			pub.publish(message)
-
-=======
 			#pub.publish(message)
->>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 		elif(scelta =='2'):
 			for i in range(0,5):
+				count = 0
 				while True:
-					lego = get_random_model()
+
+					while True:
+						lego = get_random_model()
+						print("--> " + lego + "\n")
+						for it in models_spawned:
+							print(it + " ")
+						if lego not in models_spawned:   #non possono esserci due lego della stessa classe
+							break
+					
+
 					pos=random_position(lego)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1
 						break
+				models_spawned.append(lego)
+				print("---------> spawnato")
 			message = legoGroup("Assigment 2",list)   
 			#pub.publish(message)
 		elif(scelta =='3'):
 			for i in range(0,5):
-<<<<<<< HEAD
-				print(spawn_model(get_random_model(),pos=random_position(rotation=True)))
-				i=i+1
-			message = legoGroup("Assigment 3",list)   
-			pub.publish(message)
-
-=======
 				while True:
 					lego = get_random_model()
 					pos=random_position(lego, rotazione=True)
@@ -176,7 +176,6 @@ if __name__ == "__main__":
 						break
 			message = legoGroup("Assigment 2",list)   
 			#pub.publish(message)
->>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 		else :
 			print("scelta sbagliata")
 
