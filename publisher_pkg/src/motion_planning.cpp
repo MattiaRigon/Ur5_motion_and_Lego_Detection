@@ -15,11 +15,10 @@ using namespace std;
 
 RotationMatrix eul2rot(EulerVector th)
 {
-    /*
-    Returns the rotation matrix
-    th[0] = roll , th[1] = pitch ,th[2] = yaw
-    */
-    
+
+    // Returns the rotation matrix
+
+    // th[0] = roll , th[1] = pitch ,th[2] = yaw
 
     RotationMatrix R;
     R << cos(th[0]) * cos(th[1]), cos(th[0]) * sin(th[1]) * sin(th[2]) - sin(th[0]) * cos(th[2]), cos(th[0]) * sin(th[1]) * cos(th[2]) + sin(th[0]) * sin(th[2]),
@@ -61,6 +60,20 @@ bool check_angles(JointStateVector Th)
     for (int i = 0; i < 6; i++)
     {
 
+        // if(i==1){
+        //     if(Th(i) > M_PI && Th(i)  < 2*M_PI ){
+        //         Th(i) = Th(i)-2*M_PI;
+        //     }
+        // }else{
+        //     if(Th(i) < max_angles_value(cont,0)){
+        //         Th(i) = Th(i) + max_angles_value(cont,0);
+        //     }else if (Th(i)  > max_angles_value(cont,1) )
+        //     {
+        //         Th(i) = Th(i) - max_angles_value(cont,1);
+        //     }
+
+        // }
+
         if (Th(i) > max_angles_value(cont, 0) && Th(i) < max_angles_value(cont, 1))
         {
             cont = cont + 1;
@@ -68,6 +81,7 @@ bool check_angles(JointStateVector Th)
         }
         else
         {
+            // cout <<"NON VA BENE " << Th(i) << "fuori range " << max_angles_value(cont,0) << " - " << max_angles_value(cont,1) << endl;
             return false;
         }
     }
@@ -110,11 +124,7 @@ bool check_singularity_collision(const double th1, const double th2, const doubl
         Pos_y = Tn(1, 3);
         Pos_z = Tn(2, 3);
 
-<<<<<<< HEAD
-        if (Pos_z < 0 or Pos_z > 0.745 - 0.14 or Pos_y > 0.25)
-=======
-        if (Pos_z < 0 or Pos_z > 0.745 + 0.15 or Pos_y > 0.25)
->>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
+        if (Pos_z < 0 or Pos_z > 0.745 or Pos_y > 0.25)
         {
             //cout << Pos_z << " " << Pos_y << endl;
             cond = false;
@@ -273,6 +283,7 @@ vector<vector<double>> thetaConnect2Points(const double tStart, JointStateVector
 }
 
 vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qEs, const PositionVector xEf, const EulerVector phiEf, vector<PositionVector> intermediate_points, double dt ,bool turn)
+
 {
 
     // xEs, phiEs, xEf, phiEf,points,minT,maxT,
@@ -282,26 +293,20 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qE
 
     JointStateVector qInt;
     JointStateVector last_q = qEs;
-    EulerVector e(0, 0, 0);
 
+    EulerVector e(0, 0, 0);
+    // cout <<"punti di passaggio "<<endl;
     int i = 0;
     for (PositionVector item : intermediate_points)
     {
-        if(i == intermediate_points.size() -1 && turn){
-            item(2) = 0.6;
-            qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
-            cout << "intermedio storto"<< endl;
 
-        }else{
-            qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
-        }
-        //qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
-
+        qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
 
         if(qInt[0] > M_PI/2){
             qInt[0] =qInt[0] - 2*M_PI;
-            cout << "cambiato angoli 1" << endl;
+      //      cout << "ho cambiato l'angolo 1" << endl;
         }
+        // cout << endl;
         qAll.push_back(qInt);
         last_q = qInt;
         i++;
@@ -309,9 +314,10 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qE
     qInt = nearest(last_q, inverse_kinematics(xEf, eul2rot(phiEf)));
     if(qInt[0] > M_PI/2){
         qInt[0] =qInt[0] - 2*M_PI;
-        cout << "cambiato angoli 2" << endl;
-
+        //cout << "ho cambiato l'angolo 2" << endl;
     }
+    //cout << "ARRIVO  : " << endl;
+    cout << qInt << endl;
     qAll.push_back(qInt);
 
     vector<vector<double>> th;
@@ -327,8 +333,8 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qE
     for (int i : T)
     {
 
-        if (i + 1 < size) // controllo se ha un successivo
-        { 
+        if (i + 1 < size)
+        { // controllo se ha un successivo
             vector<vector<double>> res = thetaConnect2Points(i * DtP, qAll[i], qAll[i + 1], dt, DtP, DtA);
             th.insert(th.end(), res.begin(), res.end());
         }

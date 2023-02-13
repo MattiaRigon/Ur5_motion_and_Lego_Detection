@@ -19,7 +19,7 @@
 #include <spawnLego_pkg/legoGroup.h>
 #include <cmath>
 
-using namespace std;
+
 
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
@@ -50,22 +50,17 @@ EulerVector ToEulerAngles(Quaternion q) {
 void send_des_jstate(const JointStateGripperVector & joint_pos)
 {
 
-    if(real_robot){
-        for (int i = 0; i < joint_pos.size() -2; i++)
-        {
-            jointState_msg_robot.data[i] = joint_pos[i];
-        }
-    }else{
-        for (int i = 0; i < joint_pos.size() -2; i++)
-        {
-            jointState_msg_robot.data[i] = joint_pos[i];
-        }
-        for (int i=6;i<8;i++){
-            jointState_msg_robot.data[i] = actual_gripper[i-6];
-        }   
-    }
 
+    for (int i = 0; i < joint_pos.size() -2; i++)
+    {
+        jointState_msg_robot.data[i] = joint_pos[i];
+    }
+    // for (int i=6;i<8;i++){
+    //     jointState_msg_robot.data[i] = actual_gripper[i-6];
+    // }
     pub_des_jstate.publish(jointState_msg_robot);
+
+
 
 }
 
@@ -78,28 +73,27 @@ JointStateVector return_joint_states(){
     JointStateVector actual_pos ;
 
     boost::shared_ptr<const sensor_msgs::JointState_<std::allocator<void>>> msg = ros::topic::waitForMessage<sensor_msgs::JointState>("/ur5/joint_states",node_1, Timeout );
+    // actual_pos[0]= msg->position[4];
+    // actual_pos[1]= msg->position[3];
+    // actual_pos[2]= msg->position[0];
+    // actual_pos[3]= msg->position[5];
+    // actual_pos[4]= msg->position[6];
+    // actual_pos[5]= msg->position[7];
 
-    if(real_robot){
-        actual_pos[0]= msg->position[2];
-        actual_pos[1]= msg->position[1];
-        actual_pos[2]= msg->position[0];
-        actual_pos[3]= msg->position[3];
-        actual_pos[4]= msg->position[4];
-        actual_pos[5]= msg->position[5];
-    }else{
-        actual_pos[0]= msg->position[4];
-        actual_pos[1]= msg->position[3];
-        actual_pos[2]= msg->position[0];
-        actual_pos[3]= msg->position[5];
-        actual_pos[4]= msg->position[6];
-        actual_pos[5]= msg->position[7];
-    }
+
+    actual_pos[0]= msg->position[2];
+    actual_pos[1]= msg->position[1];
+    actual_pos[2]= msg->position[0];
+    actual_pos[3]= msg->position[3];
+    actual_pos[4]= msg->position[4];
+    actual_pos[5]= msg->position[5];
 
     return actual_pos;
 }
 
 
 void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
+
 
     //EulerVector e ;
     //e << M_PI/2,0,0; // default braccio drittto 
@@ -119,11 +113,12 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
 
     PositionVector i1 ;
     i1 = direct_res.pos;
-    i1(2)=0.5 + 0.14;
+    i1(2)=0.5;
     intermediate.push_back(i1);
 
     PositionVector i ;
     i<< pos[0],pos[1],0.5+0.14;
+
     intermediate.push_back(i);
 
     double dt = 0.001;
@@ -135,7 +130,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
 
     ros::Rate loop_rate(loop_frequency);
 
-    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,false);
+    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001);
     
     // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
     // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
@@ -158,6 +153,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
             pos_send(i-1)=conf[i];
 
         }
+        //cout << pos_send << endl;
         send_des_jstate(pos_send);
         loop_rate.sleep();
 
@@ -235,8 +231,10 @@ void turn(PositionVector pos,EulerVector e ,ros::Rate rate){
 void listen_lego_detection_turn(ros::Rate rate){
 
     ros::NodeHandle node_1;
+    //ros::Duration Timeout = ros::Duration(1);
+    //Json::Value msg_recived;
+
     spawnLego_pkg::legoGroup::ConstPtr msg = ros::topic::waitForMessage<spawnLego_pkg::legoGroup>("/lego_position",node_1 );
-    
     if(msg!=0){
         cout << "Arrivato messaggio" << endl;
         vector<spawnLego_pkg::legoDetection> vector = msg->lego_vector ;
@@ -245,7 +243,7 @@ void listen_lego_detection_turn(ros::Rate rate){
             cout << lego.model << endl;
             PositionVector pos;
 
-            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
+            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75+0.14);
             Quaternion q ;
             q.x = lego.pose.orientation.x;
             q.y = lego.pose.orientation.y;
@@ -404,14 +402,13 @@ void listen_lego_detection_turn(ros::Rate rate){
 
 
 
+
     }else{
         cout << "vuoto " << endl;
     }
 
 
 }
-
-void listen_lego_detection(ros::Rate rate){
 
     ros::NodeHandle node_1;
     spawnLego_pkg::legoGroup::ConstPtr msg = ros::topic::waitForMessage<spawnLego_pkg::legoGroup>("/lego_position",node_1 );
@@ -455,6 +452,7 @@ void listen_lego_detection(ros::Rate rate){
 }
 
 
+
 GripperState return_gripper_states(){
 
     ros::NodeHandle node_2;
@@ -472,12 +470,14 @@ GripperState return_gripper_states(){
 bool check_point(PositionVector _pos,EulerVector e ){
 
 
+
     // chiede gli angoli alla inverse kinematics che tra la lista di 8 array guarda che ci sia almeno un array di angoli che 
     // rispetta le condizioni, ovvero angoli la cui applicazione non comportano che nessun joint sbatta sul soffitto , ovvero abbia z > 0
     // e che gli angoli che bisogna applicare si possano veramente 
 
     vector<JointStateVector> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
     for(JointStateVector res : inverseSolution){
+
 
             double th1 = res[0];
             double th2 = res[1];
@@ -502,6 +502,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
                 //     continue;
                 // }else{
                     break;        
+
                 }
 
                 return true;
@@ -509,9 +510,14 @@ bool check_point(PositionVector _pos,EulerVector e ){
     }
     return false;
 
+
 }
 
 void open_gripper(){
+    
+    JointStateVector msg ;
+    JointStateVecor actual_pos = return_joint_states();
+    ros::Rate loop_rate(loop_frequency);
 
     if(!real_robot){
         JointStateGripperVector msg ;
@@ -531,9 +537,17 @@ void open_gripper(){
             actual_gripper(1)=actual_gripper(1)+0.1;
 
             loop_rate.sleep();
-        }
-    }
 
+        }
+        for(int i=6;i<8;i++){
+           msg(i)= actual_gripper(i-6);
+        }
+        send_des_jstate(msg);
+        actual_gripper(0)=actual_gripper(0)+0.01;
+        actual_gripper(1)=actual_gripper(1)+0.01;
+
+        loop_rate.sleep();
+    }
 }
 
 void close_gripper(){
@@ -555,10 +569,25 @@ void close_gripper(){
             actual_gripper(0)=actual_gripper(0)-0.1;
             actual_gripper(1)=actual_gripper(1)-0.1;
 
-            loop_rate.sleep();
-        }
-    }
 
+    JointStateVector msg ;
+    JointStateVecor actual_pos = return_joint_states();
+    ros::Rate loop_rate(loop_frequency);
+
+    actual_gripper = return_gripper_states();
+    while(actual_gripper(0)> -0.3){
+        for(int i=0;i<6;i++){
+           msg(i)= actual_pos(i);
+        }
+        for(int i=6;i<8;i++){
+           msg(i)= actual_gripper(i-6);
+        }
+        send_des_jstate(msg);
+        actual_gripper(0)=actual_gripper(0)-0.01;
+        actual_gripper(1)=actual_gripper(1)-0.01;
+
+        loop_rate.sleep();
+    }
 }
 
 int main(int argc,char **argv){
@@ -583,6 +612,7 @@ int main(int argc,char **argv){
     float x,y,z;
     while (ros::ok())
     {   
+
         // listen_lego_detection(loop_rate);
         listen_lego_detection_turn(loop_rate);
         // cout << " x " ;
@@ -624,10 +654,8 @@ int main(int argc,char **argv){
 
 
         // loop_rate.sleep();
+
     }
     
     return 0;
 }
-
-
-
