@@ -25,21 +25,17 @@ typedef struct Quaternion {
     double w, x, y, z;
 }Quaternion;
 
-
-
 // Methods
 void send_des_jstate(const vector<double> & joint_pos);
-
 JointStateGripperVector secondOrderFilter(const JointStateGripperVector & input, const double rate, const double settling_time);
 bool check_point(PositionVector _pos,EulerVector e );
 void close_gripper();
 void open_gripper();
 GripperState return_gripper_states();
 void listen_lego_detection(ros::Rate rate);
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate);
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn);
 JointStateVector return_joint_states();
 EulerVector ToEulerAngles(Quaternion q);
-
 
 // Variables
 GripperState actual_gripper;
@@ -47,8 +43,8 @@ double loop_time = 0.;
 double loop_frequency = 1000.;
 float position;
 bool first_msg = false;
-bool real_robot = false;
-
+bool real_robot = false;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
+                         // fasle : puoi comandare anche il gripper (soft) , quindi pubblica comandi di dimensione 8
 
 // Publishers
 ros::Publisher pub_des_jstate;

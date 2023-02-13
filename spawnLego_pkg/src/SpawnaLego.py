@@ -89,7 +89,7 @@ def random_position(lego, rotation = False):
 	# se metti pi/2 sulla x sono sorti ma in piedi 
 	# con pi/2 sulla y sono storti ma di lato
 	if(rotation):
-		q = quaternion_from_euler(0, pi/2, randNum(0,2*pi))
+		q = quaternion_from_euler(0,pi/2,randNum(0,2*pi))
 	else:
 		q = quaternion_from_euler(0, 0,randNum(0,2*pi))
 
