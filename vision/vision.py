@@ -153,6 +153,11 @@ def correction(dimension,nome):
                     dimension[1] = 0.041
                 else:
                     dimension[1] = 0.065    
+        #correggo ordine di dimension
+        if(dimension[1] > dimension[0]):
+            tmp = dimension[1]
+            dimension[1] = dimension[0]
+            dimension[0] = tmp
 
     if(int(split[1][1]) != int(dimension[0]/DIM_BLOCK)):
         print("ERRORE DIM")
@@ -309,7 +314,6 @@ def receive_image():
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
     
-
     table = [[558*1.5, 278*1.5], [460*1.5, 552*1.5], [957*1.5,535*1.5], [777*1.5, 267*1.5]]
     mask = np.array(table, dtype=np.int32)
 
@@ -360,7 +364,7 @@ if __name__ == '__main__':
 
     rospy.init_node('custom_joint_pub_node')
     loop_rate = rospy.Rate(1.)
-     #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
+    #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
     #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
     #Take Zed picture
     receive_image()

@@ -147,11 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-<<<<<<< HEAD
-            //return;
-=======
             break;
->>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
         }
     }
 
@@ -190,14 +186,8 @@ void listen_lego_detection(ros::Rate rate){
             q.w = lego.pose.orientation.w;
 
             EulerVector rot  = ToEulerAngles(q); 
-<<<<<<< HEAD
-            rot << -rot[2],-rot[1],-rot[0];
-            //cout << pos << endl;
-            //cout << rot << endl;
-=======
             rot << -rot[2],0,0;
 
->>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
             if(check_point(pos)){
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
@@ -362,14 +352,6 @@ int main(int argc,char **argv){
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
         //     continue;
         // }
-<<<<<<< HEAD
-        // //open_gripper();
-        // move_to(pos_des,e,loop_rate);
-        // //close_gripper();
-
-        loop_rate.sleep();
-    //
-=======
         // open_gripper();
         // move_to(pos_des,e,loop_rate);
         // close_gripper();
@@ -379,7 +361,6 @@ int main(int argc,char **argv){
 
 
         loop_rate.sleep();
->>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
     }
     
     return 0;
