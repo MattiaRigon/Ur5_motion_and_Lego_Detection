@@ -33,7 +33,7 @@ void close_gripper();
 void open_gripper();
 GripperState return_gripper_states();
 void listen_lego_detection(ros::Rate rate);
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate);
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn);
 JointStateVector return_joint_states();
 EulerVector ToEulerAngles(Quaternion q);
 

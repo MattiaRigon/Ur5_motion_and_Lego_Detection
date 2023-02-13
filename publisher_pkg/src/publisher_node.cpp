@@ -99,7 +99,7 @@ JointStateVector return_joint_states(){
 }
 
 
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
 
     //EulerVector e ;
     //e << M_PI/2,0,0; // default braccio drittto 
@@ -135,73 +135,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
 
     ros::Rate loop_rate(loop_frequency);
 
-    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,false);
-    
-    // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
-    // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
-    // se si sceglie il secondo nearest, e cosi via finchè trova una configurazione che gli permette di non scontrarsi contro nulla
-
-    for (vector<double> conf : res){
-        if(!check_singularity_collision(conf[1],conf[2],conf[3],conf[4],conf[5],conf[6])){
-            cout << "COLLISIONE CON DELLE SINGOLARITA' "<<endl;
-            cout <<"Per andare da : "<<direct_res.pos<<endl;
-            cout << "a : "<< pos <<endl;
-
-            return;
-        }
-    }
-
-    for (vector<double> conf : res){
-
-        for(int i=1;i<7;i++){
-
-            pos_send(i-1)=conf[i];
-
-        }
-        send_des_jstate(pos_send);
-        loop_rate.sleep();
-
-    }
-
-}
-
-void turn(PositionVector pos,EulerVector e ,ros::Rate rate){
-
-    //EulerVector e ;
-    //e << M_PI/2,0,0; // default braccio drittto 
-
-    if(pos[0] == 0){
-        pos[0]= 0.001;
-    }
-    if(pos[1] == 0){
-        pos[1]= 0.001;
-    }
-
-    vector<PositionVector> intermediate;
-
-    JointStateVector actual_pos = return_joint_states();
-
-    DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
-
-    PositionVector i1 ;
-    i1 = direct_res.pos;
-    i1(2)=0.5 + 0.14;
-    intermediate.push_back(i1);
-
-    PositionVector i ;
-    i<< pos[0],pos[1],0.5+0.14;
-    intermediate.push_back(i);
-
-    double dt = 0.001;
-    double DtP = 2;
-    double DtA = 0.5;
-    JointStateGripperVector pos_send;
-    PositionVector pos_check;
-    pos_send<<0,0,0,0,0,0,0,0;
-
-    ros::Rate loop_rate(loop_frequency);
-
-    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,true);
+    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,turn);
     
     // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
     // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
@@ -270,7 +204,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
                 open_gripper();
-                move_to(pos,rot,rate);
+                move_to(pos,rot,rate,false);
                              
                 cout << endl ;
                 cout << endl ;
@@ -291,7 +225,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
 
                 open_gripper();
-                move_to(pos,rot,rate);
+                move_to(pos,rot,rate,false);
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
                 pos(2) = 0.82;
@@ -304,7 +238,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                turn(pos,turn_rot,rate);
+                move_to(pos,turn_rot,rate,true);
                 open_gripper(); 
 
             }else if(rot[1] != 0){ // di lato , due rotazioni
@@ -322,7 +256,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
 
                 open_gripper();
-                move_to(pos,rot,rate);
+                move_to(pos,rot,rate,false);
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
                 pos(2) = 0.82;
@@ -335,12 +269,12 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                turn(pos,turn_rot,rate);
+                move_to(pos,turn_rot,rate,true);
                 open_gripper();
 
                 //giro seconda volta
                 rot << M_PI/2,0,0;
-                move_to(pos,rot,rate);
+                move_to(pos,rot,rate,false);
                 close_gripper();
                 rot << M_PI/2,0,-M_PI/2;
 
@@ -350,7 +284,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
                     continue;
                 }
-                turn(pos,rot,rate);
+                move_to(pos,rot,rate,true);
                 open_gripper();
             }
         }
@@ -441,7 +375,7 @@ void listen_lego_detection(ros::Rate rate){
                 cout << pos << endl;
                 continue;
             }
-            move_to(pos,rot,rate);
+            move_to(pos,rot,rate,false);
             cout << endl ;
             cout << endl ;
             cout << endl ;

@@ -28,7 +28,8 @@ models_str = models_str [::-1]
 src_str = "src"
 src_str = src_str[::-1]
 models_path = models_path[::-1].replace(src_str, models_str, 1)[::-1]
-models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2"] 
+#models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2"] 
+models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2"] 
 cont = 0
 colorList = ['Gazebo/Indigo', 'Gazebo/Gray', 'Gazebo/Orange','Gazebo/Red', 'Gazebo/Purple', 'Gazebo/SkyBlue','Gazebo/DarkYellow', 'Gazebo/White', 'Gazebo/Green']
 
@@ -78,7 +79,7 @@ def random_position(rotation = False):
 	# se metti pi/2 sulla x sono sorti ma in piedi 
 	# con pi/2 sulla y sono storti ma di lato
 	if(rotation):
-		q = quaternion_from_euler(0, pi/2, randNum(0,2*pi))
+		q = quaternion_from_euler(0,pi/2,randNum(0,2*pi))
 	else:
 		q = quaternion_from_euler(0, 0,randNum(0,2*pi))
 
@@ -114,7 +115,7 @@ if __name__ == "__main__":
 			print(spawn_model("X1-Y2-Z2",pos=random_position()))
 			message = legoGroup("Assigment 1",list)   
 
-			#pub.publish(message)
+			pub.publish(message)
 
 		elif(scelta =='2'):
 			for i in range(0,5):
@@ -123,10 +124,11 @@ if __name__ == "__main__":
 			message = legoGroup("Assigment 2",list)   
 			#pub.publish(message)
 		elif(scelta =='3'):
-		
-			print(spawn_model("X1-Y2-Z2",pos=random_position(rotation=True)))
+			for i in range(0,5):
+				print(spawn_model(get_random_model(),pos=random_position(rotation=True)))
+				i=i+1
 			message = legoGroup("Assigment 3",list)   
-			#pub.publish(message)
+			pub.publish(message)
 
 		else :
 			print("scelta sbagliata")
