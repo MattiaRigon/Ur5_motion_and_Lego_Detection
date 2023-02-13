@@ -47,10 +47,7 @@ EulerVector ToEulerAngles(Quaternion q) {
 }
 
 
-using namespace std;
-
-
-void send_des_jstate(const JointStateVector & joint_pos)
+void send_des_jstate(const JointStateGripperVector & joint_pos)
 {
 
 
@@ -68,12 +65,12 @@ void send_des_jstate(const JointStateVector & joint_pos)
 }
 
 
-JointStateVecor return_joint_states(){
+JointStateVector return_joint_states(){
 
     ros::NodeHandle node_1;
     ros::Duration Timeout = ros::Duration(3);
 
-    JointStateVecor actual_pos ;
+    JointStateVector actual_pos ;
 
     boost::shared_ptr<const sensor_msgs::JointState_<std::allocator<void>>> msg = ros::topic::waitForMessage<sensor_msgs::JointState>("/ur5/joint_states",node_1, Timeout );
     // actual_pos[0]= msg->position[4];
@@ -93,7 +90,10 @@ JointStateVecor return_joint_states(){
 
     return actual_pos;
 }
-void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
+
+
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
+
 
     //EulerVector e ;
     //e << M_PI/2,0,0; // default braccio drittto 
@@ -105,26 +105,27 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
         pos[1]= 0.001;
     }
 
-    vector<PositionVecor> intermediate;
+    vector<PositionVector> intermediate;
 
-    JointStateVecor actual_pos = return_joint_states();
+    JointStateVector actual_pos = return_joint_states();
 
     DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
 
-    PositionVecor i1 ;
+    PositionVector i1 ;
     i1 = direct_res.pos;
     i1(2)=0.5;
     intermediate.push_back(i1);
 
-    PositionVecor i ;
-    i<< pos[0],pos[1],0.5;
+    PositionVector i ;
+    i<< pos[0],pos[1],0.5+0.14;
+
     intermediate.push_back(i);
 
     double dt = 0.001;
     double DtP = 2;
     double DtA = 0.5;
-    JointStateVector pos_send;
-    PositionVecor pos_check;
+    JointStateGripperVector pos_send;
+    PositionVector pos_check;
     pos_send<<0,0,0,0,0,0,0,0;
 
     ros::Rate loop_rate(loop_frequency);
@@ -141,7 +142,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            break;
+            return;
         }
     }
 
@@ -160,7 +161,74 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
 }
 
-void listen_lego_detection(ros::Rate rate){
+void turn(PositionVector pos,EulerVector e ,ros::Rate rate){
+
+    //EulerVector e ;
+    //e << M_PI/2,0,0; // default braccio drittto 
+
+    if(pos[0] == 0){
+        pos[0]= 0.001;
+    }
+    if(pos[1] == 0){
+        pos[1]= 0.001;
+    }
+
+    vector<PositionVector> intermediate;
+
+    JointStateVector actual_pos = return_joint_states();
+
+    DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
+
+    PositionVector i1 ;
+    i1 = direct_res.pos;
+    i1(2)=0.5 + 0.14;
+    intermediate.push_back(i1);
+
+    PositionVector i ;
+    i<< pos[0],pos[1],0.5+0.14;
+    intermediate.push_back(i);
+
+    double dt = 0.001;
+    double DtP = 2;
+    double DtA = 0.5;
+    JointStateGripperVector pos_send;
+    PositionVector pos_check;
+    pos_send<<0,0,0,0,0,0,0,0;
+
+    ros::Rate loop_rate(loop_frequency);
+
+    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,true);
+    
+    // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
+    // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
+    // se si sceglie il secondo nearest, e cosi via finchè trova una configurazione che gli permette di non scontrarsi contro nulla
+
+    for (vector<double> conf : res){
+        if(!check_singularity_collision(conf[1],conf[2],conf[3],conf[4],conf[5],conf[6])){
+            cout << "COLLISIONE CON DELLE SINGOLARITA' "<<endl;
+            cout <<"Per andare da : "<<direct_res.pos<<endl;
+            cout << "a : "<< pos <<endl;
+
+            return;
+        }
+    }
+
+    for (vector<double> conf : res){
+
+        for(int i=1;i<7;i++){
+
+            pos_send(i-1)=conf[i];
+
+        }
+        send_des_jstate(pos_send);
+        loop_rate.sleep();
+
+    }
+
+}
+
+
+void listen_lego_detection_turn(ros::Rate rate){
 
     ros::NodeHandle node_1;
     //ros::Duration Timeout = ros::Duration(1);
@@ -173,7 +241,7 @@ void listen_lego_detection(ros::Rate rate){
         for (spawnLego_pkg::legoDetection lego : vector){
 
             cout << lego.model << endl;
-            PositionVecor pos;
+            PositionVector pos;
 
             pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75+0.14);
             Quaternion q ;
@@ -182,11 +250,188 @@ void listen_lego_detection(ros::Rate rate){
             q.z = lego.pose.orientation.z;
             q.w = lego.pose.orientation.w;
 
+            EulerVector rot  = ToEulerAngles(q);
+            EulerVector turn_rot; 
+            cout << rot << endl;
+
+            if(rot[0] == 0 && rot[1] == 0){ // blocchetto dritto 
+
+                cout << "BLOCCHETTO DRITTO" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+                open_gripper();
+                move_to(pos,rot,rate);
+                             
+                cout << endl ;
+                cout << endl ;
+                cout << endl ;
+                
+            }else if(rot[0] != 0 && rot[1] == 0){ // in piedi , solamente una rotazione
+
+                cout << "BLOCCHETTO IN PIEDI" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+
+                open_gripper();
+                move_to(pos,rot,rate);
+                close_gripper();
+                turn_rot << M_PI/2,0,-M_PI/2;
+                pos(2) = 0.82;
+                pos << -0.1 , -0.3 , 0.82;
+
+                if(check_point(pos,turn_rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+
+                turn(pos,turn_rot,rate);
+                open_gripper(); 
+
+            }else if(rot[1] != 0){ // di lato , due rotazioni
+
+                cout << "BLOCCHETTO SDRAIATO" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+
+                open_gripper();
+                move_to(pos,rot,rate);
+                close_gripper();
+                turn_rot << M_PI/2,0,-M_PI/2;
+                pos(2) = 0.82;
+                pos << -0.1 , -0.3 , 0.82;
+
+                if(check_point(pos,turn_rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+
+                turn(pos,turn_rot,rate);
+                open_gripper();
+
+                //giro seconda volta
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate);
+                close_gripper();
+                rot << M_PI/2,0,-M_PI/2;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+                turn(pos,rot,rate);
+                open_gripper();
+            }
+        }
+            // rot << -rot[2],0,0;
+
+            // if(check_point(pos,rot)){
+            //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // }else{
+            //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            //     cout << pos << endl;
+            //     continue;
+            // }
+            // open_gripper();
+            // move_to(pos,rot,rate);
+            // close_gripper();
+            // //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+            // rot << M_PI/2,0,-M_PI/2;
+
+            // pos(2) = 0.82;
+            // pos << -0.1 , -0.3 , 0.82;
+            // if(check_point(pos,rot)){
+            //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // }else{
+            //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            //     continue;
+            // }
+            // turn(pos,rot,rate);
+            // open_gripper(); 
+            // // girato prima volta
+
+
+            // // //giro seconda volta
+            // // rot << M_PI/2,0,0;
+
+            // // move_to(pos,rot,rate);
+            // // close_gripper();
+            // // //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+            // // rot << M_PI/2,0,-M_PI/2;
+            // // if(check_point(pos,rot)){
+            // //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // // }else{
+            // //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            // //     continue;
+            // // }
+            // // turn(pos,rot,rate);
+            // // open_gripper();
+
+            // cout << endl ;
+            // cout << endl ;
+            // cout << endl ;
+
+
+
+
+    }else{
+        cout << "vuoto " << endl;
+    }
+
+
+}
+
+    ros::NodeHandle node_1;
+    spawnLego_pkg::legoGroup::ConstPtr msg = ros::topic::waitForMessage<spawnLego_pkg::legoGroup>("/lego_position",node_1 );
+    
+    if(msg!=0){
+        cout << "Arrivato messaggio" << endl;
+        vector<spawnLego_pkg::legoDetection> vector = msg->lego_vector ;
+        for (spawnLego_pkg::legoDetection lego : vector){
+
+            cout << lego.model << endl;
+            PositionVector pos;
+
+            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
+            Quaternion q ;
+            q.x = lego.pose.orientation.x;
+            q.y = lego.pose.orientation.y;
+            q.z = lego.pose.orientation.z;
+            q.w = lego.pose.orientation.w;
+
             EulerVector rot  = ToEulerAngles(q); 
             rot << -rot[2],0,0;
-            //cout << pos << endl;
-            //cout << rot << endl;
-            if(check_point(pos)){
+
+            if(check_point(pos,rot)){
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
                 cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
@@ -197,10 +442,7 @@ void listen_lego_detection(ros::Rate rate){
             cout << endl ;
             cout << endl ;
             cout << endl ;
-
-            
         }
-
 
     }else{
         cout << "vuoto " << endl;
@@ -208,7 +450,6 @@ void listen_lego_detection(ros::Rate rate){
 
 
 }
-
 
 
 
@@ -226,16 +467,18 @@ GripperState return_gripper_states(){
 
 
 
-bool check_point(PositionVecor _pos){
+bool check_point(PositionVector _pos,EulerVector e ){
+
 
 
     // chiede gli angoli alla inverse kinematics che tra la lista di 8 array guarda che ci sia almeno un array di angoli che 
     // rispetta le condizioni, ovvero angoli la cui applicazione non comportano che nessun joint sbatta sul soffitto , ovvero abbia z > 0
     // e che gli angoli che bisogna applicare si possano veramente 
 
-    EulerVector e(0,0,0);
-    vector<JointStateVecor> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
-    for(JointStateVecor res : inverseSolution){
+    vector<JointStateVector> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
+    for(JointStateVector res : inverseSolution){
+
+
             double th1 = res[0];
             double th2 = res[1];
             double th3 = res[2];
@@ -246,20 +489,26 @@ bool check_point(PositionVecor _pos){
             //controlla che la posizione inserita sia raggiungibile dal robot , per farlo controlla che il risultaro della inverse messo dentro la direct dia la medesima posizione 
             
             DirectResult res_d = direct_kinematics(th1,th2,th3,th4,th5,th6);
-            PositionVecor p ;
+            PositionVector p ;
             p = res_d.pos;
+
+            // cout << "direct : " << res_d.pos <<endl;
+            // cout << "position : " << _pos <<endl;
+
 
             for(int i=0;i<3;i++){
 
-                if ((float(res_d.pos[i]) - float(_pos[i])) < 0.001){
-                    continue;
-                }else{
-                    //cout << float(res_d.pos[i]) << " " << float(_pos[i]) << endl;
-                    return false;        
+                if (! (float(res_d.pos[i]) - float(_pos[i])) < 0.001){
+                //     continue;
+                // }else{
+                    break;        
+
                 }
+
+                return true;
             }
     }
-    return true;
+    return false;
 
 
 }
@@ -270,10 +519,25 @@ void open_gripper(){
     JointStateVecor actual_pos = return_joint_states();
     ros::Rate loop_rate(loop_frequency);
 
-    actual_gripper = return_gripper_states();
-    while(actual_gripper(0)< 0.3){
-        for(int i=0;i<6;i++){
-           msg(i)= actual_pos(i);
+    if(!real_robot){
+        JointStateGripperVector msg ;
+        JointStateVector actual_pos = return_joint_states();
+        ros::Rate loop_rate(loop_frequency);
+
+        actual_gripper = return_gripper_states();
+        while(actual_gripper(0)< 0.3){
+            for(int i=0;i<6;i++){
+                msg(i)= actual_pos(i);
+            }
+            for(int i=6;i<8;i++){
+                msg(i)= actual_gripper(i-6);
+            }
+            send_des_jstate(msg);
+            actual_gripper(0)=actual_gripper(0)+0.1;
+            actual_gripper(1)=actual_gripper(1)+0.1;
+
+            loop_rate.sleep();
+
         }
         for(int i=6;i<8;i++){
            msg(i)= actual_gripper(i-6);
@@ -288,6 +552,23 @@ void open_gripper(){
 
 void close_gripper(){
     
+    if(!real_robot){
+        JointStateGripperVector msg ;
+        JointStateVector actual_pos = return_joint_states();
+        ros::Rate loop_rate(loop_frequency);
+
+        actual_gripper = return_gripper_states();
+        while(actual_gripper(0)> -0.3){
+            for(int i=0;i<6;i++){
+            msg(i)= actual_pos(i);
+            }
+            for(int i=6;i<8;i++){
+            msg(i)= actual_gripper(i-6);
+            }
+            send_des_jstate(msg);
+            actual_gripper(0)=actual_gripper(0)-0.1;
+            actual_gripper(1)=actual_gripper(1)-0.1;
+
 
     JointStateVector msg ;
     JointStateVecor actual_pos = return_joint_states();
@@ -318,39 +599,62 @@ int main(int argc,char **argv){
     pub_des_jstate = node.advertise<std_msgs::Float64MultiArray>("/ur5/joint_group_pos_controller/command", 1);
     ros::Rate loop_rate(loop_frequency);
 
-    JointStateVector amp;
-    JointStateVector freq;
-    PositionVecor pos_des;
-    jointState_msg_robot.data.resize(6);
+    JointStateGripperVector amp;
+    JointStateGripperVector freq;
+    PositionVector pos_des;
+    if(real_robot){
+        jointState_msg_robot.data.resize(6);
+    }else{
+        jointState_msg_robot.data.resize(8);
+
+    }
 
     float x,y,z;
     while (ros::ok())
     {   
-        //listen_lego_detection(loop_rate);
-        cout << " x " ;
-        cin >> x;
-        cout << " y " ;
-        cin >> y;
-        y=-y;
-        cout << " z " ;
-        cin >> z;
-        z=-z;
-        pos_des << x,y,z;    
-        EulerVector e ;
-        e << M_PI/2,0,0; // default braccio drittto 
+
+        // listen_lego_detection(loop_rate);
+        listen_lego_detection_turn(loop_rate);
+        // cout << " x " ;
+        // cin >> x;
+        // cout << " y " ;
+        // cin >> y;
+        // //y=-y;
+        // // cout << " z " ;
+        // // cin >> z;
+        // z = -0.86;
+        // x = x-0.5;
+        // y= -(y-0.35);
+        // z=-z;
+        // pos_des << x,y,z;    
+        // EulerVector e ;
+        // e << M_PI/2,0,0; // default braccio drittto 
 
 
-        if(check_point(pos_des)){
-            cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-        }else{
-            cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-            continue;
-        }
-        //open_gripper();
-        move_to(pos_des,e,loop_rate);
-        //close_gripper();
+        // if(check_point(pos_des,e)){
+        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        // }else{
+        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+        //     continue;
+        // }
+        // open_gripper();
+        // move_to(pos_des,e,loop_rate);
+        // close_gripper();
+        // e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+        // pos_des(2) = 0.82;
 
-        loop_rate.sleep();
+        // if(check_point(pos_des,e)){
+        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        // }else{
+        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+        //     continue;
+        // }
+        // turn(pos_des,e,loop_rate);
+        // open_gripper();
+
+
+        // loop_rate.sleep();
+
     }
     
     return 0;

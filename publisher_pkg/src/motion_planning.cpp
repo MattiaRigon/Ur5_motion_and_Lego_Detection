@@ -42,7 +42,7 @@ EulerVector rot2eul(RotationMatrix R)
     return e;
 }
 
-bool check_angles(JointStateVecor Th)
+bool check_angles(JointStateVector Th)
 {
 
     // check for each angles if the ur5 can apply it . Checking for each angle if is inside the associate range in max_angles_value
@@ -126,7 +126,7 @@ bool check_singularity_collision(const double th1, const double th2, const doubl
 
         if (Pos_z < 0 or Pos_z > 0.745 or Pos_y > 0.25)
         {
-            cout << Pos_z << " " << Pos_y << endl;
+            //cout << Pos_z << " " << Pos_y << endl;
             cond = false;
             break;
         }
@@ -134,7 +134,7 @@ bool check_singularity_collision(const double th1, const double th2, const doubl
     return cond;
 }
 
-JointStateVecor nearest(JointStateVecor qEs, vector<JointStateVecor> configurations)
+JointStateVector nearest(JointStateVector qEs, vector<JointStateVector> configurations)
 {
 
     // trovo la conifgurazione + vicina a quella di partenza
@@ -142,9 +142,9 @@ JointStateVecor nearest(JointStateVecor qEs, vector<JointStateVecor> configurati
     double min_dist = 100000;
     int cont = 0;
     int pos = 0;
-    JointStateVecor e;
+    JointStateVector e;
     double e_norm;
-    for (JointStateVecor conf : configurations)
+    for (JointStateVector conf : configurations)
     {
 
         if (!check_angles(conf))
@@ -170,12 +170,12 @@ JointStateVecor nearest(JointStateVecor qEs, vector<JointStateVecor> configurati
         cont = cont + 1;
     }
 
-    JointStateVecor qEf = configurations[pos];
+    JointStateVector qEf = configurations[pos];
 
     return qEf;
 }
 
-vector<vector<double>> thetaConnect2Points(const double tStart, JointStateVecor qEs, JointStateVecor qEf, const double dt, const double DtP, const double DtA)
+vector<vector<double>> thetaConnect2Points(const double tStart, JointStateVector qEs, JointStateVector qEf, const double dt, const double DtP, const double DtA)
 {
 
     // Returns starting from tStart momement the trajectory to college togheter qEs e qEf
@@ -282,23 +282,22 @@ vector<vector<double>> thetaConnect2Points(const double tStart, JointStateVecor 
     return th;
 }
 
-vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs, const PositionVecor xEf, const EulerVector phiEf, vector<PositionVecor> intermediate_points, double dt)
+vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qEs, const PositionVector xEf, const EulerVector phiEf, vector<PositionVector> intermediate_points, double dt ,bool turn)
+
 {
 
     // xEs, phiEs, xEf, phiEf,points,minT,maxT,
     //  parte da qEs(joints) e deve raggiungere poszione xEf con phiEf passando per tutti gli intermediate points
-    vector<JointStateVecor> qAll;
+    vector<JointStateVector> qAll;
     qAll.push_back(qEs);
 
-    JointStateVecor qInt;
+    JointStateVector qInt;
+    JointStateVector last_q = qEs;
 
-    JointStateVecor last_q = qEs;
-    //cout << "PARTENZA : " << endl;
-    //cout << qEs << endl;
     EulerVector e(0, 0, 0);
     // cout <<"punti di passaggio "<<endl;
     int i = 0;
-    for (PositionVecor item : intermediate_points)
+    for (PositionVector item : intermediate_points)
     {
 
         qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
