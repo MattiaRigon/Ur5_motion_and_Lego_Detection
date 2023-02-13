@@ -47,6 +47,9 @@ from params import *
 
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
+
+
+
 #Resources
 
 # native reading best explanation
@@ -59,9 +62,15 @@ pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 # Objects=[(640,360),(630,350),(620,340),(650,380),(740,380)]
 Objects = []
 point_count_for_item = []
+<<<<<<< HEAD
 list = []
 DIM_BLOCK = 0.03
 class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWINFILLET","X1-Y3-Z2","X1-Y1-Z2-FILLET","X1-Y4-Z1","X1-Y4-Z2","X2-Y2-Z2","X2-Y2-Z2-FILLET"]
+=======
+list=[]
+
+def distanza(p1,p2):
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 
 
 def find_dimension(v1,v2,v3,zmax):
@@ -202,6 +211,7 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
         
         if(pos[2]>zmax):    #find z max
                 zmax = pos[2]
+<<<<<<< HEAD
         
         if(pos[2] >= 0.872 and pos[2] <= 0.93): #find the three point in case the block is relaxed on one side
             if(pos[1] > yMaxleft):
@@ -221,6 +231,25 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
 
 
     #find block center
+=======
+
+
+    b = distanza(v2,v3)
+    p = distanza(v1,v2)
+
+    if(b < p):
+        tmp = b
+        b = p
+        p = tmp
+    
+    h = zmax -0.866       
+
+    print("3 punti magici :")
+    print(v1)
+    print(v2)   
+    print(v3)
+
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
     pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
     if(v2[0]-v1[0] != 0):
         alpha =  atan((v1[1]-v2[1])/(v1[0]-v2[0])) 
@@ -280,8 +309,14 @@ def receive_pointcloud(results_data):
 
         data_zed_rotation = np.array( data * Ry ) * -1
         
+<<<<<<< HEAD
         data_base_link = np.array(data_zed_rotation.tolist()[0]) + np.array(pos_zed)
+=======
+        data_base_link =np.array(data_zed_rotation.tolist()[0]) + np.array(pos_zed)
+        #print(data_base_link)
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 
+        #data_world = data_base_link + pos_base_link
         data_world = Ry.dot(data) + pos_zed + pos_base_link
         data_world = np.array(data_world)
 
@@ -290,15 +325,26 @@ def receive_pointcloud(results_data):
         if(cont >= point_count_for_item[actual_detection]):
             print("\nIMMAGINE " + str(actual_detection+1) + " --> " + results_data["name"][actual_detection])
 
+<<<<<<< HEAD
             initial_pose = trova_posizione_lego(actual_detection,actual_lego,results_data)
 
             list.append(legoDetection(results_data["name"][actual_detection],initial_pose))
+=======
+            list.append(legoDetection("prova",initial_pose))
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
             actual_detection = actual_detection +1
             cont = 1
             actual_lego = []
         
         cont = cont +1
         actual_lego.append(data_world[0])
+<<<<<<< HEAD
+=======
+        #print(data_world[0])
+    
+    print()
+
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 
 
 def receive_image():
@@ -308,18 +354,29 @@ def receive_image():
     
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
+<<<<<<< HEAD
     
 
     table = [[558*1.5, 278*1.5], [460*1.5, 552*1.5], [957*1.5,535*1.5], [777*1.5, 267*1.5]]
     mask = np.array(table, dtype=np.int32)
+=======
+    # table = [[558*2, 278*2], [460*2, 552*2], [957*2,535*2], [777*2, 267*2]]
+    # mask = np.array(table, dtype=np.int32)
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 
-    background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
-    cv2.fillPoly(background, [mask],255)
-    mask_background = cv2.inRange(background, 1, 255)
+    #background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
+    #cv2.fillPoly(background, [mask],255)
+    #mask_background = cv2.inRange(background, 1, 255)
 
-    img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
+    #img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
+<<<<<<< HEAD
     cv2.imwrite(LAST_PHOTO_PATH, img)
+=======
+    cv2.imwrite(LAST_PHOTO_PATH, rgb)
+    riconoscimento()
+
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 
 
 def riconoscimento():

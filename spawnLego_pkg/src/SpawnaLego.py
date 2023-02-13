@@ -8,6 +8,7 @@ import rospy, rospkg, rosservice
 import sys
 import time
 import random
+import math
 import numpy as np
 
 from time import sleep
@@ -34,6 +35,8 @@ cont = 0
 colorList = ['Gazebo/Indigo', 'Gazebo/Gray', 'Gazebo/Orange','Gazebo/Red', 'Gazebo/Purple', 'Gazebo/SkyBlue','Gazebo/DarkYellow', 'Gazebo/White', 'Gazebo/Green']
 
 list = []
+
+spawned_lego = []
 
 def get_random_model():
     return random.choice(models)
@@ -66,11 +69,17 @@ def randNum(min, max):
     num = round(random.uniform(min, max), 2)
     return num
 
-def random_position(rotation = False):
+def random_position(lego, rotation = False):
+	s = lego.split("-")
 
-	x = randNum(0, 0.98)   #0.42 + 0.5 
-	y = randNum(0.35, 0.79)   #0.2 + 0.35
-	z = 0.866 
+	r = int(s[1][1])*1.5*0.01
+
+	while 1:
+		x = randNum(0.03, 0.4)   #0.42 + 0.5 
+		y = randNum(0.35, 0.74)   #0.2 + 0.35
+		if x - r >= 0 or y + r <= 0.75:
+			break
+	z = 0.9
 
 	initial_pose = Pose()
 	initial_pose.position.x = x
@@ -88,7 +97,6 @@ def random_position(rotation = False):
 	initial_pose.orientation.z = q[2]
 	initial_pose.orientation.w = q[3]
 
-
 	print(initial_pose)
 
 	return initial_pose
@@ -100,36 +108,75 @@ def changeModelColor(model_xml, color):
 	root.find('.//material/script/name').text = color
 	return ET.tostring(root, encoding='unicode')	
 
+def check_sovrapposizioni(pos, lego):
+	s = lego.split("-")
 
+	r = int(s[1][1])*1.5*0.01
+	print("\n\n" + lego + " -> y = " + str(r) + "\n\n")
+
+	if not spawned_lego: #empty list
+		spawned_lego.append(pos)
+		print("Qui può spawnare \n")
+
+		return False
+	else:
+		for p in spawned_lego:
+			if (p.position.x - pos.position.x)**2 + (p.position.y - pos.position.y)**2 <= r:
+				print("Qui c'è gia un blocchetto! \n")
+				return True 
+		spawned_lego.append(pos)
+		print("Qui può spawnare \n")
+		return False
+	
 
 if __name__ == "__main__":
-		
-		
-
 		#rospy.init_node('turtlebot3_replay1')
 		rospy.init_node("spawn")
 		color = random.choice(colorList)
 		print("Che assigment vuoi eseguire ? \n Inserire un numero tra 1 e 2 e 3 ")
 		scelta = input("Scelta : ")
 		if(scelta == '1'):	
-			print(spawn_model("X1-Y2-Z2",pos=random_position()))
+			lego = get_random_model()
+			pos=random_position(lego)
+			print(spawn_model(lego, pos))
 			message = legoGroup("Assigment 1",list)   
+<<<<<<< HEAD
 
 			pub.publish(message)
 
+=======
+			#pub.publish(message)
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 		elif(scelta =='2'):
 			for i in range(0,5):
-				print(spawn_model(get_random_model(),pos=random_position()))
-				i=i+1
+				while True:
+					lego = get_random_model()
+					pos=random_position(lego)
+					if not check_sovrapposizioni(pos, lego): 
+						print(spawn_model(lego, pos))
+						i=i+1
+						break
 			message = legoGroup("Assigment 2",list)   
 			#pub.publish(message)
 		elif(scelta =='3'):
 			for i in range(0,5):
+<<<<<<< HEAD
 				print(spawn_model(get_random_model(),pos=random_position(rotation=True)))
 				i=i+1
 			message = legoGroup("Assigment 3",list)   
 			pub.publish(message)
 
+=======
+				while True:
+					lego = get_random_model()
+					pos=random_position(lego, rotazione=True)
+					if not check_sovrapposizioni(pos, lego): 
+						print(spawn_model(lego, pos))
+						i=i+1
+						break
+			message = legoGroup("Assigment 2",list)   
+			#pub.publish(message)
+>>>>>>> 4a121cf88a48896a5f93ba7459170a9ea52371e5
 		else :
 			print("scelta sbagliata")
 
