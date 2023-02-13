@@ -11,7 +11,11 @@
 using namespace std;
 
 const double A[6] = {0,-0.425,-0.3922,0,0, 0};
+<<<<<<< HEAD
+const double D[6] = {0.1625, 0, 0, 0.1333, 0.0997, 0.0996 + 0.14};
+=======
 const double D[6] = {0.1625, 0, 0, 0.1333, 0.0997, 0.0996 +0.14};
+>>>>>>> 8111b3c94a7b08080b1a9d83a844035f14ccc9f6
 
 typedef Eigen::Matrix<double, 1, 3> PositionVecor;
 typedef Eigen::Matrix<double, 1, 3> EulerVector;
