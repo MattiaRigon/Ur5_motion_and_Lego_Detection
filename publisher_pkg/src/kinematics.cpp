@@ -86,7 +86,7 @@ DirectResult direct_kinematics(const double th1,const double th2,const double th
     TransformationMatrix T06m ;
 
     T06m =T10m*T21m*T32m*T43m*T54m*T65m;
-    PositionVecor pos(*(T06m.data() +12),*(T06m.data() +13),*(T06m.data() +14));
+    PositionVector pos(*(T06m.data() +12),*(T06m.data() +13),*(T06m.data() +14));
     RotationMatrix rotMatrix = T06m.block<3,3>(0, 0);
 
     DirectResult result(pos,rotMatrix);
@@ -96,7 +96,7 @@ DirectResult direct_kinematics(const double th1,const double th2,const double th
 }
 
 
-vector<JointStateVecor> inverse_kinematics(PositionVecor pos,RotationMatrix RotationMatrix){
+vector<JointStateVector> inverse_kinematics(PositionVector pos,RotationMatrix RotationMatrix){
 
 
     TransformationMatrix T60 ;
@@ -213,8 +213,8 @@ vector<JointStateVecor> inverse_kinematics(PositionVecor pos,RotationMatrix Rota
     Xhat43 = T43m.block<3,1>(0,0);
     double th4_8 = double(atan2(Xhat43[1], Xhat43[0]));
 
-    vector<JointStateVecor> Th;
-    JointStateVecor q;
+    vector<JointStateVector> Th;
+    JointStateVector q;
      
     q << th1_1,th2_1,th3_1,th4_1,th5_1,th6_1;
     Th.push_back(q);
