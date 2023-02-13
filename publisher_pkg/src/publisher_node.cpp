@@ -147,7 +147,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            break;
+            return;
         }
     }
 
@@ -213,7 +213,7 @@ void turn(PositionVecor pos,EulerVector e ,ros::Rate rate){
             cout <<"Per andare da : "<<direct_res.pos<<endl;
             cout << "a : "<< pos <<endl;
 
-            break;
+            return;
         }
     }
 
@@ -252,37 +252,157 @@ void listen_lego_detection_turn(ros::Rate rate){
             q.z = lego.pose.orientation.z;
             q.w = lego.pose.orientation.w;
 
-            EulerVector rot  = ToEulerAngles(q); 
-            rot << -rot[2],0,0;
+            EulerVector rot  = ToEulerAngles(q);
+            EulerVector turn_rot; 
+            cout << rot << endl;
 
-            if(check_point(pos,rot)){
-                cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-            }else{
-                cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-                cout << pos << endl;
-                continue;
+            if(rot[0] == 0 && rot[1] == 0){ // blocchetto dritto 
+
+                cout << "BLOCCHETTO DRITTO" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+                open_gripper();
+                move_to(pos,rot,rate);
+                             
+                cout << endl ;
+                cout << endl ;
+                cout << endl ;
+                
+            }else if(rot[0] != 0 && rot[1] == 0){ // in piedi , solamente una rotazione
+
+                cout << "BLOCCHETTO IN PIEDI" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+
+                open_gripper();
+                move_to(pos,rot,rate);
+                close_gripper();
+                turn_rot << M_PI/2,0,-M_PI/2;
+                pos(2) = 0.82;
+                pos << -0.1 , -0.3 , 0.82;
+
+                if(check_point(pos,turn_rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+
+                turn(pos,turn_rot,rate);
+                open_gripper(); 
+
+            }else if(rot[1] != 0){ // di lato , due rotazioni
+
+                cout << "BLOCCHETTO SDRAIATO" <<endl;
+
+                rot << -rot[2],0,0;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    cout << pos << endl;
+                    continue;
+                }
+
+                open_gripper();
+                move_to(pos,rot,rate);
+                close_gripper();
+                turn_rot << M_PI/2,0,-M_PI/2;
+                pos(2) = 0.82;
+                pos << -0.1 , -0.3 , 0.82;
+
+                if(check_point(pos,turn_rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+
+                turn(pos,turn_rot,rate);
+                open_gripper();
+
+                //giro seconda volta
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate);
+                close_gripper();
+                rot << M_PI/2,0,-M_PI/2;
+
+                if(check_point(pos,rot)){
+                    cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+                }else{
+                    cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                    continue;
+                }
+                turn(pos,rot,rate);
+                open_gripper();
             }
-            open_gripper();
-            move_to(pos,rot,rate);
-            close_gripper();
-            //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
-            rot << M_PI/2,0,-M_PI/2;
-
-            pos(2) = 0.82;
-            pos << 0.01 , -0.3 , 0.82;
-            if(check_point(pos,rot)){
-                cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
-            }else{
-                cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
-                continue;
-            }
-            turn(pos,rot,rate);
-            open_gripper();
-            cout << endl ;
-            cout << endl ;
-            cout << endl ;
-
         }
+            // rot << -rot[2],0,0;
+
+            // if(check_point(pos,rot)){
+            //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // }else{
+            //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            //     cout << pos << endl;
+            //     continue;
+            // }
+            // open_gripper();
+            // move_to(pos,rot,rate);
+            // close_gripper();
+            // //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+            // rot << M_PI/2,0,-M_PI/2;
+
+            // pos(2) = 0.82;
+            // pos << -0.1 , -0.3 , 0.82;
+            // if(check_point(pos,rot)){
+            //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // }else{
+            //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            //     continue;
+            // }
+            // turn(pos,rot,rate);
+            // open_gripper(); 
+            // // girato prima volta
+
+
+            // // //giro seconda volta
+            // // rot << M_PI/2,0,0;
+
+            // // move_to(pos,rot,rate);
+            // // close_gripper();
+            // // //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+            // // rot << M_PI/2,0,-M_PI/2;
+            // // if(check_point(pos,rot)){
+            // //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            // // }else{
+            // //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+            // //     continue;
+            // // }
+            // // turn(pos,rot,rate);
+            // // open_gripper();
+
+            // cout << endl ;
+            // cout << endl ;
+            // cout << endl ;
+
+
 
     }else{
         cout << "vuoto " << endl;
@@ -372,16 +492,22 @@ bool check_point(PositionVecor _pos,EulerVector e ){
             PositionVecor p ;
             p = res_d.pos;
 
+            // cout << "direct : " << res_d.pos <<endl;
+            // cout << "position : " << _pos <<endl;
+
+
             for(int i=0;i<3;i++){
 
-                if ((float(res_d.pos[i]) - float(_pos[i])) < 0.001){
-                    continue;
-                }else{
-                    return false;        
+                if (! (float(res_d.pos[i]) - float(_pos[i])) < 0.001){
+                //     continue;
+                // }else{
+                    break;        
                 }
+
+                return true;
             }
     }
-    return true;
+    return false;
 
 }
 
@@ -457,8 +583,8 @@ int main(int argc,char **argv){
     float x,y,z;
     while (ros::ok())
     {   
-        listen_lego_detection(loop_rate);
-        //listen_lego_detection_turn(loop_rate);
+        // listen_lego_detection(loop_rate);
+        listen_lego_detection_turn(loop_rate);
         // cout << " x " ;
         // cin >> x;
         // cout << " y " ;
