@@ -47,7 +47,7 @@ EulerVector ToEulerAngles(Quaternion q) {
 }
 
 
-void send_des_jstate(const JointStateVector & joint_pos)
+void send_des_jstate(const JointStateGripperVector & joint_pos)
 {
 
     if(real_robot){
@@ -70,12 +70,12 @@ void send_des_jstate(const JointStateVector & joint_pos)
 }
 
 
-JointStateVecor return_joint_states(){
+JointStateVector return_joint_states(){
 
     ros::NodeHandle node_1;
     ros::Duration Timeout = ros::Duration(3);
 
-    JointStateVecor actual_pos ;
+    JointStateVector actual_pos ;
 
     boost::shared_ptr<const sensor_msgs::JointState_<std::allocator<void>>> msg = ros::topic::waitForMessage<sensor_msgs::JointState>("/ur5/joint_states",node_1, Timeout );
 
@@ -99,7 +99,7 @@ JointStateVecor return_joint_states(){
 }
 
 
-void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate){
 
     //EulerVector e ;
     //e << M_PI/2,0,0; // default braccio drittto 
@@ -111,26 +111,26 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
         pos[1]= 0.001;
     }
 
-    vector<PositionVecor> intermediate;
+    vector<PositionVector> intermediate;
 
-    JointStateVecor actual_pos = return_joint_states();
+    JointStateVector actual_pos = return_joint_states();
 
     DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
 
-    PositionVecor i1 ;
+    PositionVector i1 ;
     i1 = direct_res.pos;
     i1(2)=0.5 + 0.14;
     intermediate.push_back(i1);
 
-    PositionVecor i ;
+    PositionVector i ;
     i<< pos[0],pos[1],0.5+0.14;
     intermediate.push_back(i);
 
     double dt = 0.001;
     double DtP = 2;
     double DtA = 0.5;
-    JointStateVector pos_send;
-    PositionVecor pos_check;
+    JointStateGripperVector pos_send;
+    PositionVector pos_check;
     pos_send<<0,0,0,0,0,0,0,0;
 
     ros::Rate loop_rate(loop_frequency);
@@ -165,7 +165,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
 }
 
-void turn(PositionVecor pos,EulerVector e ,ros::Rate rate){
+void turn(PositionVector pos,EulerVector e ,ros::Rate rate){
 
     //EulerVector e ;
     //e << M_PI/2,0,0; // default braccio drittto 
@@ -177,26 +177,26 @@ void turn(PositionVecor pos,EulerVector e ,ros::Rate rate){
         pos[1]= 0.001;
     }
 
-    vector<PositionVecor> intermediate;
+    vector<PositionVector> intermediate;
 
-    JointStateVecor actual_pos = return_joint_states();
+    JointStateVector actual_pos = return_joint_states();
 
     DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
 
-    PositionVecor i1 ;
+    PositionVector i1 ;
     i1 = direct_res.pos;
     i1(2)=0.5 + 0.14;
     intermediate.push_back(i1);
 
-    PositionVecor i ;
+    PositionVector i ;
     i<< pos[0],pos[1],0.5+0.14;
     intermediate.push_back(i);
 
     double dt = 0.001;
     double DtP = 2;
     double DtA = 0.5;
-    JointStateVector pos_send;
-    PositionVecor pos_check;
+    JointStateGripperVector pos_send;
+    PositionVector pos_check;
     pos_send<<0,0,0,0,0,0,0,0;
 
     ros::Rate loop_rate(loop_frequency);
@@ -243,7 +243,7 @@ void listen_lego_detection_turn(ros::Rate rate){
         for (spawnLego_pkg::legoDetection lego : vector){
 
             cout << lego.model << endl;
-            PositionVecor pos;
+            PositionVector pos;
 
             pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
             Quaternion q ;
@@ -422,7 +422,7 @@ void listen_lego_detection(ros::Rate rate){
         for (spawnLego_pkg::legoDetection lego : vector){
 
             cout << lego.model << endl;
-            PositionVecor pos;
+            PositionVector pos;
 
             pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
             Quaternion q ;
@@ -469,15 +469,15 @@ GripperState return_gripper_states(){
 
 
 
-bool check_point(PositionVecor _pos,EulerVector e ){
+bool check_point(PositionVector _pos,EulerVector e ){
 
 
     // chiede gli angoli alla inverse kinematics che tra la lista di 8 array guarda che ci sia almeno un array di angoli che 
     // rispetta le condizioni, ovvero angoli la cui applicazione non comportano che nessun joint sbatta sul soffitto , ovvero abbia z > 0
     // e che gli angoli che bisogna applicare si possano veramente 
 
-    vector<JointStateVecor> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
-    for(JointStateVecor res : inverseSolution){
+    vector<JointStateVector> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
+    for(JointStateVector res : inverseSolution){
 
             double th1 = res[0];
             double th2 = res[1];
@@ -489,7 +489,7 @@ bool check_point(PositionVecor _pos,EulerVector e ){
             //controlla che la posizione inserita sia raggiungibile dal robot , per farlo controlla che il risultaro della inverse messo dentro la direct dia la medesima posizione 
             
             DirectResult res_d = direct_kinematics(th1,th2,th3,th4,th5,th6);
-            PositionVecor p ;
+            PositionVector p ;
             p = res_d.pos;
 
             // cout << "direct : " << res_d.pos <<endl;
@@ -514,8 +514,8 @@ bool check_point(PositionVecor _pos,EulerVector e ){
 void open_gripper(){
 
     if(!real_robot){
-        JointStateVector msg ;
-        JointStateVecor actual_pos = return_joint_states();
+        JointStateGripperVector msg ;
+        JointStateVector actual_pos = return_joint_states();
         ros::Rate loop_rate(loop_frequency);
 
         actual_gripper = return_gripper_states();
@@ -539,8 +539,8 @@ void open_gripper(){
 void close_gripper(){
     
     if(!real_robot){
-        JointStateVector msg ;
-        JointStateVecor actual_pos = return_joint_states();
+        JointStateGripperVector msg ;
+        JointStateVector actual_pos = return_joint_states();
         ros::Rate loop_rate(loop_frequency);
 
         actual_gripper = return_gripper_states();
@@ -570,9 +570,9 @@ int main(int argc,char **argv){
     pub_des_jstate = node.advertise<std_msgs::Float64MultiArray>("/ur5/joint_group_pos_controller/command", 1);
     ros::Rate loop_rate(loop_frequency);
 
-    JointStateVector amp;
-    JointStateVector freq;
-    PositionVecor pos_des;
+    JointStateGripperVector amp;
+    JointStateGripperVector freq;
+    PositionVector pos_des;
     if(real_robot){
         jointState_msg_robot.data.resize(6);
     }else{

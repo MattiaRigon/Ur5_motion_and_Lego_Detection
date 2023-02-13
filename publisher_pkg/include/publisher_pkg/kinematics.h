@@ -13,19 +13,19 @@ using namespace std;
 const double A[6] = {0,-0.425,-0.3922,0,0, 0};
 const double D[6] = {0.1625, 0, 0, 0.1333, 0.0997, 0.0996 +0.14};
 
-typedef Eigen::Matrix<double, 1, 3> PositionVecor;
+typedef Eigen::Matrix<double, 1, 3> PositionVector;
 typedef Eigen::Matrix<double, 1, 3> EulerVector;
 typedef Eigen::Matrix4d TransformationMatrix;
 typedef Eigen::Matrix3d RotationMatrix;
-typedef Eigen::Matrix<double, 6, 1> JointStateVecor;
+typedef Eigen::Matrix<double, 6, 1> JointStateVector;
 
 
 typedef struct DirectResult{
 
-    PositionVecor pos;
+    PositionVector pos;
     RotationMatrix rotMatrix;
 
-    DirectResult(PositionVecor _pos,RotationMatrix _rotMatrix){
+    DirectResult(PositionVector _pos,RotationMatrix _rotMatrix){
         pos = _pos;
         rotMatrix = _rotMatrix; 
     }
@@ -40,6 +40,6 @@ TransformationMatrix T54f(const double th5);
 TransformationMatrix T65f(const double th6);
 
 DirectResult direct_kinematics(const double th1,const double th2,const double th3,const double th4,const double th5,const double th6);
-vector<JointStateVecor> inverse_kinematics(PositionVecor pos,RotationMatrix RotationMatrix);
+vector<JointStateVector> inverse_kinematics(PositionVector pos,RotationMatrix RotationMatrix);
 
 #endif
