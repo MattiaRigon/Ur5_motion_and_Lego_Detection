@@ -135,7 +135,7 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
     ros::Rate loop_rate(loop_frequency);
 
-    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001);
+    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,false);
     
     // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
     // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
@@ -165,6 +165,132 @@ void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate){
 
 }
 
+void turn(PositionVecor pos,EulerVector e ,ros::Rate rate){
+
+    //EulerVector e ;
+    //e << M_PI/2,0,0; // default braccio drittto 
+
+    if(pos[0] == 0){
+        pos[0]= 0.001;
+    }
+    if(pos[1] == 0){
+        pos[1]= 0.001;
+    }
+
+    vector<PositionVecor> intermediate;
+
+    JointStateVecor actual_pos = return_joint_states();
+
+    DirectResult direct_res = direct_kinematics(actual_pos(0),actual_pos(1),actual_pos(2),actual_pos(3),actual_pos(4),actual_pos(5));
+
+    PositionVecor i1 ;
+    i1 = direct_res.pos;
+    i1(2)=0.5 + 0.14;
+    intermediate.push_back(i1);
+
+    PositionVecor i ;
+    i<< pos[0],pos[1],0.5+0.14;
+    intermediate.push_back(i);
+
+    double dt = 0.001;
+    double DtP = 2;
+    double DtA = 0.5;
+    JointStateVector pos_send;
+    PositionVecor pos_check;
+    pos_send<<0,0,0,0,0,0,0,0;
+
+    ros::Rate loop_rate(loop_frequency);
+
+    auto res = p2pMotionPlanIntermediatePoints(actual_pos,pos,e,intermediate,0.001,true);
+    
+    // fix se va a addosso a qualcosa deve andare a richiamare p2pMotionPlan però cambaindo configurazione finale
+    // cambaire modo di fare p2pMotionPlan , far si che calcola il prossimo q da raggiungere , prova ad andarci , guarda se si scontrerebbe addosso a qualcosa
+    // se si sceglie il secondo nearest, e cosi via finchè trova una configurazione che gli permette di non scontrarsi contro nulla
+
+    for (vector<double> conf : res){
+        if(!check_singularity_collision(conf[1],conf[2],conf[3],conf[4],conf[5],conf[6])){
+            cout << "COLLISIONE CON DELLE SINGOLARITA' "<<endl;
+            cout <<"Per andare da : "<<direct_res.pos<<endl;
+            cout << "a : "<< pos <<endl;
+
+            break;
+        }
+    }
+
+    for (vector<double> conf : res){
+
+        for(int i=1;i<7;i++){
+
+            pos_send(i-1)=conf[i];
+
+        }
+        send_des_jstate(pos_send);
+        loop_rate.sleep();
+
+    }
+
+}
+
+
+void listen_lego_detection_turn(ros::Rate rate){
+
+    ros::NodeHandle node_1;
+    spawnLego_pkg::legoGroup::ConstPtr msg = ros::topic::waitForMessage<spawnLego_pkg::legoGroup>("/lego_position",node_1 );
+    
+    if(msg!=0){
+        cout << "Arrivato messaggio" << endl;
+        vector<spawnLego_pkg::legoDetection> vector = msg->lego_vector ;
+        for (spawnLego_pkg::legoDetection lego : vector){
+
+            cout << lego.model << endl;
+            PositionVecor pos;
+
+            pos << lego.pose.position.x-0.5,-(lego.pose.position.y-0.35),-(lego.pose.position.z-1.75);
+            Quaternion q ;
+            q.x = lego.pose.orientation.x;
+            q.y = lego.pose.orientation.y;
+            q.z = lego.pose.orientation.z;
+            q.w = lego.pose.orientation.w;
+
+            EulerVector rot  = ToEulerAngles(q); 
+            rot << -rot[2],0,0;
+
+            if(check_point(pos,rot)){
+                cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            }else{
+                cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                cout << pos << endl;
+                continue;
+            }
+            open_gripper();
+            move_to(pos,rot,rate);
+            close_gripper();
+            //e << M_PI/2,0,-M_PI/2; // default braccio drittto 
+            rot << M_PI/2,0,-M_PI/2;
+
+            pos(2) = 0.82;
+            pos << 0.01 , -0.3 , 0.82;
+            if(check_point(pos,rot)){
+                cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+            }else{
+                cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+                continue;
+            }
+            turn(pos,rot,rate);
+            open_gripper();
+            cout << endl ;
+            cout << endl ;
+            cout << endl ;
+
+        }
+
+    }else{
+        cout << "vuoto " << endl;
+    }
+
+
+}
+
 void listen_lego_detection(ros::Rate rate){
 
     ros::NodeHandle node_1;
@@ -188,7 +314,7 @@ void listen_lego_detection(ros::Rate rate){
             EulerVector rot  = ToEulerAngles(q); 
             rot << -rot[2],0,0;
 
-            if(check_point(pos)){
+            if(check_point(pos,rot)){
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
                 cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
@@ -223,14 +349,13 @@ GripperState return_gripper_states(){
 
 
 
-bool check_point(PositionVecor _pos){
+bool check_point(PositionVecor _pos,EulerVector e ){
 
 
     // chiede gli angoli alla inverse kinematics che tra la lista di 8 array guarda che ci sia almeno un array di angoli che 
     // rispetta le condizioni, ovvero angoli la cui applicazione non comportano che nessun joint sbatta sul soffitto , ovvero abbia z > 0
     // e che gli angoli che bisogna applicare si possano veramente 
 
-    EulerVector e(0,0,0);
     vector<JointStateVecor> inverseSolution = inverse_kinematics(_pos,eul2rot(e));
     for(JointStateVecor res : inverseSolution){
 
@@ -276,8 +401,8 @@ void open_gripper(){
                 msg(i)= actual_gripper(i-6);
             }
             send_des_jstate(msg);
-            actual_gripper(0)=actual_gripper(0)+0.01;
-            actual_gripper(1)=actual_gripper(1)+0.01;
+            actual_gripper(0)=actual_gripper(0)+0.1;
+            actual_gripper(1)=actual_gripper(1)+0.1;
 
             loop_rate.sleep();
         }
@@ -301,8 +426,8 @@ void close_gripper(){
             msg(i)= actual_gripper(i-6);
             }
             send_des_jstate(msg);
-            actual_gripper(0)=actual_gripper(0)-0.01;
-            actual_gripper(1)=actual_gripper(1)-0.01;
+            actual_gripper(0)=actual_gripper(0)-0.1;
+            actual_gripper(1)=actual_gripper(1)-0.1;
 
             loop_rate.sleep();
         }
@@ -333,20 +458,24 @@ int main(int argc,char **argv){
     while (ros::ok())
     {   
         listen_lego_detection(loop_rate);
+        //listen_lego_detection_turn(loop_rate);
         // cout << " x " ;
         // cin >> x;
         // cout << " y " ;
         // cin >> y;
-        // y=-y;
-        // cout << " z " ;
-        // cin >> z;
+        // //y=-y;
+        // // cout << " z " ;
+        // // cin >> z;
+        // z = -0.86;
+        // x = x-0.5;
+        // y= -(y-0.35);
         // z=-z;
         // pos_des << x,y,z;    
         // EulerVector e ;
         // e << M_PI/2,0,0; // default braccio drittto 
 
 
-        // if(check_point(pos_des)){
+        // if(check_point(pos_des,e)){
         //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
         // }else{
         //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
@@ -356,11 +485,19 @@ int main(int argc,char **argv){
         // move_to(pos_des,e,loop_rate);
         // close_gripper();
         // e << M_PI/2,0,-M_PI/2; // default braccio drittto 
-        // move_to(pos_des,e,loop_rate);
+        // pos_des(2) = 0.82;
+
+        // if(check_point(pos_des,e)){
+        //     cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
+        // }else{
+        //     cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
+        //     continue;
+        // }
+        // turn(pos_des,e,loop_rate);
         // open_gripper();
 
 
-        loop_rate.sleep();
+        // loop_rate.sleep();
     }
     
     return 0;
