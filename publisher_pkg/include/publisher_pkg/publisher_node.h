@@ -28,7 +28,7 @@ typedef struct Quaternion {
 // Methods
 void send_des_jstate(const vector<double> & joint_pos);
 JointStateVector secondOrderFilter(const JointStateVector & input, const double rate, const double settling_time);
-bool check_point(PositionVecor _pos);
+bool check_point(PositionVecor _pos,EulerVector e );
 void close_gripper();
 void open_gripper();
 GripperState return_gripper_states();

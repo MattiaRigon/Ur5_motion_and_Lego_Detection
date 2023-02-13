@@ -272,7 +272,7 @@ vector<vector<double>> thetaConnect2Points(const double tStart, JointStateVecor 
     return th;
 }
 
-vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs, const PositionVecor xEf, const EulerVector phiEf, vector<PositionVecor> intermediate_points, double dt)
+vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs, const PositionVecor xEf, const EulerVector phiEf, vector<PositionVecor> intermediate_points, double dt ,bool turn)
 {
 
     // xEs, phiEs, xEf, phiEf,points,minT,maxT,
@@ -287,13 +287,15 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVecor qEs
     int i = 0;
     for (PositionVecor item : intermediate_points)
     {
-        // if(i == intermediate_points.size() -1){
-        //     qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
+        if(i == intermediate_points.size() -1 && turn){
+            item(2) = 0.6;
+            qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
+            cout << "intermedio storto"<< endl;
 
-        // }else{
-        //     qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
-        // }
-        qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
+        }else{
+            qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
+        }
+        //qInt = nearest(last_q, inverse_kinematics(item, eul2rot(e)));
 
 
         if(qInt[0] > M_PI/2){
