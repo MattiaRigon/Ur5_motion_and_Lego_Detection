@@ -112,7 +112,7 @@ bool check_singularity_collision(const double th1, const double th2, const doubl
 
         if (Pos_z < 0 or Pos_z > 0.745 + 0.15 or Pos_y > 0.25)
         {
-            cout << Pos_z << " " << Pos_y << endl;
+            //cout << Pos_z << " " << Pos_y << endl;
             cond = false;
             break;
         }
