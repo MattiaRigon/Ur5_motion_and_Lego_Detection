@@ -17,11 +17,17 @@ from math import pi
 from std_msgs.msg import String
 from spawnLego_pkg.msg import legoDetection
 from spawnLego_pkg.msg import legoGroup
+import os
 
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 
-models_path = "/home/mattia/ros_ws/src/progetto_robotica/models"
+models_path = os.path.dirname(os.path.abspath(__file__))
+models_str = "models"
+models_str = models_str [::-1]
+src_str = "src"
+src_str = src_str[::-1]
+models_path = models_path[::-1].replace(src_str, models_str, 1)[::-1]
 models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2"] 
 cont = 0
 colorList = ['Gazebo/Indigo', 'Gazebo/Gray', 'Gazebo/Orange','Gazebo/Red', 'Gazebo/Purple', 'Gazebo/SkyBlue','Gazebo/DarkYellow', 'Gazebo/White', 'Gazebo/Green']
@@ -61,9 +67,9 @@ def randNum(min, max):
 
 def random_position(rotation = False):
 
-	x = randNum(0, 0.98)   #0.42 + 0.5 
-	y = randNum(0.35, 0.79)   #0.2 + 0.35
-	z = 0.866 
+	x = randNum(0.02, 0.4)   #0.42 + 0.5 
+	y = randNum(0.35, 0.75)   #0.2 + 0.35
+	z = 0.868
 
 	initial_pose = Pose()
 	initial_pose.position.x = x
@@ -105,7 +111,7 @@ if __name__ == "__main__":
 		print("Che assigment vuoi eseguire ? \n Inserire un numero tra 1 e 2 e 3 ")
 		scelta = input("Scelta : ")
 		if(scelta == '1'):	
-			print(spawn_model("X1-Y2-Z2",pos=random_position()))
+			print(spawn_model("X1-Y4-Z2",pos=random_position()))
 			message = legoGroup("Assigment 1",list)   
 
 			#pub.publish(message)
@@ -118,10 +124,9 @@ if __name__ == "__main__":
 			#pub.publish(message)
 		elif(scelta =='3'):
 		
-			print(spawn_model("X1-Y2-Z2",pos=random_position(rotation=True)))
+			print(spawn_model("X2-Y2-Z2",pos=random_position(rotation=False)))
 			message = legoGroup("Assigment 3",list)   
 			#pub.publish(message)
-
 		else :
 			print("scelta sbagliata")
 
