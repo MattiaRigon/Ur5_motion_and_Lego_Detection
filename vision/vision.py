@@ -31,7 +31,7 @@ from std_msgs.msg import String
 from spawnLego_pkg.msg import legoDetection
 from spawnLego_pkg.msg import legoGroup
 from math import pi
-from math import sin 
+from math import sin,atan2
 #import ogl_viewer.viewer as gl
 #import pyzed.sl as sl
 #import pcl
@@ -45,7 +45,7 @@ from math import sqrt
 
 from params import *
 
-pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
+#pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 #Resources
 
@@ -62,6 +62,16 @@ point_count_for_item = []
 list = []
 DIM_BLOCK = 0.03
 class_list = ["X1-Y1-Z2","X1-Y2-Z1","X1-Y2-Z2","X1-Y1-Z2-CHAMFER","X1-Y1-Z2-TWINFILLET","X1-Y3-Z2","X1-Y1-Z2-FILLET","X1-Y4-Z1","X1-Y4-Z2","X2-Y2-Z2","X2-Y2-Z2-FILLET"]
+
+def isUp(h):
+    ret = True
+    if(h < 0.04):
+        ret = False
+    return ret
+
+
+def distanza(p1,p2):
+    return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
 
 
 def find_dimension(v1,v2,v3,zmax):
@@ -82,7 +92,8 @@ def find_dimension(v1,v2,v3,zmax):
 
 
 def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
-    if(dimension[2] < 0.04):
+
+    if(not(isUp(dimension[2]))):
         print("Posizione --> sono appoggiato in un fianco")
         print(distanza(v1,v1_1))
         print(distanza(v3,v3_1))
@@ -114,13 +125,6 @@ def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
                 print("ho il pisello a destra in basso")
             else:
                 print("ho il pisello a destra in alto")
-
-
-def isUp(h):
-    ret = True
-    if(h < 0.04):
-        ret = False
-    return ret
 
 
 def correction(dimension,nome):
@@ -172,10 +176,6 @@ def correction(dimension,nome):
     return retName,dimension
 
 
-def distanza(p1,p2):
-    return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
-
-
 def trova_posizione_lego(actual_detection,posizioni,results_data):  
 
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
@@ -216,13 +216,13 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
                 yMaxright = pos[1]
                 v3_1 = np.copy(pos)
 
-    orientation = find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
     dimension = find_dimension(v1_1,v2,v3_1,zmax)
+    find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
     print("PRIMA" + str(dimension))
     nome,dimension = correction(dimension, results_data["name"][actual_detection])
     print("DOPO" + str(dimension))
     print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
-    print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
+    #print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
 
 
     #find block center
@@ -306,37 +306,80 @@ def receive_pointcloud(results_data):
         actual_lego.append(data_world[0])
 
 
-def receive_image():
+def drawAxis(img, p_, q_, color, scale):
+    p = list(p_)
+    q = list(q_)
 
-    msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
-    #msg = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
-    
-    rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
+    ## [visualization1]
+    angle = atan2(p[1] - q[1], p[0] - q[0]) # angle in radians
+    hypotenuse = sqrt((p[1] - q[1]) * (p[1] - q[1]) + (p[0] - q[0]) * (p[0] - q[0]))
 
-    
-    table = [[558*1.5, 278*1.5], [460*1.5, 552*1.5], [957*1.5,535*1.5], [777*1.5, 267*1.5]]
-    mask = np.array(table, dtype=np.int32)
+    # Here we lengthen the arrow by a factor of scale
+    q[0] = p[0] - scale * hypotenuse * cos(angle)
+    q[1] = p[1] - scale * hypotenuse * sin(angle)
+    cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), color, 3, cv2.LINE_AA)
 
-    background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
-    cv2.fillPoly(background, [mask],255)
-    mask_background = cv2.inRange(background, 1, 255)
+    # create the arrow hooks
+    p[0] = q[0] + 9 * cos(angle + pi / 4)
+    p[1] = q[1] + 9 * sin(angle + pi / 4)
+    cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), color, 3, cv2.LINE_AA)
 
-    img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
-    
-    cv2.imwrite(LAST_PHOTO_PATH, img)
+    p[0] = q[0] + 9 * cos(angle - pi / 4)
+    p[1] = q[1] + 9 * sin(angle - pi / 4)
+    cv2.line(img, (int(p[0]), int(p[1])), (int(q[0]), int(q[1])), color, 3, cv2.LINE_AA)
+    ## [visualization1]
+
+
+def getOrientation(pts, img):
+    ## [pca]
+    # Construct a buffer used by the pca analysis
+    sz = len(pts)
+    data_pts = np.empty((sz, 2), dtype=np.float64)
+    for i in range(data_pts.shape[0]):
+        data_pts[i,0] = pts[i,0,0]
+        data_pts[i,1] = pts[i,0,1]
+
+    # Perform PCA analysis
+    mean = np.empty((0))
+    mean, eigenvectors, eigenvalues = cv2.PCACompute2(data_pts, mean)
+
+    # Store the center of the object
+    cntr = (int(mean[0,0]), int(mean[0,1]))
+    ## [pca]
+
+    ## [visualization]
+    # Draw the principal components
+    cv2.circle(img, cntr, 3, (255, 0, 255), 2)
+    p1 = (cntr[0] + 0.02 * eigenvectors[0,0] * eigenvalues[0,0], cntr[1] + 0.02 * eigenvectors[0,1] * eigenvalues[0,0])
+    p2 = (cntr[0] - 0.02 * eigenvectors[1,0] * eigenvalues[1,0], cntr[1] - 0.02 * eigenvectors[1,1] * eigenvalues[1,0])
+    drawAxis(img, cntr, p1, (255, 255, 0), 1)
+    drawAxis(img, cntr, p2, (0, 0, 255), 5)
+
+    angle = atan2(eigenvectors[0,1], eigenvectors[0,0]) # orientation in radians
+    ## [visualization]
+
+    # Label with the rotation angle
+    #label = "  Rotation Angle: " + str(-int(np.rad2deg(angle)) - 90) + " degrees"
+    #textbox = cv.rectangle(img, (cntr[0], cntr[1]-25), (cntr[0] + 250, cntr[1] + 10), (255,255,255), -1)
+    #cv.putText(img, label, (cntr[0], cntr[1]), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv.LINE_AA)
+
+    return angle
 
 
 def riconoscimento():
     model = torch.hub.load(YOLO_PATH, 'custom', path=BEST_PATH, source='local')  # local repo
     
-    im1 = cv2.imread(LAST_PHOTO_PATH)[..., ::-1]
-    results = model([im1], size=640) # batch of images
-
+    img = cv2.imread(LAST_PHOTO_PATH)[..., ::-1]
+    
+    results = model([img], size=640) # batch of images
+    
     # Results
     results.print()  
-    results.save() 
+    #results.save() 
     results.render()
+    #results.show()
     
+
     results_data = results.pandas().xyxy[0]  # im1 predictions (pandas)
     print(results_data)
     for k in range(0,results_data.shape[0]):
@@ -347,31 +390,95 @@ def riconoscimento():
         results_data.loc[k,"xmin"] -= 10
         results_data.loc[k,"xmax"] += 10
 
-        cont = 0
-        if(results_data.confidence[k]<0.5):
-            continue
-        for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
-            for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):
-                tupla=(i,j)
-                Objects.append(tupla)
-                cont = cont +1 
-        point_count_for_item.append(cont)
+        ymin = int(results_data.ymin[k])
+        ymax = int(results_data.ymax[k])
+        xmin = int(results_data.xmin[k])
+        xmax = int(results_data.xmax[k])
 
-    receive_pointcloud(results_data)
+        img1 = img[ymin : ymax , xmin : xmax]
+        cv2.imwrite("pp.jpg",img1)
+        img1 = cv2.imread("pp.jpg")
+        # caricamento dell'immagine da utilizzare
+        gray = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+ 
+        # Convert image to binary
+        _, bw = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        
+        # Find all the contours in the thresholded image
+        contours, _ = cv2.findContours(bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+        
+        for i, c in enumerate(contours):
+        
+            # Calculate the area of each contour
+            area = cv2.contourArea(c)
+            
+            if((ymax-ymin)*(xmax-xmin)-area<1000):
+                continue
+            # Ignore contours that are too small or too large
+            # if area < 3700 or 100000 < area:
+            #     continue
+            
+            # Draw each contour only for visualisation purposes
+            cv2.drawContours(img1, contours, i, (0, 0, 255), 2)
+            #getOrientation(c, img1)
+            
+            cv2.imwrite("pp.jpg",img1)
+        
+    exit(0)  
+        
+    #     cont = 0
+    #     if(results_data.confidence[k]<0.5):
+    #         continue
+    #     for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
+    #         for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):
+    #             tupla=(i,j)
+    #             Objects.append(tupla)
+    #             cont = cont +1 
+    #     point_count_for_item.append(cont)
+
+    # receive_pointcloud(results_data)
+
+
+def receive_image(msg):
+
+    #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
+    rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
+
+    #Creo la mashera
+    table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]
+    mask = np.array(table, dtype=np.int32)
+
+    background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
+    cv2.fillPoly(background, [mask],255)
+    mask_background = cv2.inRange(background, 1, 255)
+
+    img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
+    
+    cv2.imwrite(LAST_PHOTO_PATH, img)
+    
+    print("IMMAGINE ACQUISITA")
+
+    
 
 
 if __name__ == '__main__':
 
     rospy.init_node('custom_joint_pub_node')
+    msg = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
     loop_rate = rospy.Rate(1.)
+    while True:
+        loop_rate.sleep()
+        break
+        pass
+    riconoscimento()
     #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
     #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
     #Take Zed picture
-    receive_image()
+    #receive_image(msg)
     #recognition models
-    riconoscimento()
+    #riconoscimento()
 
-    message = legoGroup("Assigment 1",list)   
+    #message = legoGroup("Assigment 1",list)   
 
-    pub.publish(message)
+    #pub.publish(message)
 
