@@ -169,7 +169,7 @@ if __name__ == "__main__":
 			for i in range(0,5):
 				while True:
 					lego = get_random_model()
-					pos=random_position(lego, rotazione=True)
+					pos=random_position(lego, rotattion=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1
