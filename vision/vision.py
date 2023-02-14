@@ -441,7 +441,7 @@ def riconoscimento():
 
 def receive_image(msg):
 
-    msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
+    #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
     #Creo la mashera
@@ -469,8 +469,8 @@ if __name__ == '__main__':
     while True:
         loop_rate.sleep()
         break
+        pass
     riconoscimento()
-    #riconoscimento()
     #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
     #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
     #Take Zed picture
@@ -479,5 +479,7 @@ if __name__ == '__main__':
     #riconoscimento()
 
     #message = legoGroup("Assigment 1",list)   
+
+    #pub.publish(message)
 
     #pub.publish(message)

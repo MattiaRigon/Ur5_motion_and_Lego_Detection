@@ -168,8 +168,8 @@ if __name__ == "__main__":
 		elif(scelta =='3'):
 			for i in range(0,1):
 				while True:
-					lego = "X1-Y2-Z2";#get_random_model()
-					pos=random_position(lego, rotation=True)
+					lego = get_random_model()
+					pos=random_position(lego, rotattion=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1
