@@ -89,7 +89,7 @@ def random_position(lego, rotation = False):
 	# se metti pi/2 sulla x sono sorti ma in piedi 
 	# con pi/2 sulla y sono storti ma di lato
 	if(rotation):
-		q = quaternion_from_euler(0,pi/2,randNum(0,2*pi))
+		q = quaternion_from_euler(pi/2,0,randNum(0,2*pi))
 	else:
 		q = quaternion_from_euler(0, 0,randNum(0,2*pi))
 
@@ -166,16 +166,16 @@ if __name__ == "__main__":
 			message = legoGroup("Assigment 2",list)   
 			#pub.publish(message)
 		elif(scelta =='3'):
-			for i in range(0,5):
+			for i in range(0,1):
 				while True:
-					lego = get_random_model()
-					pos=random_position(lego, rotazione=True)
+					lego = "X1-Y2-Z2";#get_random_model()
+					pos=random_position(lego, rotation=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1
 						break
-			message = legoGroup("Assigment 2",list)   
-			#pub.publish(message)
+			message = legoGroup("Assigment 3",list)   
+			pub.publish(message)
 		else :
 			print("scelta sbagliata")
 

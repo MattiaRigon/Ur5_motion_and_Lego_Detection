@@ -214,7 +214,12 @@ void listen_lego_detection_turn(ros::Rate rate){
             }else if(rot[0] != 0 && rot[1] == 0){ // in piedi , solamente una rotazione
 
                 cout << "BLOCCHETTO IN PIEDI" <<endl;
+                cout << "altezza : " <<lego.model[4] << endl;
 
+                int altezza = int(lego.model[4]) -82; // se è in piedi è la y che da la sua altezza
+                cout << "altezza : " <<altezza << endl;
+                altezza = (altezza - 1 ) * UNIT_BLOCCHETTO;
+                pos(2) = pos(2) - altezza;
                 rot << -rot[2],0,0;
 
                 if(check_point(pos,rot)){

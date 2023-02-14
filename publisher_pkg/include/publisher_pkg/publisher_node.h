@@ -18,6 +18,8 @@
 #include <numeric>
 #include <thread>
 
+#define UNIT_BLOCCHETTO 0.03
+
 //types
 typedef Eigen::Matrix<double, 8, 1> JointStateGripperVector;
 typedef Eigen::Matrix<double, 2, 1> GripperState;
