@@ -19,7 +19,7 @@
 #include <thread>
 
 //types
-typedef Eigen::Matrix<double, 8, 1> JointStateVector;
+typedef Eigen::Matrix<double, 8, 1> JointStateGripperVector;
 typedef Eigen::Matrix<double, 2, 1> GripperState;
 typedef struct Quaternion {
     double w, x, y, z;
@@ -27,14 +27,14 @@ typedef struct Quaternion {
 
 // Methods
 void send_des_jstate(const vector<double> & joint_pos);
-JointStateVector secondOrderFilter(const JointStateVector & input, const double rate, const double settling_time);
-bool check_point(PositionVecor _pos,EulerVector e );
+JointStateGripperVector secondOrderFilter(const JointStateGripperVector & input, const double rate, const double settling_time);
+bool check_point(PositionVector _pos,EulerVector e );
 void close_gripper();
 void open_gripper();
 GripperState return_gripper_states();
 void listen_lego_detection(ros::Rate rate);
-void move_to(PositionVecor pos,EulerVector e ,ros::Rate rate);
-JointStateVecor return_joint_states();
+void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn);
+JointStateVector return_joint_states();
 EulerVector ToEulerAngles(Quaternion q);
 
 // Variables
