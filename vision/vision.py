@@ -45,7 +45,7 @@ from math import sqrt
 
 from params import *
 
-#pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
+pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 #Resources
 
@@ -181,20 +181,18 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
     dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
     v1 = [0,0]   #left point of block
-    v1_1 = [0,0] #leftmost point of block 
     v2 = [0,0]   #lowest point of blocks
     v3 = [0,0]   #right point of block
-    v3_1 = [0,0] #rightmost point of block
+
 
     yleft = 0
-    yMaxleft = 0
     yright = 100000
-    yMaxright = 100000
     xmin = 100000
-    zmax = 0
 
+    zmax = 0
+        
     for pos in posizioni:
-        if(pos[2] > 0.8661 and pos[2] < 0.872):  #find the three point of blocks
+        if(pos[2] > 0.875):  #find the three point of blocks
             if(pos[1] > yleft):
                 yleft = pos[1]
                 v1 = np.copy(pos)
@@ -204,24 +202,18 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
             if(pos[0] < xmin):
                 xmin = pos[0]
                 v2 = np.copy(pos)
-        
+
         if(pos[2]>zmax):    #find z max
                 zmax = pos[2]
-        
-        if(pos[2] >= 0.872 and pos[2] <= 0.93): #find the three point in case the block is relaxed on one side
-            if(pos[1] > yMaxleft):
-                yMaxleft = pos[1]
-                v1_1 = np.copy(pos)
-            if(pos[1] < yMaxright):
-                yMaxright = pos[1]
-                v3_1 = np.copy(pos)
+    
 
-    dimension = find_dimension(v1_1,v2,v3_1,zmax)
-    find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
-    print("PRIMA" + str(dimension))
-    nome,dimension = correction(dimension, results_data["name"][actual_detection])
-    print("DOPO" + str(dimension))
-    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+
+    #dimension = find_dimension(v1,v2,v3,zmax)
+    #find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    #print("PRIMA" + str(dimension))
+    #nome,dimension = correction(dimension, results_data["name"][actual_detection])
+    #print("DOPO" + str(dimension))
+    #print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
     #print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
 
 
@@ -309,7 +301,8 @@ def receive_pointcloud(results_data):
 def find_vector(pts):
     v1 = [0,0]   #left point of block
     v2 = [0,0]   #lowest point of blocks
-    v3 = [0,0]   #right point of block
+    v3 = [0,0]   #right point of block11328     0.54708     0.88907] [    0.11781     0.48582     0.88211]
+
 
     xmin = 100000
     xmax = 0
@@ -406,32 +399,34 @@ def riconoscimento():
 
             l = [np.array(m[0]) for m in c] 
             #print(l)
-            v1,v2,v3 = find_vector(l)
+            #v1,v2,v3 = find_vector(l)
 
-            vertici = [v1,v2,v3]
-            print(vertici)
+            #vertici = [v1,v2,v3]
+            #print(vertici)
 
             cv2.imwrite("pp.jpg",img1) 
             
             
         
-    #     cont = 0
-    #     if(results_data.confidence[k]<0.5):
-    #         continue
-    #     for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
-    #         for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):
-    #             tupla=(i,j)
-    #             Objects.append(tupla)
-    #             cont = cont +1 
-    #     point_count_for_item.append(cont)
+        cont = 0
+        if(results_data.confidence[k]<0.5):
+            continue
+        for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
+            for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):
+                tupla=(i,j)
+                Objects.append(tupla)
+                cont = cont +1 
+        point_count_for_item.append(cont)
 
-    # receive_pointcloud(results_data)
+    receive_pointcloud(results_data)
 
 
 def receive_image(msg):
 
     #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
+
+
 
     #Creo la mashera
     table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]
@@ -448,22 +443,16 @@ def receive_image(msg):
 
 if __name__ == '__main__':
 
-    # rospy.init_node('custom_joint_pub_node')
-    # msg = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
-    # loop_rate = rospy.Rate(1.)
-    # while True:
-    #     loop_rate.sleep()
-    #     break
-    #     pass
+    rospy.init_node('custom_joint_pub_node')
+    msg = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
+    loop_rate = rospy.Rate(1.)
+    while True:
+        loop_rate.sleep()
+        break
+        pass
     riconoscimento()
-    #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
-    #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
-    #Take Zed picture
-    #receive_image(msg)
-    #recognition models
-    #riconoscimento()
 
-    #message = legoGroup("Assigment 1",list)   
+    message = legoGroup("Assigment 1",list)   
 
-    #pub.publish(message)
+    pub.publish(message)
 
