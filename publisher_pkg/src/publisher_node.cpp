@@ -385,11 +385,7 @@ void listen_lego_detection(ros::Rate rate){
             EulerVector rot  = ToEulerAngles(q); 
             rot << -rot[2],0,0;
 
-<<<<<<< HEAD
-            if(check_point(pos)){
-=======
             if(check_point(pos,rot)){
->>>>>>> 756ff67847395b0309758c8b65618729c1c1768f
                 cout <<" POSIZIONE RAGGIUNGIBILE " <<endl;
             }else{
                 cout <<" POSIZIONE NON RAGGIUNGIBILE "<<endl;
@@ -589,11 +585,7 @@ int main(int argc,char **argv){
         // open_gripper();
 
 
-<<<<<<< HEAD
-        loop_rate.sleep();
-=======
         // loop_rate.sleep();
->>>>>>> 756ff67847395b0309758c8b65618729c1c1768f
     }
     
     return 0;

@@ -32,11 +32,6 @@ from spawnLego_pkg.msg import legoDetection
 from spawnLego_pkg.msg import legoGroup
 from math import pi
 from math import sin,atan2
-#import ogl_viewer.viewer as gl
-#import pyzed.sl as sl
-#import pcl
-#import pcl.pcl_visualization
-
 import matplotlib.pyplot as plt
 import math
 from math import atan
@@ -45,7 +40,7 @@ from math import sqrt
 
 from params import *
 
-pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
+#pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 #Resources
 
@@ -181,16 +176,24 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
     dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
     v1 = [0,0]   #left point of block
+    v1_1 = [0,0] #leftmost point of block 
     v2 = [0,0]   #lowest point of blocks
     v3 = [0,0]   #right point of block
-
+    v3_1 = [0,0] #rightmost point of block
+    v4 = [0,0]
 
     yleft = 0
+    yMaxleft = 0
     yright = 100000
+    yMaxright = 100000
     xmin = 100000
-
+    xmax = 0
     zmax = 0
-        
+
+    for pos in posizioni:
+        if(pos[2]>zmax):    #find z max
+                zmax = pos[2]
+    
     for pos in posizioni:
         if(pos[2] > 0.875):  #find the three point of blocks
             if(pos[1] > yleft):
@@ -202,19 +205,29 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
             if(pos[0] < xmin):
                 xmin = pos[0]
                 v2 = np.copy(pos)
-
-        if(pos[2]>zmax):    #find z max
-                zmax = pos[2]
+            if(pos[0] > xmax):
+                xmax = pos[0]
+                v4 = np.copy(pos)
+            
+        if(pos[2] > 0.8661): #find the three point in case the block is relaxed on one side
+            if(pos[1] > yMaxleft):
+                yMaxleft = pos[1]
+                v1_1 = np.copy(pos)
+            if(pos[1] < yMaxright):
+                yMaxright = pos[1]
+                v3_1 = np.copy(pos)
     
 
+    print(v1,v3,v2,v4)
+    print(v1_1,v3_1)
 
-    #dimension = find_dimension(v1,v2,v3,zmax)
-    #find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
-    #print("PRIMA" + str(dimension))
-    #nome,dimension = correction(dimension, results_data["name"][actual_detection])
-    #print("DOPO" + str(dimension))
-    #print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
-    #print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
+
+    dimension = find_dimension(v1,v2,v3,zmax)
+    find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    print("PRIMA" + str(dimension))
+    nome,dimension = correction(dimension, results_data["name"][actual_detection])
+    print("DOPO" + str(dimension))
+    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
 
 
     #find block center
@@ -246,6 +259,8 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     initial_pose.orientation.y = q[1]
     initial_pose.orientation.z = q[2]
     initial_pose.orientation.w = q[3]
+
+    print(initial_pose.orientation)
 
     return initial_pose
 
@@ -426,8 +441,6 @@ def receive_image(msg):
     #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
-
-
     #Creo la mashera
     table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]
     mask = np.array(table, dtype=np.int32)
@@ -439,10 +452,6 @@ def receive_image(msg):
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
     cv2.imwrite(LAST_PHOTO_PATH, img)
-    
-    #print("IMMAGINE ACQUISITA")
-
-
 
 
 if __name__ == '__main__':
@@ -455,9 +464,14 @@ if __name__ == '__main__':
         break
         pass
     riconoscimento()
+    #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
+    #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
+    #Take Zed picture
+    #receive_image(msg)
+    #recognition models
+    #riconoscimento()
 
-    message = legoGroup("Assigment 1",list)   
-
-    pub.publish(message)
+    #message = legoGroup("Assigment 1",list)   
 
     #pub.publish(message)
+
