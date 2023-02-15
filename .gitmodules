@@ -1,0 +1,3 @@
+[submodule "locosimUpdate"]
+	path = locosim
+	url = https://github.com/mfocchi/locosim
