@@ -40,7 +40,7 @@ from math import sqrt
 
 from params import *
 
-#pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
+pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 #Resources
 
@@ -88,6 +88,8 @@ def find_dimension(v1,v2,v3,zmax):
 
 def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
 
+    rot = [0,0,0]
+
     if(not(isUp(dimension[2]))):
         print("Posizione --> sono appoggiato in un fianco")
         print(distanza(v1,v1_1))
@@ -102,11 +104,12 @@ def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
                 print("ho il pisello a destra in basso")
             else:
                 print("ho il pisello a destra in alto")
+        rot[1] = pi/2
     # elif(dimension[2] >= 0.04 and dimension[2] < 0.045):
     #     print("sono un Z1 in piedi")
     # elif(dimension[2] >= 0.06 and dimension[2] < 0.07):
     #     print("sono un Z2 in piedi")
-    elif(dimension[2] >= 0.07):
+    elif(dimension[2] >= 0.065):
         print("sono un Y" + str(int(dimension[2]/0.035)+1) + " in piedi")
         print(distanza(v1,v1_1))
         print(distanza(v3,v3_1))
@@ -120,6 +123,24 @@ def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
                 print("ho il pisello a destra in basso")
             else:
                 print("ho il pisello a destra in alto")
+        rot[0] = pi/2
+    
+    #find block center
+    pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
+    if(v2[0]-v1[0] != 0):
+        alpha =  atan((v1[1]-v2[1])/(v1[0]-v2[0])) 
+    else:
+        alpha=0
+
+    d12 = distanza(v1,v2)
+    d23 = distanza(v2,v3)
+    
+    if(d12 > d23):
+        alpha = alpha + pi/2
+    
+    rot[2] = alpha
+
+    return pos,rot
 
 
 def correction(dimension,nome):
@@ -223,27 +244,14 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
 
 
     dimension = find_dimension(v1,v2,v3,zmax)
-    find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
-    print("PRIMA" + str(dimension))
-    nome,dimension = correction(dimension, results_data["name"][actual_detection])
-    print("DOPO" + str(dimension))
-    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+    pos,rot = find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    # print("PRIMA" + str(dimension))
+    # nome,dimension = correction(dimension, results_data["name"][actual_detection])
+    # print("DOPO" + str(dimension))
+    # print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
 
 
-    #find block center
-    pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
-    if(v2[0]-v1[0] != 0):
-        alpha =  atan((v1[1]-v2[1])/(v1[0]-v2[0])) 
-    else:
-        alpha=0
-
-    d12 = distanza(v1,v2)
-    d23 = distanza(v2,v3)
     
-    if(d12 > d23):
-        alpha = alpha + pi/2
-    
-    rot = [0,0,alpha]
 
     print("pos : " + str(pos))
     print("rot : " + str(rot))
@@ -253,7 +261,7 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     initial_pose.position.y = pos[1]
     initial_pose.position.z = 0.89              #0.89
 
-    q = quaternion_from_euler(0, 0, alpha)
+    q = quaternion_from_euler(rot[0], rot[1], rot[2])
 
     initial_pose.orientation.x = q[0]
     initial_pose.orientation.y = q[1]
@@ -471,7 +479,7 @@ if __name__ == '__main__':
     #recognition models
     #riconoscimento()
 
-    #message = legoGroup("Assigment 1",list)   
+    message = legoGroup("Assigment 1",list)   
 
-    #pub.publish(message)
+    pub.publish(message)
 
