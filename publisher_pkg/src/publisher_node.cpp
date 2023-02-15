@@ -192,8 +192,14 @@ void listen_lego_detection_turn(ros::Rate rate){
             cout << rot << endl;
 
             if(rot[0] == 0 && rot[1] == 0){ // blocchetto dritto 
-
+                //z1 3.8
+                //z2 5.8
                 cout << "BLOCCHETTO DRITTO" <<endl;
+                int altezza = int(lego.model[7]) - 48; // se è in piedi è la z che da la sua altezza
+                cout << "altezza : " <<altezza << endl;
+                altezza = altezza * 0.02;  // o unit blocchetto bisogna vedere
+
+                pos(2) = pos(2) - altezza;
 
                 rot << -rot[2],0,0;
 
@@ -214,7 +220,12 @@ void listen_lego_detection_turn(ros::Rate rate){
             }else if(rot[0] != 0 && rot[1] == 0){ // in piedi , solamente una rotazione
 
                 cout << "BLOCCHETTO IN PIEDI" <<endl;
+                cout << "altezza : " <<lego.model[4] << endl;
 
+                int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
+                cout << "altezza : " <<altezza << endl;
+                altezza = (altezza - 1 ) * UNIT_BLOCCHETTO;
+                pos(2) = pos(2) - altezza;
                 rot << -rot[2],0,0;
 
                 if(check_point(pos,rot)){
@@ -245,6 +256,11 @@ void listen_lego_detection_turn(ros::Rate rate){
             }else if(rot[1] != 0){ // di lato , due rotazioni
 
                 cout << "BLOCCHETTO SDRAIATO" <<endl;
+
+                int altezza = int(lego.model[1]) -48; // se è in piedi è la y che da la sua altezza
+                cout << "altezza : " <<altezza << endl;
+                altezza = (altezza - 1 ) * UNIT_BLOCCHETTO;
+                pos(2) = pos(2) - altezza;
 
                 rot << -rot[2],0,0;
 
@@ -448,7 +464,13 @@ bool check_point(PositionVector _pos,EulerVector e ){
 
 void open_gripper(){
 
-    if(!real_robot){
+    if(real_robot){
+        ros::NodeHandle node_gripper;
+        // ros::ServiceClient client_gripper = node_gripper.serviceClient<beginner_tutorials::AddTwoInts>("add_two_ints"); 
+        // client_gripper.call(centimetri);
+
+    }else{
+
         JointStateGripperVector msg ;
         JointStateVector actual_pos = return_joint_states();
         ros::Rate loop_rate(loop_frequency);
@@ -473,7 +495,12 @@ void open_gripper(){
 
 void close_gripper(){
     
-    if(!real_robot){
+    if(real_robot){
+        ros::NodeHandle node_gripper2;
+        // ros::ServiceClient client_gripper2 = node_gripper2.serviceClient<beginner_tutorials::AddTwoInts>("add_two_ints"); 
+        // client_gripper.call(0);
+
+    }else{
         JointStateGripperVector msg ;
         JointStateVector actual_pos = return_joint_states();
         ros::Rate loop_rate(loop_frequency);

@@ -439,6 +439,10 @@ def receive_image(msg):
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
     cv2.imwrite(LAST_PHOTO_PATH, img)
+    
+    #print("IMMAGINE ACQUISITA")
+
+
 
 
 if __name__ == '__main__':
@@ -456,3 +460,4 @@ if __name__ == '__main__':
 
     pub.publish(message)
 
+    #pub.publish(message)
