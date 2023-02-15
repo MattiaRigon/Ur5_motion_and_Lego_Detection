@@ -155,7 +155,6 @@ if __name__ == "__main__":
 						if lego not in models_spawned:   #non possono esserci due lego della stessa classe
 							break
 					
-
 					pos=random_position(lego)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
