@@ -29,6 +29,7 @@ models_str = models_str [::-1]
 src_str = "src"
 src_str = src_str[::-1]
 models_path = models_path[::-1].replace(src_str, models_str, 1)[::-1]
+
 models = ["X1-Y1-Z2", "X1-Y2-Z1", "X1-Y2-Z2-CHAMFER", "X1-Y2-Z2-TWINFILLET", "X1-Y2-Z2", "X1-Y3-Z2", "X1-Y4-Z1", "X1-Y4-Z2", "X2-Y2-Z2-FILLET", "X2-Y2-Z2", "X1-Y3-Z2-FILLET"] 
 cont = 0
 colorList = ['Gazebo/Indigo', 'Gazebo/Gray', 'Gazebo/Orange','Gazebo/Red', 'Gazebo/Purple', 'Gazebo/SkyBlue','Gazebo/DarkYellow', 'Gazebo/White', 'Gazebo/Green']
@@ -169,7 +170,7 @@ if __name__ == "__main__":
 			for i in range(0,1):
 				while True:
 					lego = get_random_model()
-					pos=random_position(lego, rotattion=True)
+					pos=random_position(lego, rotation=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1

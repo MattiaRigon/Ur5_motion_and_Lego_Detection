@@ -456,7 +456,7 @@ def receive_image(msg):
     
     cv2.imwrite(LAST_PHOTO_PATH, img)
     
-    print("IMMAGINE ACQUISITA")
+    #print("IMMAGINE ACQUISITA")
 
     
 
