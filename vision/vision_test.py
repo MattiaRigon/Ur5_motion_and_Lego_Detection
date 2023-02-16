@@ -32,11 +32,6 @@ from spawnLego_pkg.msg import legoDetection
 from spawnLego_pkg.msg import legoGroup
 from math import pi
 from math import sin,atan2
-#import ogl_viewer.viewer as gl
-#import pyzed.sl as sl
-#import pcl
-#import pcl.pcl_visualization
-
 import matplotlib.pyplot as plt
 import math
 from math import atan
@@ -93,6 +88,8 @@ def find_dimension(v1,v2,v3,zmax):
 
 def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
 
+    rot = [0,0,0]
+
     if(not(isUp(dimension[2]))):
         print("Posizione --> sono appoggiato in un fianco")
         print(distanza(v1,v1_1))
@@ -107,11 +104,12 @@ def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
                 print("ho il pisello a destra in basso")
             else:
                 print("ho il pisello a destra in alto")
+        rot[1] = pi/2
     # elif(dimension[2] >= 0.04 and dimension[2] < 0.045):
     #     print("sono un Z1 in piedi")
     # elif(dimension[2] >= 0.06 and dimension[2] < 0.07):
     #     print("sono un Z2 in piedi")
-    elif(dimension[2] >= 0.07):
+    elif(dimension[2] >= 0.065):
         print("sono un Y" + str(int(dimension[2]/0.035)+1) + " in piedi")
         print(distanza(v1,v1_1))
         print(distanza(v3,v3_1))
@@ -125,6 +123,24 @@ def find_orientation(dimension,v1,v1_1,v2,v3,v3_1):
                 print("ho il pisello a destra in basso")
             else:
                 print("ho il pisello a destra in alto")
+        rot[0] = pi/2
+    
+    #find block center
+    pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
+    if(v2[0]-v1[0] != 0):
+        alpha =  atan((v1[1]-v2[1])/(v1[0]-v2[0])) 
+    else:
+        alpha=0
+
+    d12 = distanza(v1,v2)
+    d23 = distanza(v2,v3)
+    
+    if(d12 > d23):
+        alpha = alpha + pi/2
+    
+    rot[2] = alpha
+
+    return pos,rot
 
 
 def correction(dimension,nome):
@@ -181,16 +197,24 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
     dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
     v1 = [0,0]   #left point of block
+    v1_1 = [0,0] #leftmost point of block 
     v2 = [0,0]   #lowest point of blocks
     v3 = [0,0]   #right point of block
-
+    v3_1 = [0,0] #rightmost point of block
+    v4 = [0,0]
 
     yleft = 0
+    yMaxleft = 0
     yright = 100000
+    yMaxright = 100000
     xmin = 100000
-
+    xmax = 0
     zmax = 0
-        
+
+    for pos in posizioni:
+        if(pos[2]>zmax):    #find z max
+                zmax = pos[2]
+    
     for pos in posizioni:
         if(pos[2] > 0.875):  #find the three point of blocks
             if(pos[1] > yleft):
@@ -202,35 +226,32 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
             if(pos[0] < xmin):
                 xmin = pos[0]
                 v2 = np.copy(pos)
-
-        if(pos[2]>zmax):    #find z max
-                zmax = pos[2]
+            if(pos[0] > xmax):
+                xmax = pos[0]
+                v4 = np.copy(pos)
+            
+        if(pos[2] > 0.8661): #find the three point in case the block is relaxed on one side
+            if(pos[1] > yMaxleft):
+                yMaxleft = pos[1]
+                v1_1 = np.copy(pos)
+            if(pos[1] < yMaxright):
+                yMaxright = pos[1]
+                v3_1 = np.copy(pos)
     
 
-
-    #dimension = find_dimension(v1,v2,v3,zmax)
-    #find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
-    #print("PRIMA" + str(dimension))
-    #nome,dimension = correction(dimension, results_data["name"][actual_detection])
-    #print("DOPO" + str(dimension))
-    #print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
-    #print("Oggetto di dimension:\nLato lungo--> " + str(dimension[0]) + "\nLato corto--> " + str(dimension[1]) + "\nAltezza--> " + str(dimension[2]))
+    print(v1,v3,v2,v4)
+    print(v1_1,v3_1)
 
 
-    #find block center
-    pos = [(v1[0]+v3[0])/2,(v1[1]+v3[1])/2]
-    if(v2[0]-v1[0] != 0):
-        alpha =  atan((v1[1]-v2[1])/(v1[0]-v2[0])) 
-    else:
-        alpha=0
+    dimension = find_dimension(v1,v2,v3,zmax)
+    pos,rot = find_orientation(dimension,v1,v1_1,v2,v3,v3_1)
+    # print("PRIMA" + str(dimension))
+    # nome,dimension = correction(dimension, results_data["name"][actual_detection])
+    # print("DOPO" + str(dimension))
+    # print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
 
-    d12 = distanza(v1,v2)
-    d23 = distanza(v2,v3)
+
     
-    if(d12 > d23):
-        alpha = alpha + pi/2
-    
-    rot = [0,0,alpha]
 
     print("pos : " + str(pos))
     print("rot : " + str(rot))
@@ -240,12 +261,14 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
     initial_pose.position.y = pos[1]
     initial_pose.position.z = 0.89              #0.89
 
-    q = quaternion_from_euler(0, 0, alpha)
+    q = quaternion_from_euler(rot[0], rot[1], rot[2])
 
     initial_pose.orientation.x = q[0]
     initial_pose.orientation.y = q[1]
     initial_pose.orientation.z = q[2]
     initial_pose.orientation.w = q[3]
+
+    print(initial_pose.orientation)
 
     return initial_pose
 
@@ -426,8 +449,6 @@ def receive_image(msg):
     #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
-
-
     #Creo la mashera
     table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]
     mask = np.array(table, dtype=np.int32)
@@ -439,10 +460,6 @@ def receive_image(msg):
     img = cv2.bitwise_and(rgb, rgb, mask=mask_background)
     
     cv2.imwrite(LAST_PHOTO_PATH, img)
-    
-    #print("IMMAGINE ACQUISITA")
-
-
 
 
 if __name__ == '__main__':
@@ -455,9 +472,14 @@ if __name__ == '__main__':
         break
         pass
     riconoscimento()
+    #sub_pointcloud = rospy.Subscriber("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2, callback = receive_pointcloud, queue_size=1)
+    #sub_image = rospy.Subscriber("/ur5/zed_node/left_raw/image_raw_color", Image, callback = receive_image, queue_size=1)
+    #Take Zed picture
+    #receive_image(msg)
+    #recognition models
+    #riconoscimento()
 
     message = legoGroup("Assigment 1",list)   
 
     pub.publish(message)
 
-    #pub.publish(message)

@@ -387,6 +387,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
     return false;
 
 }
+
 /**
  * @brief Open the gripper of the robot, in the real robot it use the service call to move_gripper, in the simulation we public directly on the topic
  *        the angles that we want to reach with the fingers of the gripper
@@ -545,6 +546,7 @@ int main(int argc,char **argv){
 
 
         loop_rate.sleep();
+
     }
     
     return 0;
