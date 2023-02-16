@@ -18,7 +18,7 @@
 #include <numeric>
 #include <thread>
 
-#define UNIT_BLOCCHETTO 0.04
+float UNIT_BLOCCHETTO = 0.0125;
 
 //types
 typedef Eigen::Matrix<double, 8, 1> JointStateGripperVector;
@@ -45,8 +45,10 @@ double loop_time = 0.;
 double loop_frequency = 1000.;
 float position;
 bool first_msg = false;
-bool real_robot = false;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
+bool real_robot = true;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
                          // fasle : puoi comandare anche il gripper (soft) , quindi pubblica comandi di dimensione 8
+bool soft_gripper = true ;
+
 
 // Publishers
 ros::Publisher pub_des_jstate;

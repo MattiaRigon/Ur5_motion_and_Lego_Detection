@@ -4,7 +4,7 @@ project(publisher_pkg)
 # add_dependencies(spawnLego_pkg ${catkin_EXPORTED_TARGETS})
 
 ## Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp std_msgs sensor_msgs control_msgs spawnLego_pkg)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs sensor_msgs control_msgs spawnLego_pkg ros_impedance_controller)
 find_package(Eigen3 3.3 REQUIRED)
 
 
@@ -20,6 +20,7 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
 
 
 add_executable(publisher_node src/publisher_node.cpp src/motion_planning.cpp src/kinematics.cpp)
+
 #add_library(publisher_pkg src/kinematics.cpp src/motion_planning.cpp src/publisher_node.cpp)
 target_link_libraries(publisher_node ${catkin_LIBRARIES} ${catkin_INCLUDE_DIRS})
 #target_link_libraries(publisher_node src/publisher_node.cpp)
