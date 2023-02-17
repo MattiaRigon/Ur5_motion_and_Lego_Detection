@@ -23,6 +23,8 @@ using namespace std;
 
 // this implementation assumes normalized quaternion
 // converts to Euler angles in 3-2-1 sequence
+
+
 EulerVector ToEulerAngles(Quaternion q) {
     EulerVector angles;
 

@@ -8,9 +8,9 @@
         <pose>0 0 0.029775e-02 0 0 0</pose>
         <mass>14.626943e-6</mass>
         <inertia>
-          <ixx>100.1e-10</ixx>
-          <ixy>0.00044e-10</ixy>
-          <ixz>-0.0027e-10</ixz>
+          <ixx>0</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
           <iyy>58.5e-10</iyy>
           <iyz>-0.00236e-10</iyz>
           <izz>79.66e-10</izz>
