@@ -1,3 +1,15 @@
+/**
+ * @file kinematics.cpp
+ * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
+ * @brief In this file are implemented all the functions that allows to pass from the joint space to the position and orientation space,
+ *        and vice versa. 
+ * @version 0.1
+ * @date 2023-02-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <iostream>
 #include "publisher_pkg/kinematics.h" 
 #include <eigen3/Eigen/Core>
@@ -151,8 +163,8 @@ DirectResult direct_kinematics(const double th1,const double th2,const double th
 /**
  * @brief Transform from the operational space, which is specified in terms of position and orientation of the end-effector , to the joint angles space
  * 
- * @param pos 
- * @param RotationMatrix 
+ * @param pos position you want to bring into the joint space ( associated with the rotation )
+ * @param RotationMatrix orientation we want to bring into the joint space ( associated with the position )
  * @return ** vector<JointStateVector> 
  */
 

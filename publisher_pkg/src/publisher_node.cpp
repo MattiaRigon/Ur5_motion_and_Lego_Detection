@@ -1,3 +1,15 @@
+/**
+ * @file publisher_node.cpp
+ * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
+ * @brief This file is where it recive the position and orientation (of the lego) , and it publish on the right topic in order to 
+ *        reach the reach the desidered position
+ *        IMPORTANT : set properly the value of the real_robot variable in publisher_node.h
+ * @version 0.1
+ * @date 2023-02-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <sensor_msgs/JointState.h>
@@ -26,7 +38,7 @@ using namespace std;
 /**
  * @brief Convert from Quaternion to Euler Angles,this implementation assumes normalized quaternion
  * 
- * @param q 
+ * @param q Quaternion
  * @return ** EulerVector 
  */
 EulerVector ToEulerAngles(Quaternion q) {
@@ -55,7 +67,7 @@ EulerVector ToEulerAngles(Quaternion q) {
 /**
  * @brief posts on the topic the vector joint_pos , which contains the value of the angles of all joints must reach
  * 
- * @param joint_pos 
+ * @param joint_pos vecort that conatins the values of each joint angle position that you're going to publish
  * @return ** void 
  */
 void send_des_jstate(const JointStateGripperVector & joint_pos)
@@ -184,7 +196,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
  * @brief Listen to the /lego_position topic if messages arrives from the vision node , for each lego detected it send the robot to the lego position
  *        knowing which type of lego is , it can know which move it has to do, if it has to turn or not .
  * 
- * @param rate 
+ * @param rate ros rate
  * @return ** void 
  */
 void listen_lego_detection_turn(ros::Rate rate){
@@ -348,11 +360,13 @@ GripperState return_gripper_states(){
 
 
 /**
- * @brief check that the position entered is reachable by the robot , to do so check that at least one resultant of the inverse kinematics put inside the  
+ * @brief check that the position, with e orientation, entered is reachable by the robot , to do so check that at least one resultant of the inverse kinematics put inside the  
  *        direct kinematics gives the same position that we have put inside the inverse kinematics
+ *        Is important to notice that the results of this control have 2 parameters, beacuse also the orientation that we want to achive has a lot of 
+ *        importance in this control 
  * 
- * @param _pos 
- * @param e 
+ * @param _pos position that you want to know if is reachable or not
+ * @param e Orientation that you want to have in the position _pos
  * @return true 
  * @return false 
  */

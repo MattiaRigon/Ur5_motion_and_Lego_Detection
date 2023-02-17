@@ -1,3 +1,12 @@
+/**
+ * @file kinematics.h
+ * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
+ * @version 0.1
+ * @date 2023-02-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __KINEMATICS__ 
 #define __KINEMATICS__
 
