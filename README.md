@@ -11,7 +11,7 @@ For running each sample code:
 
 ### Installation and setup
 
-we **suggest** to follow the locosim readme until this [point]: https://github.com/mfocchi/locosim#python, for download and setup all the catkin - Ros workspace.
+we **suggest** to follow the locosim readme until this point: https://github.com/mfocchi/locosim#python, for download and setup all the catkin - Ros workspace.
 
 For gazebo and Yolov5 , follow their own tutorial .
 
