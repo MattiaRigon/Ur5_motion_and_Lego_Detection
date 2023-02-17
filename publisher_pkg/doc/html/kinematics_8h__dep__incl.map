@@ -1,0 +1,8 @@
+<map id="kinematics.h" name="kinematics.h">
+<area shape="rect" id="node1" title=" " alt="" coords="189,5,295,32"/>
+<area shape="rect" id="node2" href="$motion__planning_8h.html" title=" " alt="" coords="93,80,236,107"/>
+<area shape="rect" id="node6" href="$kinematics_8cpp.html" title="In this file are implemented all the functions that allows to pass from the joint space to the positi..." alt="" coords="260,80,381,107"/>
+<area shape="rect" id="node3" href="$publisher__node_8h.html" title=" " alt="" coords="13,155,146,181"/>
+<area shape="rect" id="node5" href="$motion__planning_8cpp.html" title="In this file there are the main function that permit to calculate the trajectory that the robot will ..." alt="" coords="171,155,329,181"/>
+<area shape="rect" id="node4" href="$publisher__node_8cpp.html" title="This file is where it recive the position and orientation (of the lego) , and it publish on the right..." alt="" coords="5,229,153,256"/>
+</map>
