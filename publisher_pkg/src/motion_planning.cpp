@@ -1,4 +1,13 @@
-
+/**
+ * @file motion_planning.cpp
+ * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
+ * @brief In this file there are the main function that permit to calculate the trajectory that the robot will do 
+ * @version 0.1
+ * @date 2023-02-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "publisher_pkg/motion_planning.h"
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
@@ -16,7 +25,7 @@ using namespace std;
 /**
  * @brief Returns the rotation matrix corresponding to the given Euler angles
  * 
- * @param th 
+ * @param th Euler angles
  * @return ** RotationMatrix 
  */
 
@@ -33,7 +42,7 @@ RotationMatrix eul2rot(EulerVector th)
 /**
  * @brief Returns the euler vector associated to the R rotation Matrix
  * 
- * @param R 
+ * @param R RotationMatrix 3x3
  * @return ** EulerVector 
  */
 
@@ -52,7 +61,7 @@ EulerVector rot2eul(RotationMatrix R)
 /**
  * @brief check for each angles if the ur5 can apply it on the correspondent joiny,checking for each angle if is inside the associate range in max_angles_value
  * 
- * @param Th 
+ * @param Th Vector which contains values of all 6 joints angles
  * @return true 
  * @return false 
  */
