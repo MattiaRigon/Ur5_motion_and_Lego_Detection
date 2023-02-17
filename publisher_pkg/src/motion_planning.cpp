@@ -97,7 +97,7 @@ bool check_angles(JointStateVector Th)
 }
 
 /**
- * @brief Give the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of alle the 6 joint,then it check that
+ * @brief Give the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of all the 6 joint,then it check that
  *        this postion is inside some defined range. In our case we have to avoid the collision with 3 plans : 
  *        - the ceiling of our envoirment
  *        - the floor of our envoirment
