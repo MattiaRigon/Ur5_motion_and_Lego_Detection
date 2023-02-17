@@ -96,6 +96,11 @@ cd $HOME/ros_ws/src/progetto_robotica/spawnLego_pkg/src/
 ```
 python3 SpawnaLego.py
 ```
+This script will ask you to input the number of the assigment that you want to perform :
+- Assignment 1 : it will spawn only one Lego ,which is positioned with its base “naturally” in contact with the ground.
+- Assignment 2 : it will spawn multiple objects on the initial stand, one for each class.
+- Assignment  3 : it will spawn multiple objects on the initial stand, and there can be more than one object for each class, object could be lying on one of its lateral sides or on its top.
+
 
 Run the script that make the robot move : 
 
