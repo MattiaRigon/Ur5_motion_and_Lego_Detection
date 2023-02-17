@@ -117,4 +117,12 @@ cd $HOME/ros_ws/src/progetto_robotica/vision/
 python3 vision.py
 ```
 
+### Contributors
+
+| Name                 | Matricola | Github                               |
+|----------------------|-----------|--------------------------------------|
+|   Rigon Mattia       | 217868    | https://github.com/MattiaRigon  |
+|   Simone Roman       |           | https://github.com/Sro552     |
+|   Bonetto Stefano    |           | https://github.com/stefanoobonetto  |
+
 
