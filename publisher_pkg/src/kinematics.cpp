@@ -1,3 +1,15 @@
+/**
+ * @file kinematics.cpp
+ * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
+ * @brief In this file are implemented all the functions that allows to pass from the joint space to the position and orientation space,
+ *        and vice versa. 
+ * @version 0.1
+ * @date 2023-02-17
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <iostream>
 #include "publisher_pkg/kinematics.h" 
 #include <eigen3/Eigen/Core>
@@ -7,7 +19,12 @@
 
 using namespace std;
 
-
+/**
+ * @brief Give th1 returns the transformation matrix from frame 0 to frame 1
+ * 
+ * @param th1 
+ * @return ** TransformationMatrix 
+ */
 TransformationMatrix T10f(const double th1){
 
     TransformationMatrix T10m;
@@ -18,6 +35,13 @@ TransformationMatrix T10f(const double th1){
     return T10m;
 
 }
+
+/**
+ * @brief Give th2 returns the transformation matrix from frame 1 to frame 2
+ * 
+ * @param th2 
+ * @return ** TransformationMatrix 
+ */
 
 TransformationMatrix T21f(const double th2){
 
@@ -30,6 +54,14 @@ TransformationMatrix T21f(const double th2){
 
 }
 
+
+/**
+ * @brief Give th3 returns the transformation matrix from frame 2 to frame 3
+ * 
+ * @param th3 
+ * @return ** TransformationMatrix 
+ */
+
 TransformationMatrix T32f(const double th3){
 
     TransformationMatrix T32m;
@@ -40,6 +72,13 @@ TransformationMatrix T32f(const double th3){
     return T32m;
 
 }
+
+/**
+ * @brief Give th4 returns the transformation matrix from frame 3 to frame 4
+ * 
+ * @param th4 
+ * @return ** TransformationMatrix 
+ */
 
 TransformationMatrix T43f(const double th4){
 
@@ -52,6 +91,13 @@ TransformationMatrix T43f(const double th4){
 
 }
 
+/**
+ * @brief Give th5 returns the transformation matrix from frame 4 to frame 5
+ * 
+ * @param th5 
+ * @return ** TransformationMatrix 
+ */
+
 TransformationMatrix T54f(const double th5){
 
     TransformationMatrix T54m;
@@ -63,6 +109,13 @@ TransformationMatrix T54f(const double th5){
 
 }
 
+/**
+ * @brief Give th6 returns the transformation matrix from frame 5 to frame 6
+ * 
+ * @param th6 
+ * @return ** TransformationMatrix 
+ */
+
 TransformationMatrix T65f(const double th6){
 
     TransformationMatrix T65m;
@@ -73,6 +126,18 @@ TransformationMatrix T65f(const double th6){
     return T65m;
 
 }
+
+/**
+ * @brief Transform from the joint angles space to the operational space, which is specified in terms of position and orientation of the end-effector  
+ * 
+ * @param th1 
+ * @param th2 
+ * @param th3 
+ * @param th4 
+ * @param th5 
+ * @param th6 
+ * @return ** DirectResult 
+ */
 
 DirectResult direct_kinematics(const double th1,const double th2,const double th3,const double th4,const double th5,const double th6){
 
@@ -95,6 +160,13 @@ DirectResult direct_kinematics(const double th1,const double th2,const double th
 
 }
 
+/**
+ * @brief Transform from the operational space, which is specified in terms of position and orientation of the end-effector , to the joint angles space
+ * 
+ * @param pos position you want to bring into the joint space ( associated with the rotation )
+ * @param RotationMatrix orientation we want to bring into the joint space ( associated with the position )
+ * @return ** vector<JointStateVector> 
+ */
 
 vector<JointStateVector> inverse_kinematics(PositionVector pos,RotationMatrix RotationMatrix){
 
@@ -127,7 +199,7 @@ vector<JointStateVector> inverse_kinematics(PositionVector pos,RotationMatrix Ro
     TransformationMatrix T06 ;
     T06 = T60.inverse();
 
-    Eigen::Matrix<double, 3, 1> Xhat = T06.block<3,1>(0,0); //seleziono la prima colonna e ne estraggo solamente i primi 3 elementi 
+    Eigen::Matrix<double, 3, 1> Xhat = T06.block<3,1>(0,0); 
     Eigen::Matrix<double, 3, 1> Yhat = T06.block<3,1>(0,1);
 
     double th6_1 = double(atan2(((-Xhat[1]*sin(th1_1)+Yhat[1]*cos(th1_1)))/sin(th5_1), ((Xhat[0]*sin(th1_1)-Yhat[0]*cos(th1_1)))/sin(th5_1)));
@@ -212,6 +284,8 @@ vector<JointStateVector> inverse_kinematics(PositionVector pos,RotationMatrix Ro
     T43m = (T32f(th3_8)).inverse()*(T21f(th2_8)).inverse()*(T10f(th1_2)).inverse()*T60*(T65f(th6_4)).inverse()*(T54f(th5_4)).inverse();
     Xhat43 = T43m.block<3,1>(0,0);
     double th4_8 = double(atan2(Xhat43[1], Xhat43[0]));
+
+    // Load all the 8 solutions on Th
 
     vector<JointStateVector> Th;
     JointStateVector q;

@@ -1,3 +1,3 @@
-[submodule "locosim"]
+[submodule "locosimUpdate"]
 	path = locosim
-	url = git@github.com:mfocchi/locosim.git
+	url = https://github.com/mfocchi/locosim

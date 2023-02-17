@@ -81,7 +81,7 @@ def random_position(lego, rotation = False):
 		y = randNum(0.35, 0.74)   #0.2 + 0.35
 		if x - r >= 0 or y + r <= 0.75:
 			break
-	z = 0.9
+	z = 0.91
 
 	initial_pose = Pose()
 	initial_pose.position.x = x
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 			pos=random_position(lego)
 			print(spawn_model(lego, pos))
 			message = legoGroup("Assigment 1",list)   
-			#pub.publish(message)
+			pub.publish(message)
 		elif(scelta =='2'):
 			for i in range(0,5):
 				count = 0
@@ -168,7 +168,7 @@ if __name__ == "__main__":
 		elif(scelta =='3'):
 			for i in range(0,1):
 				while True:
-					lego = get_random_model()
+					lego = "X1-Y4-Z2"#get_random_model()
 					pos=random_position(lego, rotation=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
