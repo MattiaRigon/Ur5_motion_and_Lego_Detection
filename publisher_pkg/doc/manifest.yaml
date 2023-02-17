@@ -1,0 +1,17 @@
+actions: []
+authors: ''
+brief: ''
+bugtracker: ''
+depends:
+- catkin
+- roscpp
+- ros_impedance_controller
+- spawnLego_pkg
+description: The publisher_pkg package
+license: TODO
+maintainers: mattia <mattia@todo.todo>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: ''
