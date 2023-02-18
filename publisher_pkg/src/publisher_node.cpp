@@ -34,6 +34,12 @@
 
 using namespace std;
 
+<<<<<<< HEAD
+// this implementation assumes normalized quaternion
+// converts to Euler angles in 3-2-1 sequence
+
+
+=======
 
 /**
  * @brief Convert from Quaternion to Euler Angles,this implementation assumes normalized quaternion
@@ -41,6 +47,7 @@ using namespace std;
  * @param q Quaternion
  * @return ** EulerVector 
  */
+>>>>>>> f068b8cd25a5207c8cde8ddeefef3a85eef946cd
 EulerVector ToEulerAngles(Quaternion q) {
     EulerVector angles;
 

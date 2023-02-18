@@ -41,10 +41,25 @@ spawned_lego = []
 models_spawned = []
 
 def get_random_model():
+	"""this function return me a random lego block's class
+
+	Returns:
+		string : the name of the lego model 
+	"""
     return random.choice(models)
 
 def spawn_model(model, pos, name=None, ref_frame='world'):
+	"""This function spawns the model in the position given 
 
+	Args:
+		model (string): the name of the lego model
+		pos (struct): it contains pall the parameters for the position of the block and his orientation too
+		name (string, optional): the name of the model. Defaults to None.
+		ref_frame (string, optional): the reference frame. Defaults to 'world'.
+
+	Returns:
+		_type_: _description_
+	"""
 	global cont,list
 
 	if(name == None):
@@ -68,10 +83,27 @@ def spawn_model(model, pos, name=None, ref_frame='world'):
 	return spawn_model_client(model_name=name,model_xml=model_xml,initial_pose=pos,reference_frame=ref_frame)
 
 def randNum(min, max):
+	"""generates a random number 
+
+	Args:
+		min (int): the minimum number
+		max (int): the maximum number
+
+	Returns:
+		int : the random number generated
+	"""
     num = round(random.uniform(min, max), 2)
     return num
 
-def random_position(lego, rotation = False):
+def random_position(rotation = False):
+	"""It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too
+
+	Args:
+		rotation (bool, optional): if is equal to True, it generates also a random rotation. Defaults to False.
+
+	Returns:
+		Pose: _description_
+	"""
 	s = lego.split("-")
 
 	r = int(s[1][1])*1.5*0.01
@@ -139,7 +171,7 @@ if __name__ == "__main__":
 		scelta = input("Scelta : ")
 		if(scelta == '1'):	
 			lego = get_random_model()
-			pos=random_position(lego)
+			pos=random_position()
 			print(spawn_model(lego, pos))
 			message = legoGroup("Assigment 1",list)   
 			pub.publish(message)
@@ -147,7 +179,6 @@ if __name__ == "__main__":
 			for i in range(0,5):
 				count = 0
 				while True:
-
 					while True:
 						lego = get_random_model()
 						print("--> " + lego + "\n")
@@ -156,7 +187,7 @@ if __name__ == "__main__":
 						if lego not in models_spawned:   #non possono esserci due lego della stessa classe
 							break
 					
-					pos=random_position(lego)
+					pos=random_position()
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1
@@ -169,7 +200,7 @@ if __name__ == "__main__":
 			for i in range(0,1):
 				while True:
 					lego = "X1-Y4-Z2"#get_random_model()
-					pos=random_position(lego, rotation=True)
+					pos=random_position(rotation=True)
 					if not check_sovrapposizioni(pos, lego): 
 						print(spawn_model(lego, pos))
 						i=i+1

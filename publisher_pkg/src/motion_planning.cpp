@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 /**
  * @file motion_planning.cpp
  * @author Rigon Mattia (mattia.rigon@studenti.unitn.it)
@@ -8,6 +10,7 @@
  * @copyright Copyright (c) 2023
  * 
  */
+>>>>>>> f068b8cd25a5207c8cde8ddeefef3a85eef946cd
 #include "publisher_pkg/motion_planning.h"
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
