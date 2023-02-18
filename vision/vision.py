@@ -351,7 +351,7 @@ def recognition():
         xmax = int(results_data.xmax[k])
         
         cont = 0
-        if(results_data.confidence[k]<0.5):
+        if(results_data.confidence[k]<0.6):
             continue
         for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
             for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):
@@ -376,11 +376,7 @@ def receive_image(msg):
 
     #Creo la mashera
     table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]       #sim
-<<<<<<< HEAD
-    #table = [[310, 180], [210, 410], [800, 410], [650, 180]]
-=======
     #table = [[310, 180], [210, 410], [800, 410], [650, 180]]      #real robot
->>>>>>> 918d6f76cbbb671f6369849ad7eacd8a7b047af5
     mask = np.array(table, dtype=np.int32)
 
     background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)

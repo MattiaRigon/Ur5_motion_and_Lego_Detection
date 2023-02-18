@@ -135,8 +135,7 @@ JointStateVector return_joint_states(){
  * @return ** void 
  */
 
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
-
+bool move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
 
 
     if(pos[0] == 0){
@@ -174,7 +173,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
             cout <<"To go from : "<<direct_res.pos<<endl;
             cout << "to : "<< pos <<endl;
 
-            return;
+            return false;
         }
     }
 
@@ -189,6 +188,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
         loop_rate.sleep();
     }
 
+    return true;
 }
 
 
@@ -243,14 +243,20 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
                 //pick
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 pos = models_map[lego.model];
                 //place
-                rot << M_PI/2,0,0;
-                move_to(pos,rot,rate,false);
+                rot << 0,0,0;
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 open_gripper();
-
+                
                 cout << endl ;
                 cout << endl ;
                 cout << endl ;
@@ -260,7 +266,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                 cout << "TURNED LEGO (Y as height)" <<endl;
 
                 int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
-                float altezza_cm = (altezza - 1 ) * UNIT_BLOCCHETTO;
+                float altezza_cm = (altezza ) * UNIT_BLOCCHETTO;
                 cout << "tolgo altezza : " <<altezza_cm << endl;
 
                 pos(2) = pos(2) - altezza_cm;
@@ -275,11 +281,16 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
 
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
                 pos(2) = 0.82;
                 pos << -0.1 , -0.3 , 0.82;
+                
+                
 
                 if(check_point(pos,turn_rot)){
                     cout <<" REACHABLE POSITION" <<endl;
@@ -288,11 +299,15 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                move_to(pos,turn_rot,rate,true);
+                if(!move_to(pos,rot,rate,true)){
+                    continue;
+                }
                 open_gripper(); 
                 rot << M_PI/2,0,0;
                 pos(2) =0.86;
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
                 close_gripper();
                 pos = models_map[lego.model];
                 //place

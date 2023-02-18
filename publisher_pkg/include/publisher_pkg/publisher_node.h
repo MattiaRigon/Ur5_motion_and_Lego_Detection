@@ -39,7 +39,7 @@ typedef struct Quaternion {
 EulerVector ToEulerAngles(Quaternion q);
 void send_des_jstate(const vector<double> & joint_pos);
 JointStateVector return_joint_states();
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn);
+bool move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn);
 bool check_point(PositionVector _pos,EulerVector e );
 void close_gripper();
 void open_gripper();
