@@ -351,7 +351,7 @@ def recognition():
         xmax = int(results_data.xmax[k])
         
         cont = 0
-        if(results_data.confidence[k]<0.5):
+        if(results_data.confidence[k]<0.6):
             continue
         for j in range(int(results_data.ymin[k]),int(results_data.ymax[k])):
             for i in range(int(results_data.xmin[k]),int(results_data.xmax[k])):

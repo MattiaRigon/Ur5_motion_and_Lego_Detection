@@ -34,12 +34,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-// this implementation assumes normalized quaternion
-// converts to Euler angles in 3-2-1 sequence
-
-
-=======
 
 /**
  * @brief Convert from Quaternion to Euler Angles,this implementation assumes normalized quaternion
@@ -47,7 +41,6 @@ using namespace std;
  * @param q Quaternion
  * @return ** EulerVector 
  */
->>>>>>> f068b8cd25a5207c8cde8ddeefef3a85eef946cd
 EulerVector ToEulerAngles(Quaternion q) {
     EulerVector angles;
 
@@ -142,8 +135,7 @@ JointStateVector return_joint_states(){
  * @return ** void 
  */
 
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
-
+bool move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
 
 
     if(pos[0] == 0){
@@ -181,7 +173,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
             cout <<"To go from : "<<direct_res.pos<<endl;
             cout << "to : "<< pos <<endl;
 
-            return;
+            return false;
         }
     }
 
@@ -196,6 +188,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
         loop_rate.sleep();
     }
 
+    return true;
 }
 
 
@@ -250,14 +243,20 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
                 //pick
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 pos = models_map[lego.model];
                 //place
-                rot << M_PI/2,0,0;
-                move_to(pos,rot,rate,false);
+                rot << 0,0,0;
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 open_gripper();
-
+                
                 cout << endl ;
                 cout << endl ;
                 cout << endl ;
@@ -267,7 +266,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                 cout << "TURNED LEGO (Y as height)" <<endl;
 
                 int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
-                float altezza_cm = (altezza - 1 ) * UNIT_BLOCCHETTO;
+                float altezza_cm = (altezza ) * UNIT_BLOCCHETTO;
                 cout << "tolgo altezza : " <<altezza_cm << endl;
 
                 pos(2) = pos(2) - altezza_cm;
@@ -282,11 +281,16 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
 
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
                 pos(2) = 0.82;
                 pos << -0.1 , -0.3 , 0.82;
+                
+                
 
                 if(check_point(pos,turn_rot)){
                     cout <<" REACHABLE POSITION" <<endl;
@@ -295,11 +299,15 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                move_to(pos,turn_rot,rate,true);
+                if(!move_to(pos,rot,rate,true)){
+                    continue;
+                }
                 open_gripper(); 
                 rot << M_PI/2,0,0;
                 pos(2) =0.86;
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
                 close_gripper();
                 pos = models_map[lego.model];
                 //place
@@ -443,7 +451,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
  */
 void open_gripper(){
 
-   if(real_robot){
+    if(real_robot){
         ros::NodeHandle node_gripper;
         ros::ServiceClient client_gripper = node_gripper.serviceClient<ros_impedance_controller::generic_float>("move_gripper"); 
         ros_impedance_controller::generic_float::Request req;
@@ -598,6 +606,3 @@ int main(int argc,char **argv){
     
     return 0;
 }
-
-
-
