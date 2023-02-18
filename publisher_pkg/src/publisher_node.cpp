@@ -34,12 +34,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-// this implementation assumes normalized quaternion
-// converts to Euler angles in 3-2-1 sequence
-
-
-=======
 
 /**
  * @brief Convert from Quaternion to Euler Angles,this implementation assumes normalized quaternion
@@ -47,7 +41,6 @@ using namespace std;
  * @param q Quaternion
  * @return ** EulerVector 
  */
->>>>>>> f068b8cd25a5207c8cde8ddeefef3a85eef946cd
 EulerVector ToEulerAngles(Quaternion q) {
     EulerVector angles;
 
@@ -417,7 +410,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
  */
 void open_gripper(){
 
-   if(real_robot){
+    if(real_robot){
         ros::NodeHandle node_gripper;
         ros::ServiceClient client_gripper = node_gripper.serviceClient<ros_impedance_controller::generic_float>("move_gripper"); 
         ros_impedance_controller::generic_float::Request req;
@@ -572,6 +565,3 @@ int main(int argc,char **argv){
     
     return 0;
 }
-
-
-
