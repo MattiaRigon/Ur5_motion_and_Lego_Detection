@@ -46,8 +46,17 @@ Objects = []
 point_count_for_item = []
 list = []
 DIM_BLOCK = 0.03
+
     
 def isUp(h):
+    """return true if the block is up false if it si relaxed
+
+    Args:
+        h (int): max height of lego
+
+    Returns:
+        boolean: return true if the block is up false if it si relaxed
+    """
     ret = True
     if(h < 0.04):
         ret = False
@@ -55,10 +64,30 @@ def isUp(h):
 
 
 def distanza(p1,p2):
+    """this function calculate the distance between two point
+
+    Args:
+        p1 (array): first point cordinates
+        p2 (array): second point cordinates
+
+    Returns:
+        int: the distance between the two points
+    """
     return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
 
     
 def find_dimension(v1,v2,v3,zmax):
+    """This function return the three lego's dimensions (width, length and height)
+
+    Args:
+        v1 (array): the cordinate of leftmost points
+        v2 (array): the cordinate the lowest point at the bottom
+        v3 (array): the cordinate of rightmost points
+        zmax (int): the max height of lego
+
+    Returns:
+        array: the three dimension of lego (width, length and height)
+    """
     #find dimension of blocks
     dimension = [0,0,0]
     d12 = distanza(v1,v2)
@@ -76,6 +105,17 @@ def find_dimension(v1,v2,v3,zmax):
 
 
 def find_orientation(dimension,v1,v2,v3):
+    """This function find lego's position and orientation 
+
+    Args:
+        dimension (array): the three dimension of lego (width, length and height)
+        v1 (array): the cordinate of leftmost points
+        v2 (array): the cordinate the lowest point at the bottom
+        v3 (array): the cordinate of rightmost points
+
+    Returns:
+        pos,rot: return the cordinate of position and rotation
+    """
 
     rot = [0,0,0]
     if(not(isUp(dimension[2]))):
@@ -103,7 +143,16 @@ def find_orientation(dimension,v1,v2,v3):
     return pos,rot
 
 def correction(dimension,nome,v3):
+    """this function correct the name for classification of blocks based on his dimensions
 
+    Args:
+        dimension (array): the three dimension of lego (width, length and height)
+        nome (String): the name of classification for lego
+        v3 (array): the cordinate of rightmost points (we correct this if the block is perfectly perpendicular to the camera)
+
+    Returns:
+        string,array,array: the name of lego, the dimension and the cordinate of rightmost points
+    """
     split = nome.split("-")
 
     #Correction name with height 
@@ -149,13 +198,23 @@ def correction(dimension,nome,v3):
     return retName,dimension,v3
 
 
-def trova_posizione_lego(actual_detection,posizioni,results_data):  
+def lego_processing(actual_detection,posizioni,results_data):  
+    """this function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections
+
+    Args:
+        actual_detection (_type_): _description_
+        posizioni (_type_): _description_
+        results_data (_type_): _description_
+
+    Returns:
+        string, : _description_
+    """
 
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
     dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
-    v1 = [0,0]   #left point of block
-    v2 = [0,0]   #lowest point of blocks
-    v3 = [0,0]   #right point of block
+    v1 = [0,0,0]   #left point of block
+    v2 = [0,0,0]   #lowest point of blocks
+    v3 = [0,0,0]   #right point of block
 
 
     yleft = 0
@@ -179,7 +238,6 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
         if(pos[2]>zmax):    #find z max
                 zmax = pos[2]
     
-
 
     dimension = find_dimension(v1,v2,v3,zmax)
     print("PRIMA" + str(dimension))
@@ -212,6 +270,11 @@ def trova_posizione_lego(actual_detection,posizioni,results_data):
 
 
 def receive_pointcloud(results_data):
+    """For each pixel of the list created by recognition(), this function takes all the corresponding points of the pointcloud  
+
+    Args:
+        results_data (ArrayList): the results of the recognition: class and bounding box's vertices
+    """
 
     msg = rospy.wait_for_message("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2)
     # read all the points
@@ -248,7 +311,7 @@ def receive_pointcloud(results_data):
         if(cont >= point_count_for_item[actual_detection]):
             print("\nIMMAGINE " + str(actual_detection+1) + " --> " + results_data["name"][actual_detection])
 
-            nome,initial_pose = trova_posizione_lego(actual_detection,actual_lego,results_data)
+            nome,initial_pose = lego_processing(actual_detection,actual_lego,results_data)
 
             list.append(legoDetection(nome,initial_pose))
             actual_detection = actual_detection +1
@@ -259,7 +322,9 @@ def receive_pointcloud(results_data):
         actual_lego.append(data_world[0])
 
 
-def riconoscimento():
+def recognition():
+    """This function use the photo saved before and recognizes lego with YOLOv5, then it saves all the inner points of the bounding box into a list  
+    """
     model = torch.hub.load(YOLO_PATH, 'custom', path=BEST_PATH, source='local')  # local repo
     
     img = cv2.imread(LAST_PHOTO_PATH)[..., ::-1]
@@ -268,7 +333,7 @@ def riconoscimento():
     
     # Results
     results.print()  
-    #results.save() 
+    results.save() 
     results.render()
     results.show()
     
@@ -302,15 +367,19 @@ def riconoscimento():
 
 
 def receive_image(msg):
+    """This function take a photo with ZED2, cropped it and finally save the result
 
+    Args:
+        msg (_type_): zed message
+    """
     #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 
 
 
     #Creo la mashera
-    table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]       #sim
-    #table = [[310, 180], [210, 410], [800, 410], [650, 180]]
+    #table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]       #sim
+    table = [[310, 180], [210, 410], [800, 410], [650, 180]]
     mask = np.array(table, dtype=np.int32)
 
     background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
@@ -334,7 +403,7 @@ if __name__ == '__main__':
         loop_rate.sleep()
         break
         pass
-    riconoscimento()
+    recognition()
 
     message = legoGroup("Assigment 1",list)   
 
