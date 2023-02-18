@@ -27,7 +27,6 @@
 #include <numeric>
 #include <thread>
 
-float UNIT_BLOCCHETTO = 0.0125;
 
 //types
 typedef Eigen::Matrix<double, 8, 1> JointStateGripperVector;
@@ -53,9 +52,25 @@ double loop_time = 0.;
 double loop_frequency = 1000.;
 float position;
 bool first_msg = false;
-bool real_robot = true;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
+bool real_robot = false;  // true : puoi comandare solamente i 6 giunti e il gripper per lui non esiste
                          // fasle : puoi comandare anche il gripper (soft) , quindi pubblica comandi di dimensione 8
 bool soft_gripper = true ;
+float UNIT_BLOCCHETTO = 0.0125;
+PositionVector X1_Y1_Z2(0.44,0,0.87);
+PositionVector X1_Y2_Z1(0.34,0,0.87);
+PositionVector X1_Y2_Z2(0.24,0,0.87);
+
+PositionVector X1_Y3_Z2(0.44,-0.11,0.87);
+PositionVector X1_Y4_Z1(0.34,-0.11,0.87);
+PositionVector X1_Y4_Z2(0.24,-0.11,0.87);
+
+PositionVector X1_Y2_Z2_CHAMFER(0.44,-0.22,0.87);
+PositionVector X1_Y2_Z2_TWINFILLET(0.34,-0.22,0.87);
+PositionVector X2_Y2_Z2(0.24,-0.22,0.87);
+
+PositionVector X2_Y2_Z2_FILLET(0.44,-0.33,0.87);
+PositionVector X1_Y3_Z2_FILLET(0.34,-0.33,0.87);
+map<std::string, PositionVector> models_map{{"X1-Y1-Z2", X1_Y1_Z2},{"X1-Y2-Z1", X1_Y2_Z1},{"X1-Y2-Z2", X1_Y2_Z2},{"X1-Y3-Z2", X1_Y3_Z2},{"X1-Y4-Z1", X1_Y4_Z1},{"X1-Y4-Z2", X1_Y4_Z2},{"X1-Y2-Z2-CHAMFER", X1_Y2_Z2_CHAMFER},{"X1-Y2-Z2-TWINFILLET", X1_Y2_Z2_TWINFILLET},{"X1-Y1-Z2", X2_Y2_Z2},{"X2-Y2-Z2-FILLET",X2_Y2_Z2_FILLET},{"X1-Y3-Z2-FILLET",X1_Y3_Z2_FILLET}};
 
 
 // Publishers

@@ -145,7 +145,7 @@ if __name__ == "__main__":
 			pos=random_position()
 			print(spawn_model(lego, pos))
 			message = legoGroup("Assigment 1",list)   
-			pub.publish(message)
+			#pub.publish(message)
 		elif(scelta =='2'):
 			for i in range(0,5):
 				count = 0
@@ -177,7 +177,7 @@ if __name__ == "__main__":
 						i=i+1
 						break
 			message = legoGroup("Assigment 3",list)   
-			pub.publish(message)
+			#pub.publish(message)
 		else :
 			print("scelta sbagliata")
 

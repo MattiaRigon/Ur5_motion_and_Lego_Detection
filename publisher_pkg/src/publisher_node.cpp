@@ -226,11 +226,11 @@ void listen_lego_detection_turn(ros::Rate rate){
                 //z1 3.8
                 //z2 5.8
                 cout << "STRAIGHT LEGO" <<endl;
-                int altezza = int(lego.model[7]) - 48; // se è in piedi è la z che da la sua altezza
-                cout << "altezza : " <<altezza << endl;
-                altezza = altezza * 0.01;  // o unit blocchetto bisogna vedere
+                // int altezza = int(lego.model[7]) - 48; // se è in piedi è la z che da la sua altezza
+                // cout << "altezza : " <<altezza << endl;
+                // altezza = (altezza -1 )* 0.01;  // o unit blocchetto bisogna vedere
 
-                pos(2) = pos(2) - altezza;
+                pos(2) =0.86;
 
                 rot << -rot[2],0,0;
 
@@ -241,9 +241,16 @@ void listen_lego_detection_turn(ros::Rate rate){
                     cout << pos << endl;
                     continue;
                 }
+                //pick
                 open_gripper();
                 move_to(pos,rot,rate,false);
-                             
+                close_gripper();
+                pos = models_map[lego.model];
+                //place
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate,false);
+                open_gripper();
+
                 cout << endl ;
                 cout << endl ;
                 cout << endl ;
@@ -283,6 +290,16 @@ void listen_lego_detection_turn(ros::Rate rate){
 
                 move_to(pos,turn_rot,rate,true);
                 open_gripper(); 
+                rot << M_PI/2,0,0;
+                pos(2) =0.86;
+                move_to(pos,rot,rate,false);
+                close_gripper();
+                pos = models_map[lego.model];
+                //place
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate,false);
+                open_gripper();
+
 
             }else if(rot[1] != 0){ // di lato , due rotazioni
 
@@ -333,6 +350,15 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
                 move_to(pos,turn_rot,rate,true);
+                open_gripper();
+                pos(2) =0.86;
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate,false);
+                close_gripper();
+                pos = models_map[lego.model];
+                //place
+                rot << M_PI/2,0,0;
+                move_to(pos,rot,rate,false);
                 open_gripper();
             }
         }
