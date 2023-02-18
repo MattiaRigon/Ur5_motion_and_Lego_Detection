@@ -292,9 +292,6 @@ def receive_pointcloud(results_data):
     
     for data in points_list:
         alpha = -0.523
-        # Ry = np.matrix([[cos(alpha),0,sin(alpha)],
-        #             [0,1,0],
-        #             [-sin(alpha),0,cos(alpha)]])
         Ry = np.matrix([[ 0.     , -0.49948,  0.86632],
                         [-1.     ,  0.     ,  0.     ],
                         [-0.     , -0.86632, -0.49948]])
@@ -378,8 +375,8 @@ def receive_image(msg):
 
 
     #Creo la mashera
-    #table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]       #sim
-    table = [[310, 180], [210, 410], [800, 410], [650, 180]]
+    table = [[558*1.5, 278*1.5], [450*1.5, 590*1.5], [970*1.5,610*1.5], [777*1.5, 267*1.5]]       #sim
+    #table = [[310, 180], [210, 410], [800, 410], [650, 180]]      #real robot
     mask = np.array(table, dtype=np.int32)
 
     background = np.zeros((rgb.shape[0], rgb.shape[1]), np.int8)
