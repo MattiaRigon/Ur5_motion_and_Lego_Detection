@@ -126,8 +126,8 @@ python3 vision.py
 
 | Name                 | Matricola | Github                               |
 |----------------------|-----------|--------------------------------------|
-|   Rigon Mattia       | 217868    | https://github.com/MattiaRigon  |
-|   Simone Roman       |           | https://github.com/Sro552     |
-|   Bonetto Stefano    |           | https://github.com/stefanoobonetto  |
+|   Rigon Mattia       | 217868    | https://github.com/MattiaRigon       |
+|   Simone Roman       | 218788    | https://github.com/Sro552            |
+|   Bonetto Stefano    | 217861    | https://github.com/stefanoobonetto   |
 
 
