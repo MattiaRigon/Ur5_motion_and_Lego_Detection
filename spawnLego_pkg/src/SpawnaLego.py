@@ -121,7 +121,13 @@ def random_position(rotation = False):
 	# se metti pi/2 sulla x sono sorti ma in piedi 
 	# con pi/2 sulla y sono storti ma di lato
 	if(rotation):
-		q = quaternion_from_euler(pi/2,0,randNum(0,2*pi))
+		num = randNum(0, 2)
+		if num == 0:
+			q = quaternion_from_euler(pi/2,0,randNum(0,2*pi))
+		elif num == 1:
+			q = quaternion_from_euler(0,pi/2,randNum(0,2*pi))
+		elif num == 2:
+			q = quaternion_from_euler(pi/2,pi/2,randNum(0,2*pi))
 	else:
 		q = quaternion_from_euler(0, 0,randNum(0,2*pi))
 
