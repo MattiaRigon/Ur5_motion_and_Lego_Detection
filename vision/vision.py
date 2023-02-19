@@ -173,17 +173,17 @@ def correction(dimension,nome,v1,v2,v3):
             v1[1] += DIM_BLOCK
         else:
             if(dimension[0]==int(split[1][1])*DIM_BLOCK):
-                v1[1]=DIM_BLOCK
+                v1[1]+=DIM_BLOCK
             else:
-                v1[1]=int(split[1][1])*DIM_BLOCK
+                v1[1]+=int(split[1][1])*DIM_BLOCK
     if(tuple3 == tuple2):
         if(dimension[2]>=0.07):
             v3[1] += DIM_BLOCK
         else:
             if(dimension[0]==int(split[1][1])*DIM_BLOCK):
-                v3[1]=DIM_BLOCK
+                v3[1]+=DIM_BLOCK
             else:
-                v3[1]=int(split[1][1])*DIM_BLOCK  
+                v3[1]+=int(split[1][1])*DIM_BLOCK  
         
 
 
