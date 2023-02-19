@@ -198,7 +198,7 @@ def correction(dimension,nome,v1,v2,v3):
     else:
         retName = split[0] + "-" + split[1] + "-" + split[2]
     
-    return dimension,retName,v1,v3
+    return retName,v1,v3
 
 
 def lego_processing(actual_detection,posizioni,results_data):  
@@ -243,10 +243,10 @@ def lego_processing(actual_detection,posizioni,results_data):
     
 
     dimension = find_dimension(v1,v2,v3,zmax)
-    dimension,name,v1,v3 = correction(dimension, results_data["name"][actual_detection],v1,v2,v3)
+    name,v1,v3 = correction(dimension, results_data["name"][actual_detection],v1,v2,v3)
     pos,rot = find_orientation(dimension,v1,v2,v3)
     #print("DOPO" + str(dimension))
-    #print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
     
 
 
