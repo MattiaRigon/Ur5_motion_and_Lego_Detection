@@ -42,8 +42,7 @@ from params import *
 
 pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
-Objects = []
-point_count_for_item = []
+
 list = []
 DIM_BLOCK = 0.03
 
@@ -142,13 +141,15 @@ def find_orientation(dimension,v1,v2,v3):
 
     return pos,rot
 
-def correction(dimension,nome,v3):
+def correction(dimension,nome,v1,v2,v3):
     """this function correct the name for classification of blocks based on his dimensions
 
     Args:
         dimension (array): the three dimension of lego (width, length and height)
         nome (String): the name of classification for lego
-        v3 (array): the cordinate of rightmost points (we correct this if the block is perfectly perpendicular to the camera)
+        v1 (array): the cordinate of leftmost points
+        v2 (array): the cordinate the lowest point at the bottom
+        v3 (array): the cordinate of rightmost points
 
     Returns:
         string,array,array: the name of lego, the dimension and the cordinate of rightmost points
@@ -164,38 +165,40 @@ def correction(dimension,nome,v3):
         split[1] = "Y" + str(int(dimension[2]/0.035)+1)
 
     #Correction dimension   correction case of block is in the same direction of the camera and general correction dimension
-    if(dimension[1] < 0.01):
-        if(isUp):
-            if(dimension[0] < DIM_BLOCK):
-                dimension[1] = DIM_BLOCK * int(split[1][1])
-            else:
-                dimension[1] = DIM_BLOCK
+    tuple1 = tuple(v1)
+    tuple2 = tuple(v2)
+    tuple3 = tuple(v3)
+    if(tuple1 == tuple2):
+        if(dimension[2]>=0.07):
+            v1[1] += DIM_BLOCK
         else:
-            if((dimension[0] >= 0.06 and dimension[0] < 0.07) or (dimension[0] >= 0.04 and dimension[0] < 0.045)):
-                dimension[1] = dimension[1] = DIM_BLOCK * int(split[1][1])
+            if(dimension[0]==int(split[1][1])*DIM_BLOCK):
+                v1[1]=DIM_BLOCK
             else:
-                if(int(split[2][1]) == 1):
-                    dimension[1] = 0.041
-                else:
-                    dimension[1] = 0.065  
-        v3[1] = dimension[1]  
-        #correggo ordine di dimension
-        if(dimension[1] > dimension[0]):
-            tmp = dimension[1]
-            dimension[1] = dimension[0]
-            dimension[0] = tmp
+                v1[1]=int(split[1][1])*DIM_BLOCK
+    if(tuple3 == tuple2):
+        if(dimension[2]>=0.07):
+            v3[1] += DIM_BLOCK
+        else:
+            if(dimension[0]==int(split[1][1])*DIM_BLOCK):
+                v3[1]=DIM_BLOCK
+            else:
+                v3[1]=int(split[1][1])*DIM_BLOCK  
+        
 
-    if(int(split[1][1]) != int(dimension[0]/DIM_BLOCK)):
-        print("ERRORE DIM")
-    if(int(split[0][1]) != int(dimension[1]/DIM_BLOCK)):
-        print("ERRORE DIM")
 
+    # if(int(split[1][1]) != int(dimension[0]/DIM_BLOCK)):
+    #     print("ERRORE DIM")
+    # if(int(split[0][1]) != int(dimension[1]/DIM_BLOCK)):
+    #     print("ERRORE DIM")
+
+   
     if(len(split)==4):
         retName = split[0] + "-" + split[1] + "-" + split[2] + "-" + split[3]
     else:
         retName = split[0] + "-" + split[1] + "-" + split[2]
     
-    return retName,dimension,v3
+    return dimension,retName,v1,v3
 
 
 def lego_processing(actual_detection,posizioni,results_data):  
@@ -240,14 +243,10 @@ def lego_processing(actual_detection,posizioni,results_data):
     
 
     dimension = find_dimension(v1,v2,v3,zmax)
-    print("PRIMA" + str(dimension))
-    nome,dimension,v3 = correction(dimension, results_data["name"][actual_detection],v3)
-
-    
-
+    dimension,name,v1,v3 = correction(dimension, results_data["name"][actual_detection],v1,v2,v3)
     pos,rot = find_orientation(dimension,v1,v2,v3)
-    print("DOPO" + str(dimension))
-    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+    #print("DOPO" + str(dimension))
+    #print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
     
 
 
@@ -266,15 +265,18 @@ def lego_processing(actual_detection,posizioni,results_data):
     initial_pose.orientation.z = q[2]
     initial_pose.orientation.w = q[3]
 
-    return nome,initial_pose
+    return name,initial_pose
 
 
-def receive_pointcloud(results_data):
+def receive_pointcloud(results_data,Objects,point_count_for_item):
     """For each pixel of the list created by recognition(), this function takes all the corresponding points of the pointcloud  
 
     Args:
         results_data (ArrayList): the results of the recognition: class and bounding box's vertices
+        Objects (ArrayList): list of all pixel for block
+        point_count_for_item (ArrayList): number of point for block
     """
+    
 
     msg = rospy.wait_for_message("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2)
     # read all the points
@@ -322,6 +324,9 @@ def receive_pointcloud(results_data):
 def recognition():
     """This function use the photo saved before and recognizes lego with YOLOv5, then it saves all the inner points of the bounding box into a list  
     """
+    Objects = []
+    point_count_for_item = []
+
     model = torch.hub.load(YOLO_PATH, 'custom', path=BEST_PATH, source='local')  # local repo
     
     img = cv2.imread(LAST_PHOTO_PATH)[..., ::-1]
@@ -360,7 +365,7 @@ def recognition():
                 cont = cont +1 
         point_count_for_item.append(cont)
 
-    receive_pointcloud(results_data)
+    receive_pointcloud(results_data,Objects,point_count_for_item)
 
 
 def receive_image(msg):
@@ -400,6 +405,7 @@ if __name__ == '__main__':
         loop_rate.sleep()
         break
         pass
+
     recognition()
 
     message = legoGroup("Assigment 1",list)   
