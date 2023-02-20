@@ -348,7 +348,7 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qE
     for (PositionVector item : intermediate_points)
     {   
         // if is a turn movement , the second to last point to reach will have alrady the final configuration phiEf
-        if(i == intermediate_points.size() -1 && turn){
+        if(i == intermediate_points.size() -1 ){
             item(2) = 0.6;
             qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
 

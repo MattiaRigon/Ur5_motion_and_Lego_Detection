@@ -265,11 +265,11 @@ void listen_lego_detection_turn(ros::Rate rate){
 
                 cout << "TURNED LEGO (Y as height)" <<endl;
 
-                int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
-                float altezza_cm = (altezza ) * UNIT_BLOCCHETTO;
-                cout << "tolgo altezza : " <<altezza_cm << endl;
+                // int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
+                // float altezza_cm = (altezza ) * UNIT_BLOCCHETTO;
+                // cout << "tolgo altezza : " <<altezza_cm << endl;
 
-                pos(2) = pos(2) - altezza_cm;
+                // pos(2) = pos(2) - altezza_cm;
                 rot << -rot[2],0,0;
 
                 if(check_point(pos,rot)){
@@ -287,7 +287,6 @@ void listen_lego_detection_turn(ros::Rate rate){
                 
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
-                pos(2) = 0.82;
                 pos << -0.1 , -0.3 , 0.82;
                 
                 
@@ -514,7 +513,7 @@ void close_gripper(){
             ros::Rate loop_rate(loop_frequency);
 
             actual_gripper = return_gripper_states();
-            while(actual_gripper(0)> -0.3){
+            while(actual_gripper(0)> -0.2){
                 for(int i=0;i<6;i++){
                 msg(i)= actual_pos(i);
                 }
@@ -562,7 +561,7 @@ int main(int argc,char **argv){
     {   
         listen_lego_detection_turn(loop_rate);
 
-
+        // string model = "";
         // cout << " x " ;
         // cin >> x;
         // cout << " y " ;
@@ -580,24 +579,26 @@ int main(int argc,char **argv){
         //     cout <<" REACHABLE POSITION" <<endl;
         // }else{
         //     cout <<" NON REACHABLE POSITION "<<endl;
+        //     cout << pos_des << endl;
         //     continue;
         // }
+        // //pick
         // open_gripper();
-        // move_to(pos_des,e,loop_rate,false);
+        // if(!move_to(pos_des,e,loop_rate,false)){
+        //     continue;
+        // }
+        
         // close_gripper();
-
-        // for turn
-        // e << M_PI/2,0,-M_PI/2; // default braccio drittto 
-        // pos_des(2) = 0.82;
-
-        // if(check_point(pos_des,e)){
-        //     cout <<" REACHABLE POSITION" <<endl;
-        // }else{
-        //     cout <<" NON REACHABLE POSITION "<<endl;
+        // pos_des = models_map[model];
+        // //place
+        // e << 0,0,0;
+        // if(!move_to(pos_des,e,loop_rate,false)){
         //     continue;
         // }
-        // turn(pos_des,e,loop_rate);
+        
         // open_gripper();
+
+
 
 
         loop_rate.sleep();
