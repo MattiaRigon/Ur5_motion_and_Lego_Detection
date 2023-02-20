@@ -246,7 +246,7 @@ def lego_processing(actual_detection,posizioni,results_data):
     name,v1,v3 = correction(dimension, results_data["name"][actual_detection],v1,v2,v3)
     pos,rot = find_orientation(dimension,v1,v2,v3)
     #print("DOPO" + str(dimension))
-    print("Correzione: " + results_data["name"][actual_detection] + " --> " + nome)
+    print("Correzione: " + results_data["name"][actual_detection] + " --> " + name)
     
 
 

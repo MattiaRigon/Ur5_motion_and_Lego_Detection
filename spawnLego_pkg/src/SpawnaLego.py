@@ -162,23 +162,28 @@ if __name__ == "__main__":
 						print(spawn_model(lego, pos))
 						i=i+1
 						break
-				models_spawned.append(lego)
-				print("---------> spawnato")
-			message = legoGroup("Assigment 2",list)   
-			# pub.publish(message)
-		elif(scelta =='3'):
-			for i in range(0,1):
-				while True:
-					lego = "X1-Y4-Z2"#get_random_model()
-					pos=random_position(lego, rotation=True)
-					if not check_sovrapposizioni(pos, lego): 
-						print(spawn_model(lego, pos))
-						i=i+1
-						break
-			message = legoGroup("Assigment 3",list)   
-			# pub.publish(message)
-		else :
-			print("scelta sbagliata")
+				pos=random_position()
+				if not check_sovrapposizioni(pos, lego): 
+					print(spawn_model(lego, pos))
+					i=i+1
+					break
+			models_spawned.append(lego)
+			print("---------> spawnato")
+		message = legoGroup("Assigment 2",list)   
+		#pub.publish(message)
+	elif(scelta =='3'):
+		for i in range(0,1):
+			while True:
+				lego = "X1-Y4-Z2"#get_random_model()
+				pos=random_position(rotation=True)
+				if not check_sovrapposizioni(pos, lego): 
+					print(spawn_model(lego, pos))
+					i=i+1
+					break
+		message = legoGroup("Assigment 3",list)   
+		#pub.publish(message)
+	else :
+		print("scelta sbagliata")
 
 		#sleep(5)
 		#mov_lego()
