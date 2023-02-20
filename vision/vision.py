@@ -45,6 +45,7 @@ pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 
 list = []
 DIM_BLOCK = 0.03
+real_robot = true
 
     
 def isUp(h):
@@ -293,10 +294,17 @@ def receive_pointcloud(results_data,Objects,point_count_for_item):
     actual_lego =[]
     
     for data in points_list:
-        alpha = -0.523
-        Ry = np.matrix([[ 0.     , -0.49948,  0.86632],
-                        [-1.     ,  0.     ,  0.     ],
-                        [-0.     , -0.86632, -0.49948]])
+        
+        if(real_robot):
+            Ry = np.matrix([[ 0.86632     , 0.,  0.49948],
+                        [0.     ,  1.     ,  0.     ],
+                        [-0.49948     , 0., 0.86632
+        
+        else:
+            alpha = -0.523
+            Ry = np.matrix([[ 0.     , -0.49948,  0.86632],
+                            [-1.     ,  0.     ,  0.     ],
+                            [-0.     , -0.86632, -0.49948]])
 
         data_zed_rotation = np.array( data * Ry ) * -1
         
