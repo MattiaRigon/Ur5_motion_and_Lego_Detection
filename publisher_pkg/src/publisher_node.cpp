@@ -135,8 +135,7 @@ JointStateVector return_joint_states(){
  * @return ** void 
  */
 
-void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
-
+bool move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
 
 
     if(pos[0] == 0){
@@ -174,7 +173,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
             cout <<"To go from : "<<direct_res.pos<<endl;
             cout << "to : "<< pos <<endl;
 
-            return;
+            return false;
         }
     }
 
@@ -189,6 +188,7 @@ void move_to(PositionVector pos,EulerVector e ,ros::Rate rate,bool turn){
         loop_rate.sleep();
     }
 
+    return true;
 }
 
 
@@ -243,14 +243,20 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
                 //pick
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 pos = models_map[lego.model];
                 //place
-                rot << M_PI/2,0,0;
-                move_to(pos,rot,rate,false);
+                rot << 0,0,0;
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 open_gripper();
-
+                
                 cout << endl ;
                 cout << endl ;
                 cout << endl ;
@@ -259,11 +265,11 @@ void listen_lego_detection_turn(ros::Rate rate){
 
                 cout << "TURNED LEGO (Y as height)" <<endl;
 
-                int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
-                float altezza_cm = (altezza - 1 ) * UNIT_BLOCCHETTO;
-                cout << "tolgo altezza : " <<altezza_cm << endl;
+                // int altezza = int(lego.model[4]) -48 ; // se è in piedi è la y che da la sua altezza
+                // float altezza_cm = (altezza ) * UNIT_BLOCCHETTO;
+                // cout << "tolgo altezza : " <<altezza_cm << endl;
 
-                pos(2) = pos(2) - altezza_cm;
+                // pos(2) = pos(2) - altezza_cm;
                 rot << -rot[2],0,0;
 
                 if(check_point(pos,rot)){
@@ -275,11 +281,15 @@ void listen_lego_detection_turn(ros::Rate rate){
                 }
 
                 open_gripper();
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
+                
                 close_gripper();
                 turn_rot << M_PI/2,0,-M_PI/2;
-                pos(2) = 0.82;
                 pos << -0.1 , -0.3 , 0.82;
+                
+                
 
                 if(check_point(pos,turn_rot)){
                     cout <<" REACHABLE POSITION" <<endl;
@@ -288,11 +298,15 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                move_to(pos,turn_rot,rate,true);
+                if(!move_to(pos,turn_rot,rate,true)){
+                    continue;
+                }
                 open_gripper(); 
                 rot << M_PI/2,0,0;
                 pos(2) =0.86;
-                move_to(pos,rot,rate,false);
+                if(!move_to(pos,rot,rate,false)){
+                    continue;
+                }
                 close_gripper();
                 pos = models_map[lego.model];
                 //place
@@ -427,6 +441,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
     return false;
 
 }
+
 /**
  * @brief Open the gripper of the robot, in the real robot it use the service call to move_gripper, in the simulation we public directly on the topic
  *        the angles that we want to reach with the fingers of the gripper
@@ -435,7 +450,7 @@ bool check_point(PositionVector _pos,EulerVector e ){
  */
 void open_gripper(){
 
-   if(real_robot){
+    if(real_robot){
         ros::NodeHandle node_gripper;
         ros::ServiceClient client_gripper = node_gripper.serviceClient<ros_impedance_controller::generic_float>("move_gripper"); 
         ros_impedance_controller::generic_float::Request req;
@@ -498,7 +513,7 @@ void close_gripper(){
             ros::Rate loop_rate(loop_frequency);
 
             actual_gripper = return_gripper_states();
-            while(actual_gripper(0)> -0.3){
+            while(actual_gripper(0)> -0.2){
                 for(int i=0;i<6;i++){
                 msg(i)= actual_pos(i);
                 }
@@ -546,7 +561,7 @@ int main(int argc,char **argv){
     {   
         listen_lego_detection_turn(loop_rate);
 
-
+        // string model = "";
         // cout << " x " ;
         // cin >> x;
         // cout << " y " ;
@@ -564,31 +579,31 @@ int main(int argc,char **argv){
         //     cout <<" REACHABLE POSITION" <<endl;
         // }else{
         //     cout <<" NON REACHABLE POSITION "<<endl;
+        //     cout << pos_des << endl;
         //     continue;
         // }
+        // //pick
         // open_gripper();
-        // move_to(pos_des,e,loop_rate,false);
+        // if(!move_to(pos_des,e,loop_rate,false)){
+        //     continue;
+        // }
+        
         // close_gripper();
-
-        // for turn
-        // e << M_PI/2,0,-M_PI/2; // default braccio drittto 
-        // pos_des(2) = 0.82;
-
-        // if(check_point(pos_des,e)){
-        //     cout <<" REACHABLE POSITION" <<endl;
-        // }else{
-        //     cout <<" NON REACHABLE POSITION "<<endl;
+        // pos_des = models_map[model];
+        // //place
+        // e << 0,0,0;
+        // if(!move_to(pos_des,e,loop_rate,false)){
         //     continue;
         // }
-        // turn(pos_des,e,loop_rate);
+        
         // open_gripper();
+
+
 
 
         loop_rate.sleep();
+
     }
     
     return 0;
 }
-
-
-

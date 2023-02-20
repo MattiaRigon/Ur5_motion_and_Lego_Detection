@@ -97,10 +97,10 @@ bool check_angles(JointStateVector Th)
 }
 
 /**
- * @brief Give the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of alle the 6 joint,then it check that
+ * @brief Given the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of all the 6 joints,then it checks that
  *        this postion is inside some defined range. In our case we have to avoid the collision with 3 plans : 
- *        - the ceiling of our envoirment
- *        - the floor of our envoirment
+ *        - the ceiling of our environment
+ *        - the floor of our environment
  *        - the wall behind the robot
  * 
  * @param th1 
@@ -348,7 +348,7 @@ vector<vector<double>> p2pMotionPlanIntermediatePoints(const JointStateVector qE
     for (PositionVector item : intermediate_points)
     {   
         // if is a turn movement , the second to last point to reach will have alrady the final configuration phiEf
-        if(i == intermediate_points.size() -1 && turn){
+        if(i == intermediate_points.size() -1 ){
             item(2) = 0.6;
             qInt = nearest(last_q, inverse_kinematics(item, eul2rot(phiEf)));
 
