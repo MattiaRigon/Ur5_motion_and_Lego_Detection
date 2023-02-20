@@ -301,7 +301,6 @@ def receive_pointcloud(results_data,Objects,point_count_for_item):
                         [-0.49948     , 0., 0.86632
         
         else:
-            alpha = -0.523
             Ry = np.matrix([[ 0.     , -0.49948,  0.86632],
                             [-1.     ,  0.     ,  0.     ],
                             [-0.     , -0.86632, -0.49948]])
