@@ -225,7 +225,7 @@ if __name__ == "__main__":
 				if not check_sovrapposizioni(pos, lego): 
 					print(spawn_model(lego, pos))
 					i=i+1
-			break
+					break
 		message = legoGroup("Assigment 3",list)   
 		#pub.publish(message)
 	else :
