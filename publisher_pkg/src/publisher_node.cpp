@@ -299,7 +299,7 @@ void listen_lego_detection_turn(ros::Rate rate){
                     continue;
                 }
 
-                if(!move_to(pos,rot,rate,true)){
+                if(!move_to(pos,turn_rot,rate,true)){
                     continue;
                 }
                 open_gripper(); 
