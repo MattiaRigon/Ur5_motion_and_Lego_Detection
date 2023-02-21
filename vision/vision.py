@@ -1,3 +1,8 @@
+##@package vision
+#This is the documentation for the vision.py script.
+#
+#This script is used to capture images and processing them to recognize the blocks, their dimensions and their rotations
+
 from __future__ import print_function
 import rospy
 from sensor_msgs.msg import PointCloud2,Image
@@ -46,48 +51,46 @@ pub = rospy.Publisher('lego_position', legoGroup, queue_size=10)
 list = []
 DIM_BLOCK = 0.03
 real_robot = true
-
     
+##return true if the block is up false if it si relaxed
+#
+# Args:
+#     h (int): max height of lego
+#
+# Returns:
+#     boolean: return true if the block is up false if it si relaxed
+
 def isUp(h):
-    """return true if the block is up false if it si relaxed
-
-    Args:
-        h (int): max height of lego
-
-    Returns:
-        boolean: return true if the block is up false if it si relaxed
-    """
     ret = True
     if(h < 0.04):
         ret = False
     return ret
 
-
+##this function calculate the distance between two point
+#
+# Args:
+#     p1 (array): first point cordinates
+#     p2 (array): second point cordinates
+#
+# Returns:
+#     int: the distance between the two points
+    
 def distanza(p1,p2):
-    """this function calculate the distance between two point
-
-    Args:
-        p1 (array): first point cordinates
-        p2 (array): second point cordinates
-
-    Returns:
-        int: the distance between the two points
-    """
     return sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
 
-    
+##This function return the three lego's dimensions (width, length and height)
+#
+# Args:
+#     v1 (array): the cordinate of leftmost points
+#     v2 (array): the cordinate the lowest point at the bottom
+#     v3 (array): the cordinate of rightmost points
+#     zmax (int): the max height of lego
+#
+# Returns:
+#     array: the three dimension of lego (width, length and height)  
 def find_dimension(v1,v2,v3,zmax):
-    """This function return the three lego's dimensions (width, length and height)
-
-    Args:
-        v1 (array): the cordinate of leftmost points
-        v2 (array): the cordinate the lowest point at the bottom
-        v3 (array): the cordinate of rightmost points
-        zmax (int): the max height of lego
-
-    Returns:
-        array: the three dimension of lego (width, length and height)
-    """
+    
+    
     #find dimension of blocks
     dimension = [0,0,0]
     d12 = distanza(v1,v2)
@@ -103,19 +106,17 @@ def find_dimension(v1,v2,v3,zmax):
     
     return dimension
 
-
+##This function find lego's position and orientation 
+#
+# Args:
+#     dimension (array): the three dimension of lego (width, length and height)
+#     v1 (array): the cordinate of leftmost points
+#     v2 (array): the cordinate the lowest point at the bottom
+#     v3 (array): the cordinate of rightmost points
+#
+# Returns:
+#     pos,rot: return the cordinate of position and rotation
 def find_orientation(dimension,v1,v2,v3):
-    """This function find lego's position and orientation 
-
-    Args:
-        dimension (array): the three dimension of lego (width, length and height)
-        v1 (array): the cordinate of leftmost points
-        v2 (array): the cordinate the lowest point at the bottom
-        v3 (array): the cordinate of rightmost points
-
-    Returns:
-        pos,rot: return the cordinate of position and rotation
-    """
 
     rot = [0,0,0]
     if(not(isUp(dimension[2]))):
@@ -142,19 +143,19 @@ def find_orientation(dimension,v1,v2,v3):
 
     return pos,rot
 
+##This function correct the name for classification of blocks based on his dimensions
+#
+#Args:
+#   dimension (array): the three dimension of lego (width, length and height)
+#   nome (String): the name of classification for lego
+#   v1 (array): the cordinate of leftmost points
+#   v2 (array): the cordinate the lowest point at the bottom
+#   v3 (array): the cordinate of rightmost points
+#
+#Returns:
+#   string,array,array: the name of lego, the dimension and the cordinate of rightmost points
 def correction(dimension,nome,v1,v2,v3):
-    """this function correct the name for classification of blocks based on his dimensions
-
-    Args:
-        dimension (array): the three dimension of lego (width, length and height)
-        nome (String): the name of classification for lego
-        v1 (array): the cordinate of leftmost points
-        v2 (array): the cordinate the lowest point at the bottom
-        v3 (array): the cordinate of rightmost points
-
-    Returns:
-        string,array,array: the name of lego, the dimension and the cordinate of rightmost points
-    """
+    
     split = nome.split("-")
 
     #Correction name with height 
@@ -201,19 +202,17 @@ def correction(dimension,nome,v1,v2,v3):
     
     return retName,v1,v3
 
-
+##This function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections
+#
+# Args:
+#     actual_detection (_type_): _description_
+#     posizioni (_type_): _description_
+#     results_data (_type_): _description_
+#
+# Returns:
+#     string, : _description_
 def lego_processing(actual_detection,posizioni,results_data):  
-    """this function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections
-
-    Args:
-        actual_detection (_type_): _description_
-        posizioni (_type_): _description_
-        results_data (_type_): _description_
-
-    Returns:
-        string, : _description_
-    """
-
+    
     orientation = 0   #0 normale 1 girato 2 appoggiato a terra 3 appoggiato in piedi
     dimension = [0, 0, 0]   #lato lungo, lato corto e altezza
     v1 = [0,0,0]   #left point of block
@@ -268,16 +267,14 @@ def lego_processing(actual_detection,posizioni,results_data):
 
     return name,initial_pose
 
-
-def receive_pointcloud(results_data,Objects,point_count_for_item):
-    """For each pixel of the list created by recognition(), this function takes all the corresponding points of the pointcloud  
-
-    Args:
-        results_data (ArrayList): the results of the recognition: class and bounding box's vertices
-        Objects (ArrayList): list of all pixel for block
-        point_count_for_item (ArrayList): number of point for block
-    """
+##For each pixel of the list created by recognition(), this function takes all the corresponding points of the pointcloud  
+#
+# Args:
+#     results_data (ArrayList): the results of the recognition: class and bounding box's vertices
+#     Objects (ArrayList): list of all pixel for block
+#     point_count_for_item (ArrayList): number of point for block
     
+def receive_pointcloud(results_data,Objects,point_count_for_item):
 
     msg = rospy.wait_for_message("/ur5/zed_node/point_cloud/cloud_registered", PointCloud2)
     # read all the points
@@ -298,7 +295,7 @@ def receive_pointcloud(results_data,Objects,point_count_for_item):
         if(real_robot):
             Ry = np.matrix([[ 0.86632     , 0.,  0.49948],
                         [0.     ,  1.     ,  0.     ],
-                        [-0.49948     , 0., 0.86632
+                        [-0.49948     , 0., 0.86632]])
         
         else:
             Ry = np.matrix([[ 0.     , -0.49948,  0.86632],
@@ -327,10 +324,11 @@ def receive_pointcloud(results_data,Objects,point_count_for_item):
         cont = cont +1
         actual_lego.append(data_world[0])
 
+##This function use the photo saved before and recognizes lego with YOLOv5, then it saves all the inner points of the bounding box into a list
 
 def recognition():
-    """This function use the photo saved before and recognizes lego with YOLOv5, then it saves all the inner points of the bounding box into a list  
-    """
+      
+    
     Objects = []
     point_count_for_item = []
 
@@ -374,13 +372,12 @@ def recognition():
 
     receive_pointcloud(results_data,Objects,point_count_for_item)
 
-
+##This function take a photo with ZED2, cropped it and finally save the result
+#
+# Args:
+#     msg (_type_): zed message
 def receive_image(msg):
-    """This function take a photo with ZED2, cropped it and finally save the result
-
-    Args:
-        msg (_type_): zed message
-    """
+    
     #msg = rospy.wait_for_message("/ur5/zed_node/left_raw/image_raw_color", Image)
     rgb = CvBridge().imgmsg_to_cv2(msg, "bgr8")
 

@@ -1,0 +1,6 @@
+<map id="/home/bonnie/ros_ws/src/progetto_robotica/publisher_pkg/include/publisher_pkg/motion_planning.h" name="/home/bonnie/ros_ws/src/progetto_robotica/publisher_pkg/include/publisher_pkg/motion_planning.h">
+<area shape="rect" id="node1" title=" " alt="" coords="97,5,339,76"/>
+<area shape="rect" id="node2" href="$motion__planning_8cpp.html" title="In this file there are the main function that permit to calculate the trajectory that the robot will ..." alt="" coords="5,124,196,195"/>
+<area shape="rect" id="node3" href="$publisher__node_8h.html" title=" " alt="" coords="221,124,453,195"/>
+<area shape="rect" id="node4" href="$publisher__node_8cpp.html" title="This file is where it recive the position and orientation (of the lego) , and it publish on the right..." alt="" coords="235,243,439,313"/>
+</map>

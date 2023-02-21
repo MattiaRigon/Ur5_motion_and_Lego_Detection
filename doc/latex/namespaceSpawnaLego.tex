@@ -1,0 +1,224 @@
+\hypertarget{namespaceSpawnaLego}{}\doxysection{Spawna\+Lego Namespace Reference}
+\label{namespaceSpawnaLego}\index{SpawnaLego@{SpawnaLego}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}{get\+\_\+random\+\_\+model}} ()
+\begin{DoxyCompactList}\small\item\em this function return me a random lego block\textquotesingle{}s class \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_abe648f5bc19330b34673e476deec543b}{spawn\+\_\+model}} (model, \mbox{\hyperlink{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}{pos}}, name=None, ref\+\_\+frame=\textquotesingle{}world\textquotesingle{})
+\begin{DoxyCompactList}\small\item\em This function spawns the model in the position given. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a50f82c022dbbd531ae7d6b77064966dd}{rand\+Num}} (min, max)
+\begin{DoxyCompactList}\small\item\em generates a random number \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}{random\+\_\+position}} (rotation=False)
+\begin{DoxyCompactList}\small\item\em It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a96bd40cfbab08ca7354f94f477d541ca}{change\+Model\+Color}} (model\+\_\+xml, \mbox{\hyperlink{namespaceSpawnaLego_a5f941ba162fb817cf5549c86c7e40823}{color}})
+\begin{DoxyCompactList}\small\item\em it changes the color of model \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a58e85e8582eb79e0d9f1cb675012d111}{check\+\_\+sovrapposizioni}} (\mbox{\hyperlink{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}{pos}}, \mbox{\hyperlink{namespaceSpawnaLego_a363fe32e073194d5348792f16c71a6b9}{lego}})
+\begin{DoxyCompactList}\small\item\em this function check if there is conflict in spawn with other lego \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a4cb3de8bf802f9f36ad59533a0b06ac0}{pub}} = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a919ae86e839f6e6c00baecef2c481f81}{models\+\_\+path}} = os.\+path.\+dirname(os.\+path.\+abspath(\+\_\+\+\_\+file\+\_\+\+\_\+))
+\item 
+string \mbox{\hyperlink{namespaceSpawnaLego_a8c8f95e8ceb34394d3dac09a6d3d99da}{models\+\_\+str}} = \char`\"{}models\char`\"{}
+\item 
+string \mbox{\hyperlink{namespaceSpawnaLego_ab0cbd9dcfd4246d205eb9783bdde9ef1}{src\+\_\+str}} = \char`\"{}src\char`\"{}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} \mbox{\hyperlink{namespaceSpawnaLego_aba4327513a0987939b4cea4024390720}{models}} = \mbox{[}\char`\"{}X1-\/Y1-\/Z2\char`\"{}, \char`\"{}X1-\/Y2-\/Z1\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/C\+H\+A\+M\+F\+ER\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/T\+W\+I\+N\+F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X1-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2\char`\"{}, \char`\"{}X1-\/Y4-\/Z1\char`\"{}, \char`\"{}X1-\/Y4-\/Z2\char`\"{}, \char`\"{}X2-\/Y2-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X2-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}\mbox{]}
+\item 
+int \mbox{\hyperlink{namespaceSpawnaLego_a3447b31ca8edf9690e40673458f4307a}{cont}} = 0
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} \mbox{\hyperlink{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}{color\+List}} = \mbox{[}\textquotesingle{}Gazebo/Indigo\textquotesingle{}, \textquotesingle{}Gazebo/Gray\textquotesingle{}, \textquotesingle{}Gazebo/Orange\textquotesingle{},\textquotesingle{}Gazebo/Red\textquotesingle{}, \textquotesingle{}Gazebo/Purple\textquotesingle{}, \textquotesingle{}Gazebo/Sky\+Blue\textquotesingle{},\textquotesingle{}Gazebo/Dark\+Yellow\textquotesingle{}, \textquotesingle{}Gazebo/Green\textquotesingle{}\mbox{]}
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} \mbox{\hyperlink{namespaceSpawnaLego_acc061bc83bcf282c4338d9a9237cbf9f}{spawned\+\_\+lego}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a5f941ba162fb817cf5549c86c7e40823}{color}} = random.\+choice(\mbox{\hyperlink{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}{color\+List}})
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} \mbox{\hyperlink{namespaceSpawnaLego_ae2c9c5debb759cbe89e65d0aa65d99a6}{models\+\_\+spawned}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a973b4217c203ca10851d895ea069e0fe}{scelta}} = input(\char`\"{}Scelta \+: \char`\"{})
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a363fe32e073194d5348792f16c71a6b9}{lego}} = \mbox{\hyperlink{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}{get\+\_\+random\+\_\+model}}()
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}{pos}} = \mbox{\hyperlink{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}{random\+\_\+position}}()
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a212a1b93e49869ed55ac491493752de4}{message}} = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)
+\item 
+int \mbox{\hyperlink{namespaceSpawnaLego_aaf658d7c1c3b0eeabab2b3dda4bedfeb}{i}} = i+1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceSpawnaLego_a96bd40cfbab08ca7354f94f477d541ca}\label{namespaceSpawnaLego_a96bd40cfbab08ca7354f94f477d541ca}} 
+\index{SpawnaLego@{SpawnaLego}!changeModelColor@{changeModelColor}}
+\index{changeModelColor@{changeModelColor}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{changeModelColor()}{changeModelColor()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+change\+Model\+Color (\begin{DoxyParamCaption}\item[{}]{model\+\_\+xml,  }\item[{}]{color }\end{DoxyParamCaption})}
+
+
+
+it changes the color of model 
+
+Args\+: (xml)\+: xml of model (string)\+: color to apply
+
+Returns\+: string\+: color \mbox{\Hypertarget{namespaceSpawnaLego_a58e85e8582eb79e0d9f1cb675012d111}\label{namespaceSpawnaLego_a58e85e8582eb79e0d9f1cb675012d111}} 
+\index{SpawnaLego@{SpawnaLego}!check\_sovrapposizioni@{check\_sovrapposizioni}}
+\index{check\_sovrapposizioni@{check\_sovrapposizioni}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{check\_sovrapposizioni()}{check\_sovrapposizioni()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+check\+\_\+sovrapposizioni (\begin{DoxyParamCaption}\item[{}]{pos,  }\item[{}]{lego }\end{DoxyParamCaption})}
+
+
+
+this function check if there is conflict in spawn with other lego 
+
+Args\+: pos (array)\+: position of lego (string)\+: lego
+
+Returns\+: bool\+: False if there aren\textquotesingle{}t sovrappositions, True if there aren\textquotesingle{}t \mbox{\Hypertarget{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}\label{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}} 
+\index{SpawnaLego@{SpawnaLego}!get\_random\_model@{get\_random\_model}}
+\index{get\_random\_model@{get\_random\_model}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{get\_random\_model()}{get\_random\_model()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+get\+\_\+random\+\_\+model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+this function return me a random lego block\textquotesingle{}s class 
+
+Returns\+: string \+: the name of the lego model \mbox{\Hypertarget{namespaceSpawnaLego_a50f82c022dbbd531ae7d6b77064966dd}\label{namespaceSpawnaLego_a50f82c022dbbd531ae7d6b77064966dd}} 
+\index{SpawnaLego@{SpawnaLego}!randNum@{randNum}}
+\index{randNum@{randNum}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{randNum()}{randNum()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+rand\+Num (\begin{DoxyParamCaption}\item[{}]{min,  }\item[{}]{max }\end{DoxyParamCaption})}
+
+
+
+generates a random number 
+
+Args\+: min (int)\+: the minimum number max (int)\+: the maximum number
+
+Returns\+: int \+: the random number generated \mbox{\Hypertarget{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}\label{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}} 
+\index{SpawnaLego@{SpawnaLego}!random\_position@{random\_position}}
+\index{random\_position@{random\_position}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{random\_position()}{random\_position()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+random\+\_\+position (\begin{DoxyParamCaption}\item[{}]{rotation = {\ttfamily False} }\end{DoxyParamCaption})}
+
+
+
+It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too. 
+
+Args\+: rotation (bool, optional)\+: if is equal to True, it generates also a random rotation. Defaults to False.
+
+Returns\+: Pose \mbox{\Hypertarget{namespaceSpawnaLego_abe648f5bc19330b34673e476deec543b}\label{namespaceSpawnaLego_abe648f5bc19330b34673e476deec543b}} 
+\index{SpawnaLego@{SpawnaLego}!spawn\_model@{spawn\_model}}
+\index{spawn\_model@{spawn\_model}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{spawn\_model()}{spawn\_model()}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+spawn\+\_\+model (\begin{DoxyParamCaption}\item[{}]{model,  }\item[{}]{pos,  }\item[{}]{name = {\ttfamily None},  }\item[{}]{ref\+\_\+frame = {\ttfamily \textquotesingle{}world\textquotesingle{}} }\end{DoxyParamCaption})}
+
+
+
+This function spawns the model in the position given. 
+
+Args\+: model (string)\+: the name of the lego model pos (struct)\+: it contains pall the parameters for the position of the block and his orientation too name (string, optional)\+: the name of the model. Defaults to None. ref\+\_\+frame (string, optional)\+: the reference frame. Defaults to \textquotesingle{}world\textquotesingle{}.
+
+Returns\+: {\itshape type}\+: {\itshape description} 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespaceSpawnaLego_a5f941ba162fb817cf5549c86c7e40823}\label{namespaceSpawnaLego_a5f941ba162fb817cf5549c86c7e40823}} 
+\index{SpawnaLego@{SpawnaLego}!color@{color}}
+\index{color@{color}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{color}{color}}
+{\footnotesize\ttfamily Spawna\+Lego.\+color = random.\+choice(\mbox{\hyperlink{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}{color\+List}})}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}\label{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}} 
+\index{SpawnaLego@{SpawnaLego}!colorList@{colorList}}
+\index{colorList@{colorList}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{colorList}{colorList}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} Spawna\+Lego.\+color\+List = \mbox{[}\textquotesingle{}Gazebo/Indigo\textquotesingle{}, \textquotesingle{}Gazebo/Gray\textquotesingle{}, \textquotesingle{}Gazebo/Orange\textquotesingle{},\textquotesingle{}Gazebo/Red\textquotesingle{}, \textquotesingle{}Gazebo/Purple\textquotesingle{}, \textquotesingle{}Gazebo/Sky\+Blue\textquotesingle{},\textquotesingle{}Gazebo/Dark\+Yellow\textquotesingle{}, \textquotesingle{}Gazebo/Green\textquotesingle{}\mbox{]}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a3447b31ca8edf9690e40673458f4307a}\label{namespaceSpawnaLego_a3447b31ca8edf9690e40673458f4307a}} 
+\index{SpawnaLego@{SpawnaLego}!cont@{cont}}
+\index{cont@{cont}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{cont}{cont}}
+{\footnotesize\ttfamily int Spawna\+Lego.\+cont = 0}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_aaf658d7c1c3b0eeabab2b3dda4bedfeb}\label{namespaceSpawnaLego_aaf658d7c1c3b0eeabab2b3dda4bedfeb}} 
+\index{SpawnaLego@{SpawnaLego}!i@{i}}
+\index{i@{i}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{i}{i}}
+{\footnotesize\ttfamily int Spawna\+Lego.\+i = i+1}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a363fe32e073194d5348792f16c71a6b9}\label{namespaceSpawnaLego_a363fe32e073194d5348792f16c71a6b9}} 
+\index{SpawnaLego@{SpawnaLego}!lego@{lego}}
+\index{lego@{lego}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{lego}{lego}}
+{\footnotesize\ttfamily string Spawna\+Lego.\+lego = \mbox{\hyperlink{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}{get\+\_\+random\+\_\+model}}()}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}\label{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}} 
+\index{SpawnaLego@{SpawnaLego}!list@{list}}
+\index{list@{list}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{list}{list}}
+{\footnotesize\ttfamily list Spawna\+Lego.\+list = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a212a1b93e49869ed55ac491493752de4}\label{namespaceSpawnaLego_a212a1b93e49869ed55ac491493752de4}} 
+\index{SpawnaLego@{SpawnaLego}!message@{message}}
+\index{message@{message}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{message}{message}}
+{\footnotesize\ttfamily Spawna\+Lego.\+message = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_aba4327513a0987939b4cea4024390720}\label{namespaceSpawnaLego_aba4327513a0987939b4cea4024390720}} 
+\index{SpawnaLego@{SpawnaLego}!models@{models}}
+\index{models@{models}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{models}{models}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} Spawna\+Lego.\+models = \mbox{[}\char`\"{}X1-\/Y1-\/Z2\char`\"{}, \char`\"{}X1-\/Y2-\/Z1\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/C\+H\+A\+M\+F\+ER\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/T\+W\+I\+N\+F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X1-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2\char`\"{}, \char`\"{}X1-\/Y4-\/Z1\char`\"{}, \char`\"{}X1-\/Y4-\/Z2\char`\"{}, \char`\"{}X2-\/Y2-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X2-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}\mbox{]}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a919ae86e839f6e6c00baecef2c481f81}\label{namespaceSpawnaLego_a919ae86e839f6e6c00baecef2c481f81}} 
+\index{SpawnaLego@{SpawnaLego}!models\_path@{models\_path}}
+\index{models\_path@{models\_path}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{models\_path}{models\_path}}
+{\footnotesize\ttfamily Spawna\+Lego.\+models\+\_\+path = os.\+path.\+dirname(os.\+path.\+abspath(\+\_\+\+\_\+file\+\_\+\+\_\+))}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_ae2c9c5debb759cbe89e65d0aa65d99a6}\label{namespaceSpawnaLego_ae2c9c5debb759cbe89e65d0aa65d99a6}} 
+\index{SpawnaLego@{SpawnaLego}!models\_spawned@{models\_spawned}}
+\index{models\_spawned@{models\_spawned}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{models\_spawned}{models\_spawned}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} Spawna\+Lego.\+models\+\_\+spawned = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a8c8f95e8ceb34394d3dac09a6d3d99da}\label{namespaceSpawnaLego_a8c8f95e8ceb34394d3dac09a6d3d99da}} 
+\index{SpawnaLego@{SpawnaLego}!models\_str@{models\_str}}
+\index{models\_str@{models\_str}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{models\_str}{models\_str}}
+{\footnotesize\ttfamily string Spawna\+Lego.\+models\+\_\+str = \char`\"{}models\char`\"{}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}\label{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}} 
+\index{SpawnaLego@{SpawnaLego}!pos@{pos}}
+\index{pos@{pos}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{pos}{pos}}
+{\footnotesize\ttfamily def Spawna\+Lego.\+pos = \mbox{\hyperlink{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}{random\+\_\+position}}()}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a4cb3de8bf802f9f36ad59533a0b06ac0}\label{namespaceSpawnaLego_a4cb3de8bf802f9f36ad59533a0b06ac0}} 
+\index{SpawnaLego@{SpawnaLego}!pub@{pub}}
+\index{pub@{pub}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{pub}{pub}}
+{\footnotesize\ttfamily Spawna\+Lego.\+pub = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_a973b4217c203ca10851d895ea069e0fe}\label{namespaceSpawnaLego_a973b4217c203ca10851d895ea069e0fe}} 
+\index{SpawnaLego@{SpawnaLego}!scelta@{scelta}}
+\index{scelta@{scelta}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{scelta}{scelta}}
+{\footnotesize\ttfamily Spawna\+Lego.\+scelta = input(\char`\"{}Scelta \+: \char`\"{})}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_acc061bc83bcf282c4338d9a9237cbf9f}\label{namespaceSpawnaLego_acc061bc83bcf282c4338d9a9237cbf9f}} 
+\index{SpawnaLego@{SpawnaLego}!spawned\_lego@{spawned\_lego}}
+\index{spawned\_lego@{spawned\_lego}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{spawned\_lego}{spawned\_lego}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{list}} Spawna\+Lego.\+spawned\+\_\+lego = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespaceSpawnaLego_ab0cbd9dcfd4246d205eb9783bdde9ef1}\label{namespaceSpawnaLego_ab0cbd9dcfd4246d205eb9783bdde9ef1}} 
+\index{SpawnaLego@{SpawnaLego}!src\_str@{src\_str}}
+\index{src\_str@{src\_str}!SpawnaLego@{SpawnaLego}}
+\doxysubsubsection{\texorpdfstring{src\_str}{src\_str}}
+{\footnotesize\ttfamily string Spawna\+Lego.\+src\+\_\+str = \char`\"{}src\char`\"{}}
+

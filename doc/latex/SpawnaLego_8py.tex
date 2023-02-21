@@ -1,0 +1,59 @@
+\hypertarget{SpawnaLego_8py}{}\doxysection{/home/bonnie/ros\+\_\+ws/src/progetto\+\_\+robotica/spawn\+Lego\+\_\+pkg/src/\+Spawna\+Lego.py File Reference}
+\label{SpawnaLego_8py}\index{/home/bonnie/ros\_ws/src/progetto\_robotica/spawnLego\_pkg/src/SpawnaLego.py@{/home/bonnie/ros\_ws/src/progetto\_robotica/spawnLego\_pkg/src/SpawnaLego.py}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceSpawnaLego}{Spawna\+Lego}}
+\item 
+ \mbox{\hyperlink{namespacespawnLego__pkg}{spawn\+Lego\+\_\+pkg}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a64e7ad9f4a296fe12eb5a6c23f4dcc17}{Spawna\+Lego.\+get\+\_\+random\+\_\+model}} ()
+\begin{DoxyCompactList}\small\item\em this function return me a random lego block\textquotesingle{}s class \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_abe648f5bc19330b34673e476deec543b}{Spawna\+Lego.\+spawn\+\_\+model}} (model, pos, name=None, ref\+\_\+frame=\textquotesingle{}world\textquotesingle{})
+\begin{DoxyCompactList}\small\item\em This function spawns the model in the position given. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a50f82c022dbbd531ae7d6b77064966dd}{Spawna\+Lego.\+rand\+Num}} (min, max)
+\begin{DoxyCompactList}\small\item\em generates a random number \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_afc886c8f1d2d5d5b5bd7d9b4ff2fe149}{Spawna\+Lego.\+random\+\_\+position}} (rotation=False)
+\begin{DoxyCompactList}\small\item\em It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a96bd40cfbab08ca7354f94f477d541ca}{Spawna\+Lego.\+change\+Model\+Color}} (model\+\_\+xml, color)
+\begin{DoxyCompactList}\small\item\em it changes the color of model \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a58e85e8582eb79e0d9f1cb675012d111}{Spawna\+Lego.\+check\+\_\+sovrapposizioni}} (pos, lego)
+\begin{DoxyCompactList}\small\item\em this function check if there is conflict in spawn with other lego \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a4cb3de8bf802f9f36ad59533a0b06ac0}{Spawna\+Lego.\+pub}} = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a919ae86e839f6e6c00baecef2c481f81}{Spawna\+Lego.\+models\+\_\+path}} = os.\+path.\+dirname(os.\+path.\+abspath(\+\_\+\+\_\+file\+\_\+\+\_\+))
+\item 
+string \mbox{\hyperlink{namespaceSpawnaLego_a8c8f95e8ceb34394d3dac09a6d3d99da}{Spawna\+Lego.\+models\+\_\+str}} = \char`\"{}models\char`\"{}
+\item 
+string \mbox{\hyperlink{namespaceSpawnaLego_ab0cbd9dcfd4246d205eb9783bdde9ef1}{Spawna\+Lego.\+src\+\_\+str}} = \char`\"{}src\char`\"{}
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_aba4327513a0987939b4cea4024390720}{Spawna\+Lego.\+models}} = \mbox{[}\char`\"{}X1-\/Y1-\/Z2\char`\"{}, \char`\"{}X1-\/Y2-\/Z1\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/C\+H\+A\+M\+F\+ER\char`\"{}, \char`\"{}X1-\/Y2-\/Z2-\/T\+W\+I\+N\+F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X1-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2\char`\"{}, \char`\"{}X1-\/Y4-\/Z1\char`\"{}, \char`\"{}X1-\/Y4-\/Z2\char`\"{}, \char`\"{}X2-\/Y2-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}, \char`\"{}X2-\/Y2-\/Z2\char`\"{}, \char`\"{}X1-\/Y3-\/Z2-\/F\+I\+L\+L\+ET\char`\"{}\mbox{]}
+\item 
+int \mbox{\hyperlink{namespaceSpawnaLego_a3447b31ca8edf9690e40673458f4307a}{Spawna\+Lego.\+cont}} = 0
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_a3705053b9c6eefa6c9030f451c7c5d13}{Spawna\+Lego.\+color\+List}} = \mbox{[}\textquotesingle{}Gazebo/Indigo\textquotesingle{}, \textquotesingle{}Gazebo/Gray\textquotesingle{}, \textquotesingle{}Gazebo/Orange\textquotesingle{},\textquotesingle{}Gazebo/Red\textquotesingle{}, \textquotesingle{}Gazebo/Purple\textquotesingle{}, \textquotesingle{}Gazebo/Sky\+Blue\textquotesingle{},\textquotesingle{}Gazebo/Dark\+Yellow\textquotesingle{}, \textquotesingle{}Gazebo/Green\textquotesingle{}\mbox{]}
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_a676f9c48d2f11e640b14e3973dd8cb78}{Spawna\+Lego.\+list}} = \mbox{[}$\,$\mbox{]}
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_acc061bc83bcf282c4338d9a9237cbf9f}{Spawna\+Lego.\+spawned\+\_\+lego}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a5f941ba162fb817cf5549c86c7e40823}{Spawna\+Lego.\+color}} = random.\+choice(color\+List)
+\item 
+list \mbox{\hyperlink{namespaceSpawnaLego_ae2c9c5debb759cbe89e65d0aa65d99a6}{Spawna\+Lego.\+models\+\_\+spawned}} = \mbox{[}$\,$\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a973b4217c203ca10851d895ea069e0fe}{Spawna\+Lego.\+scelta}} = input(\char`\"{}Scelta \+: \char`\"{})
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a363fe32e073194d5348792f16c71a6b9}{Spawna\+Lego.\+lego}} = get\+\_\+random\+\_\+model()
+\item 
+def \mbox{\hyperlink{namespaceSpawnaLego_a83cae1c7bce3161e2526751bc11dfe6b}{Spawna\+Lego.\+pos}} = random\+\_\+position()
+\item 
+\mbox{\hyperlink{namespaceSpawnaLego_a212a1b93e49869ed55ac491493752de4}{Spawna\+Lego.\+message}} = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)
+\item 
+int \mbox{\hyperlink{namespaceSpawnaLego_aaf658d7c1c3b0eeabab2b3dda4bedfeb}{Spawna\+Lego.\+i}} = i+1
+\end{DoxyCompactItemize}

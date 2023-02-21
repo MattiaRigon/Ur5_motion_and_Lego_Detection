@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+##@package spawnLego_pkg
+#This is the documentation for the SpawnaLego.py script.
+#
+#This script is used to spawn the blocks in the simulation scenario, with different rotations and positions
+
 from pandas import array
 from gazebo_msgs.srv import SpawnModel, DeleteModel
 from geometry_msgs.msg import *
@@ -38,26 +43,27 @@ list = []
 
 spawned_lego = []
 
+##this function return me a random lego block's class
+#
+# Returns:
+# 	string : the name of the lego model
 def get_random_model():
-	"""this function return me a random lego block's class
-
-	Returns:
-	string : the name of the lego model 
-	"""
+	 
+	
 	return random.choice(models)
 
+##This function spawns the model in the position given 
+#
+# Args:
+# 	model (string): the name of the lego model
+# 	pos (struct): it contains pall the parameters for the position of the block and his orientation too
+# 	name (string, optional): the name of the model. Defaults to None.
+# 	ref_frame (string, optional): the reference frame. Defaults to 'world'.
+#
+# Returns:
+# 	_type_: _description_
 def spawn_model(model, pos, name=None, ref_frame='world'):
-	"""This function spawns the model in the position given 
-
-	Args:
-	model (string): the name of the lego model
-	pos (struct): it contains pall the parameters for the position of the block and his orientation too
-	name (string, optional): the name of the model. Defaults to None.
-	ref_frame (string, optional): the reference frame. Defaults to 'world'.
-
-	Returns:
-	_type_: _description_
-	"""
+	
 	global cont,list
 
 	if(name == None):
@@ -79,28 +85,28 @@ def spawn_model(model, pos, name=None, ref_frame='world'):
 
 	return spawn_model_client(model_name=name,model_xml=model_xml,initial_pose=pos,reference_frame=ref_frame)
 
+##generates a random number 
+#
+#Args:
+# 	min (int): the minimum number
+# 	max (int): the maximum number
+#
+#Returns:
+# 	int : the random number generated
 def randNum(min, max):
-	"""generates a random number 
-
-	Args:
-	min (int): the minimum number
-	max (int): the maximum number
-
-	Returns:
-	int : the random number generated
-	"""
+	
 	num = round(random.uniform(min, max), 2)
 	return num
 
+##It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too
+#
+# Args:
+# 	rotation (bool, optional): if is equal to True, it generates also a random rotation. Defaults to False.
+#
+# Returns:
+# 	Pose
 def random_position(rotation = False):
-	"""It generates a random position in the spawning zone, and if rotation=True it generates a random rotation too
-
-	Args:
-	rotation (bool, optional): if is equal to True, it generates also a random rotation. Defaults to False.
-
-	Returns:
-	Pose: _description_
-	"""
+	
 	s = lego.split("-")
 
 	r = int(s[1][1])*1.5*0.01
@@ -139,31 +145,30 @@ def random_position(rotation = False):
 	return initial_pose
 
 
-
+##it changes the color of model
+#
+#Args:
+# 	(xml): xml of model
+# 	(string): color to apply
+#
+#Returns:
+#	string: color
 def changeModelColor(model_xml, color):
-	"""it changes the color of model
-
-	Args:
-		model_xml (xml): xml of model
-		color (string): color to apply
-
-	Returns:
-		string: color
-	"""
+	
 	root = ET.XML(model_xml)
 	root.find('.//material/script/name').text = color
 	return ET.tostring(root, encoding='unicode')	
 
+##this function check if there is conflict in spawn with other lego
+#
+# Args:
+# 	pos (array): position of lego
+# 	 (string): lego
+#
+# Returns:
+# 		bool: False if there aren't sovrappositions, True if there aren't
 def check_sovrapposizioni(pos, lego):
-	"""this function check if there is conflict in spawn with other lego
-
-	Args:
-		pos (array): position of lego
-		lego (_type_): lego
-
-	Returns:
-		_type_: _description_
-	"""
+	
 	s = lego.split("-")
 
 	r = int(s[1][1])*1.5*0.01

@@ -1,0 +1,78 @@
+\hypertarget{namespaceparams}{}\doxysection{params Namespace Reference}
+\label{namespaceparams}\index{params@{params}}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{namespaceparams_a540991e8523a522c31b3cbe4a2d965ca}{find\+C\+MD}} = \textquotesingle{}find / -\/name \char`\"{}yolov5\char`\"{}\textquotesingle{}
+\item 
+\mbox{\hyperlink{namespaceparams_a23b7bb54521ff247a3ab83cf04beb0f1}{out}}
+\item 
+\mbox{\hyperlink{namespaceparams_a72c6d802541afa09f5cf76d7c3a9a3e9}{stdout}}
+\item 
+\mbox{\hyperlink{namespaceparams_a5c0a6ba862bc5a86ce54250077e6699a}{stderr}}
+\item 
+\mbox{\hyperlink{namespaceparams_a3038d478b29c552f527678da6784e2a3}{filelist}} = stdout.\+decode().split()
+\item 
+\mbox{\hyperlink{namespaceparams_adebcb7b5a29b87fe87eae1cc250ee032}{Y\+O\+L\+O\+\_\+\+P\+A\+TH}} = \mbox{\hyperlink{namespaceparams_a3038d478b29c552f527678da6784e2a3}{filelist}}\mbox{[}0\mbox{]}
+\item 
+\mbox{\hyperlink{namespaceparams_a993efff9c90240921b1f369de68e9a4a}{V\+I\+S\+I\+O\+N\+\_\+\+P\+A\+TH}} = os.\+path.\+dirname(os.\+path.\+abspath(\+\_\+\+\_\+file\+\_\+\+\_\+))
+\item 
+string \mbox{\hyperlink{namespaceparams_a1c7fa7b4591e7d4a1bce02afc26f137c}{L\+A\+S\+T\+\_\+\+P\+H\+O\+T\+O\+\_\+\+P\+A\+TH}} = \mbox{\hyperlink{namespaceparams_a993efff9c90240921b1f369de68e9a4a}{V\+I\+S\+I\+O\+N\+\_\+\+P\+A\+TH}} + \char`\"{}/last\+\_\+photo.\+png\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespaceparams_a3038d478b29c552f527678da6784e2a3}\label{namespaceparams_a3038d478b29c552f527678da6784e2a3}} 
+\index{params@{params}!filelist@{filelist}}
+\index{filelist@{filelist}!params@{params}}
+\doxysubsubsection{\texorpdfstring{filelist}{filelist}}
+{\footnotesize\ttfamily params.\+filelist = stdout.\+decode().split()}
+
+\mbox{\Hypertarget{namespaceparams_a540991e8523a522c31b3cbe4a2d965ca}\label{namespaceparams_a540991e8523a522c31b3cbe4a2d965ca}} 
+\index{params@{params}!findCMD@{findCMD}}
+\index{findCMD@{findCMD}!params@{params}}
+\doxysubsubsection{\texorpdfstring{findCMD}{findCMD}}
+{\footnotesize\ttfamily string params.\+find\+C\+MD = \textquotesingle{}find / -\/name \char`\"{}yolov5\char`\"{}\textquotesingle{}}
+
+\mbox{\Hypertarget{namespaceparams_a1c7fa7b4591e7d4a1bce02afc26f137c}\label{namespaceparams_a1c7fa7b4591e7d4a1bce02afc26f137c}} 
+\index{params@{params}!LAST\_PHOTO\_PATH@{LAST\_PHOTO\_PATH}}
+\index{LAST\_PHOTO\_PATH@{LAST\_PHOTO\_PATH}!params@{params}}
+\doxysubsubsection{\texorpdfstring{LAST\_PHOTO\_PATH}{LAST\_PHOTO\_PATH}}
+{\footnotesize\ttfamily string params.\+L\+A\+S\+T\+\_\+\+P\+H\+O\+T\+O\+\_\+\+P\+A\+TH = \mbox{\hyperlink{namespaceparams_a993efff9c90240921b1f369de68e9a4a}{V\+I\+S\+I\+O\+N\+\_\+\+P\+A\+TH}} + \char`\"{}/last\+\_\+photo.\+png\char`\"{}}
+
+\mbox{\Hypertarget{namespaceparams_a23b7bb54521ff247a3ab83cf04beb0f1}\label{namespaceparams_a23b7bb54521ff247a3ab83cf04beb0f1}} 
+\index{params@{params}!out@{out}}
+\index{out@{out}!params@{params}}
+\doxysubsubsection{\texorpdfstring{out}{out}}
+{\footnotesize\ttfamily params.\+out}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  subprocess.Popen(findCMD,shell=\textcolor{keyword}{True},stdin=subprocess.PIPE, }
+\DoxyCodeLine{2                         stdout=subprocess.PIPE,stderr=subprocess.PIPE)}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespaceparams_a5c0a6ba862bc5a86ce54250077e6699a}\label{namespaceparams_a5c0a6ba862bc5a86ce54250077e6699a}} 
+\index{params@{params}!stderr@{stderr}}
+\index{stderr@{stderr}!params@{params}}
+\doxysubsubsection{\texorpdfstring{stderr}{stderr}}
+{\footnotesize\ttfamily params.\+stderr}
+
+\mbox{\Hypertarget{namespaceparams_a72c6d802541afa09f5cf76d7c3a9a3e9}\label{namespaceparams_a72c6d802541afa09f5cf76d7c3a9a3e9}} 
+\index{params@{params}!stdout@{stdout}}
+\index{stdout@{stdout}!params@{params}}
+\doxysubsubsection{\texorpdfstring{stdout}{stdout}}
+{\footnotesize\ttfamily params.\+stdout}
+
+\mbox{\Hypertarget{namespaceparams_a993efff9c90240921b1f369de68e9a4a}\label{namespaceparams_a993efff9c90240921b1f369de68e9a4a}} 
+\index{params@{params}!VISION\_PATH@{VISION\_PATH}}
+\index{VISION\_PATH@{VISION\_PATH}!params@{params}}
+\doxysubsubsection{\texorpdfstring{VISION\_PATH}{VISION\_PATH}}
+{\footnotesize\ttfamily params.\+V\+I\+S\+I\+O\+N\+\_\+\+P\+A\+TH = os.\+path.\+dirname(os.\+path.\+abspath(\+\_\+\+\_\+file\+\_\+\+\_\+))}
+
+\mbox{\Hypertarget{namespaceparams_adebcb7b5a29b87fe87eae1cc250ee032}\label{namespaceparams_adebcb7b5a29b87fe87eae1cc250ee032}} 
+\index{params@{params}!YOLO\_PATH@{YOLO\_PATH}}
+\index{YOLO\_PATH@{YOLO\_PATH}!params@{params}}
+\doxysubsubsection{\texorpdfstring{YOLO\_PATH}{YOLO\_PATH}}
+{\footnotesize\ttfamily string params.\+Y\+O\+L\+O\+\_\+\+P\+A\+TH = \mbox{\hyperlink{namespaceparams_a3038d478b29c552f527678da6784e2a3}{filelist}}\mbox{[}0\mbox{]}}
+
