@@ -1,0 +1,238 @@
+\hypertarget{namespacevision}{}\doxysection{vision Namespace Reference}
+\label{namespacevision}\index{vision@{vision}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacevision_abad6f424df1e515f2cf8c9c6a6118844}{is\+Up}} (h)
+\begin{DoxyCompactList}\small\item\em return true if the block is up false if it si relaxed \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a3343c1488dd9a996a6a005ca32904d35}{distanza}} (p1, p2)
+\begin{DoxyCompactList}\small\item\em this function calculate the distance between two point \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_aa4895840e97579201a7470353bd94c29}{find\+\_\+dimension}} (v1, v2, v3, zmax)
+\begin{DoxyCompactList}\small\item\em This function return the three lego\textquotesingle{}s dimensions (width, length and height) \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9562cf1a8663019ca4493a8894342643}{find\+\_\+orientation}} (dimension, v1, v2, v3)
+\begin{DoxyCompactList}\small\item\em This function find lego\textquotesingle{}s position and orientation. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9d848a8c56d32bcac0df01d6a29ba887}{correction}} (dimension, nome, v1, v2, v3)
+\begin{DoxyCompactList}\small\item\em This function correct the name for classification of blocks based on his dimensions. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9ee4d711b9ebdbeb02a4367caf55b935}{lego\+\_\+processing}} (actual\+\_\+detection, posizioni, results\+\_\+data)
+\begin{DoxyCompactList}\small\item\em This function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a8e326d7a559bd7a2b0676cb52634cbc3}{receive\+\_\+pointcloud}} (results\+\_\+data, Objects, point\+\_\+count\+\_\+for\+\_\+item)
+\begin{DoxyCompactList}\small\item\em For each pixel of the list created by \mbox{\hyperlink{namespacevision_a6d8194936785c87616be062615ea4105}{recognition()}}, this function takes all the corresponding points of the pointcloud ~\newline
+ \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a6d8194936785c87616be062615ea4105}{recognition}} ()
+\begin{DoxyCompactList}\small\item\em This function use the photo saved before and recognizes lego with Y\+O\+L\+Ov5, then it saves all the inner points of the bounding box into a list. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}{receive\+\_\+image}} (\mbox{\hyperlink{namespacevision_a2ad03c6560be2f40b733938ba8413215}{msg}})
+\begin{DoxyCompactList}\small\item\em This function take a photo with Z\+E\+D2, cropped it and finally save the result. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacevision_ae26d7e1e651c56826f35ef8777884000}{threshold}}
+\item 
+\mbox{\hyperlink{namespacevision_a163d8754c0213a56700646e31b6c3762}{inf}}
+\item 
+\mbox{\hyperlink{namespacevision_a01382879abd45cfee09ab7c5bbb39926}{precision}}
+\item 
+\mbox{\hyperlink{namespacevision_a1bdb8c23925c89e8119ef1568855dea5}{linewidth}}
+\item 
+\mbox{\hyperlink{namespacevision_adbd1662a9eb2ff011d8c6b6f213f3998}{suppress}}
+\item 
+\mbox{\hyperlink{namespacevision_aa9a9163530bd32b2d963c4214419cb42}{pub}} = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)
+\item 
+list \mbox{\hyperlink{namespacevision_a6e735a1994f88e61a1ebeb28a2d54cc4}{list}} = \mbox{[}$\,$\mbox{]}
+\item 
+float \mbox{\hyperlink{namespacevision_afa8e4626478c16bb5e173e01aaf861bd}{D\+I\+M\+\_\+\+B\+L\+O\+CK}} = 0.\+03
+\item 
+\mbox{\hyperlink{namespacevision_a5dbf34269c56a6c42f25bfabc4dfd3a0}{real\+\_\+robot}} = true
+\item 
+\mbox{\hyperlink{namespacevision_a2ad03c6560be2f40b733938ba8413215}{msg}} = rospy.\+Subscriber(\char`\"{}/ur5/zed\+\_\+node/left\+\_\+raw/image\+\_\+raw\+\_\+color\char`\"{}, Image, callback = \mbox{\hyperlink{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}{receive\+\_\+image}}, queue\+\_\+size=1)
+\item 
+\mbox{\hyperlink{namespacevision_a5d92a9238b8ed11499d1f40cb2ad956e}{loop\+\_\+rate}} = rospy.\+Rate(1.)
+\item 
+\mbox{\hyperlink{namespacevision_a11ff96269b907d78488969e4800dee3a}{message}} = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This is the documentation for the \mbox{\hyperlink{vision_8py}{vision.\+py}} script.
+
+This script is used to capture images and processing them to recognize the blocks, their dimensions and their rotations 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacevision_a9d848a8c56d32bcac0df01d6a29ba887}\label{namespacevision_a9d848a8c56d32bcac0df01d6a29ba887}} 
+\index{vision@{vision}!correction@{correction}}
+\index{correction@{correction}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{correction()}{correction()}}
+{\footnotesize\ttfamily def vision.\+correction (\begin{DoxyParamCaption}\item[{}]{dimension,  }\item[{}]{nome,  }\item[{}]{v1,  }\item[{}]{v2,  }\item[{}]{v3 }\end{DoxyParamCaption})}
+
+
+
+This function correct the name for classification of blocks based on his dimensions. 
+
+Args\+: dimension (array)\+: the three dimension of lego (width, length and height) nome (String)\+: the name of classification for lego v1 (array)\+: the cordinate of leftmost points v2 (array)\+: the cordinate the lowest point at the bottom v3 (array)\+: the cordinate of rightmost points
+
+Returns\+: string,array,array\+: the name of lego, the dimension and the cordinate of rightmost points \mbox{\Hypertarget{namespacevision_a3343c1488dd9a996a6a005ca32904d35}\label{namespacevision_a3343c1488dd9a996a6a005ca32904d35}} 
+\index{vision@{vision}!distanza@{distanza}}
+\index{distanza@{distanza}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{distanza()}{distanza()}}
+{\footnotesize\ttfamily def vision.\+distanza (\begin{DoxyParamCaption}\item[{}]{p1,  }\item[{}]{p2 }\end{DoxyParamCaption})}
+
+
+
+this function calculate the distance between two point 
+
+Args\+: p1 (array)\+: first point cordinates p2 (array)\+: second point cordinates
+
+Returns\+: int\+: the distance between the two points \mbox{\Hypertarget{namespacevision_aa4895840e97579201a7470353bd94c29}\label{namespacevision_aa4895840e97579201a7470353bd94c29}} 
+\index{vision@{vision}!find\_dimension@{find\_dimension}}
+\index{find\_dimension@{find\_dimension}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{find\_dimension()}{find\_dimension()}}
+{\footnotesize\ttfamily def vision.\+find\+\_\+dimension (\begin{DoxyParamCaption}\item[{}]{v1,  }\item[{}]{v2,  }\item[{}]{v3,  }\item[{}]{zmax }\end{DoxyParamCaption})}
+
+
+
+This function return the three lego\textquotesingle{}s dimensions (width, length and height) 
+
+Args\+: v1 (array)\+: the cordinate of leftmost points v2 (array)\+: the cordinate the lowest point at the bottom v3 (array)\+: the cordinate of rightmost points zmax (int)\+: the max height of lego
+
+Returns\+: array\+: the three dimension of lego (width, length and height) ~\newline
+ \mbox{\Hypertarget{namespacevision_a9562cf1a8663019ca4493a8894342643}\label{namespacevision_a9562cf1a8663019ca4493a8894342643}} 
+\index{vision@{vision}!find\_orientation@{find\_orientation}}
+\index{find\_orientation@{find\_orientation}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{find\_orientation()}{find\_orientation()}}
+{\footnotesize\ttfamily def vision.\+find\+\_\+orientation (\begin{DoxyParamCaption}\item[{}]{dimension,  }\item[{}]{v1,  }\item[{}]{v2,  }\item[{}]{v3 }\end{DoxyParamCaption})}
+
+
+
+This function find lego\textquotesingle{}s position and orientation. 
+
+Args\+: dimension (array)\+: the three dimension of lego (width, length and height) v1 (array)\+: the cordinate of leftmost points v2 (array)\+: the cordinate the lowest point at the bottom v3 (array)\+: the cordinate of rightmost points
+
+Returns\+: pos,rot\+: return the cordinate of position and rotation \mbox{\Hypertarget{namespacevision_abad6f424df1e515f2cf8c9c6a6118844}\label{namespacevision_abad6f424df1e515f2cf8c9c6a6118844}} 
+\index{vision@{vision}!isUp@{isUp}}
+\index{isUp@{isUp}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{isUp()}{isUp()}}
+{\footnotesize\ttfamily def vision.\+is\+Up (\begin{DoxyParamCaption}\item[{}]{h }\end{DoxyParamCaption})}
+
+
+
+return true if the block is up false if it si relaxed 
+
+Args\+: h (int)\+: max height of lego
+
+Returns\+: boolean\+: return true if the block is up false if it si relaxed \mbox{\Hypertarget{namespacevision_a9ee4d711b9ebdbeb02a4367caf55b935}\label{namespacevision_a9ee4d711b9ebdbeb02a4367caf55b935}} 
+\index{vision@{vision}!lego\_processing@{lego\_processing}}
+\index{lego\_processing@{lego\_processing}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{lego\_processing()}{lego\_processing()}}
+{\footnotesize\ttfamily def vision.\+lego\+\_\+processing (\begin{DoxyParamCaption}\item[{}]{actual\+\_\+detection,  }\item[{}]{posizioni,  }\item[{}]{results\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+This function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections. 
+
+Args\+: actual\+\_\+detection ({\itshape type})\+: {\itshape description} posizioni ({\itshape type})\+: {\itshape description} results\+\_\+data ({\itshape type})\+: {\itshape description}
+
+Returns\+: string, \+: {\itshape description} \mbox{\Hypertarget{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}\label{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}} 
+\index{vision@{vision}!receive\_image@{receive\_image}}
+\index{receive\_image@{receive\_image}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{receive\_image()}{receive\_image()}}
+{\footnotesize\ttfamily def vision.\+receive\+\_\+image (\begin{DoxyParamCaption}\item[{}]{msg }\end{DoxyParamCaption})}
+
+
+
+This function take a photo with Z\+E\+D2, cropped it and finally save the result. 
+
+Args\+: msg ({\itshape type})\+: zed message \mbox{\Hypertarget{namespacevision_a8e326d7a559bd7a2b0676cb52634cbc3}\label{namespacevision_a8e326d7a559bd7a2b0676cb52634cbc3}} 
+\index{vision@{vision}!receive\_pointcloud@{receive\_pointcloud}}
+\index{receive\_pointcloud@{receive\_pointcloud}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{receive\_pointcloud()}{receive\_pointcloud()}}
+{\footnotesize\ttfamily def vision.\+receive\+\_\+pointcloud (\begin{DoxyParamCaption}\item[{}]{results\+\_\+data,  }\item[{}]{Objects,  }\item[{}]{point\+\_\+count\+\_\+for\+\_\+item }\end{DoxyParamCaption})}
+
+
+
+For each pixel of the list created by \mbox{\hyperlink{namespacevision_a6d8194936785c87616be062615ea4105}{recognition()}}, this function takes all the corresponding points of the pointcloud ~\newline
+ 
+
+Args\+: results\+\_\+data (Array\+List)\+: the results of the recognition\+: class and bounding box\textquotesingle{}s vertices Objects (Array\+List)\+: list of all pixel for block point\+\_\+count\+\_\+for\+\_\+item (Array\+List)\+: number of point for block \mbox{\Hypertarget{namespacevision_a6d8194936785c87616be062615ea4105}\label{namespacevision_a6d8194936785c87616be062615ea4105}} 
+\index{vision@{vision}!recognition@{recognition}}
+\index{recognition@{recognition}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{recognition()}{recognition()}}
+{\footnotesize\ttfamily def vision.\+recognition (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function use the photo saved before and recognizes lego with Y\+O\+L\+Ov5, then it saves all the inner points of the bounding box into a list. 
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacevision_afa8e4626478c16bb5e173e01aaf861bd}\label{namespacevision_afa8e4626478c16bb5e173e01aaf861bd}} 
+\index{vision@{vision}!DIM\_BLOCK@{DIM\_BLOCK}}
+\index{DIM\_BLOCK@{DIM\_BLOCK}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{DIM\_BLOCK}{DIM\_BLOCK}}
+{\footnotesize\ttfamily float vision.\+D\+I\+M\+\_\+\+B\+L\+O\+CK = 0.\+03}
+
+\mbox{\Hypertarget{namespacevision_a163d8754c0213a56700646e31b6c3762}\label{namespacevision_a163d8754c0213a56700646e31b6c3762}} 
+\index{vision@{vision}!inf@{inf}}
+\index{inf@{inf}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{inf}{inf}}
+{\footnotesize\ttfamily vision.\+inf}
+
+\mbox{\Hypertarget{namespacevision_a1bdb8c23925c89e8119ef1568855dea5}\label{namespacevision_a1bdb8c23925c89e8119ef1568855dea5}} 
+\index{vision@{vision}!linewidth@{linewidth}}
+\index{linewidth@{linewidth}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{linewidth}{linewidth}}
+{\footnotesize\ttfamily vision.\+linewidth}
+
+\mbox{\Hypertarget{namespacevision_a6e735a1994f88e61a1ebeb28a2d54cc4}\label{namespacevision_a6e735a1994f88e61a1ebeb28a2d54cc4}} 
+\index{vision@{vision}!list@{list}}
+\index{list@{list}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{list}{list}}
+{\footnotesize\ttfamily list vision.\+list = \mbox{[}$\,$\mbox{]}}
+
+\mbox{\Hypertarget{namespacevision_a5d92a9238b8ed11499d1f40cb2ad956e}\label{namespacevision_a5d92a9238b8ed11499d1f40cb2ad956e}} 
+\index{vision@{vision}!loop\_rate@{loop\_rate}}
+\index{loop\_rate@{loop\_rate}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{loop\_rate}{loop\_rate}}
+{\footnotesize\ttfamily vision.\+loop\+\_\+rate = rospy.\+Rate(1.)}
+
+\mbox{\Hypertarget{namespacevision_a11ff96269b907d78488969e4800dee3a}\label{namespacevision_a11ff96269b907d78488969e4800dee3a}} 
+\index{vision@{vision}!message@{message}}
+\index{message@{message}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{message}{message}}
+{\footnotesize\ttfamily vision.\+message = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)}
+
+\mbox{\Hypertarget{namespacevision_a2ad03c6560be2f40b733938ba8413215}\label{namespacevision_a2ad03c6560be2f40b733938ba8413215}} 
+\index{vision@{vision}!msg@{msg}}
+\index{msg@{msg}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{msg}{msg}}
+{\footnotesize\ttfamily vision.\+msg = rospy.\+Subscriber(\char`\"{}/ur5/zed\+\_\+node/left\+\_\+raw/image\+\_\+raw\+\_\+color\char`\"{}, Image, callback = \mbox{\hyperlink{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}{receive\+\_\+image}}, queue\+\_\+size=1)}
+
+\mbox{\Hypertarget{namespacevision_a01382879abd45cfee09ab7c5bbb39926}\label{namespacevision_a01382879abd45cfee09ab7c5bbb39926}} 
+\index{vision@{vision}!precision@{precision}}
+\index{precision@{precision}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{precision}{precision}}
+{\footnotesize\ttfamily vision.\+precision}
+
+\mbox{\Hypertarget{namespacevision_aa9a9163530bd32b2d963c4214419cb42}\label{namespacevision_aa9a9163530bd32b2d963c4214419cb42}} 
+\index{vision@{vision}!pub@{pub}}
+\index{pub@{pub}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{pub}{pub}}
+{\footnotesize\ttfamily vision.\+pub = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)}
+
+\mbox{\Hypertarget{namespacevision_a5dbf34269c56a6c42f25bfabc4dfd3a0}\label{namespacevision_a5dbf34269c56a6c42f25bfabc4dfd3a0}} 
+\index{vision@{vision}!real\_robot@{real\_robot}}
+\index{real\_robot@{real\_robot}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{real\_robot}{real\_robot}}
+{\footnotesize\ttfamily vision.\+real\+\_\+robot = true}
+
+\mbox{\Hypertarget{namespacevision_adbd1662a9eb2ff011d8c6b6f213f3998}\label{namespacevision_adbd1662a9eb2ff011d8c6b6f213f3998}} 
+\index{vision@{vision}!suppress@{suppress}}
+\index{suppress@{suppress}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{suppress}{suppress}}
+{\footnotesize\ttfamily vision.\+suppress}
+
+\mbox{\Hypertarget{namespacevision_ae26d7e1e651c56826f35ef8777884000}\label{namespacevision_ae26d7e1e651c56826f35ef8777884000}} 
+\index{vision@{vision}!threshold@{threshold}}
+\index{threshold@{threshold}!vision@{vision}}
+\doxysubsubsection{\texorpdfstring{threshold}{threshold}}
+{\footnotesize\ttfamily vision.\+threshold}
+

@@ -1,0 +1,56 @@
+\hypertarget{vision_8py}{}\doxysection{/home/bonnie/ros\+\_\+ws/src/progetto\+\_\+robotica/vision/vision.py File Reference}
+\label{vision_8py}\index{/home/bonnie/ros\_ws/src/progetto\_robotica/vision/vision.py@{/home/bonnie/ros\_ws/src/progetto\_robotica/vision/vision.py}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacevision}{vision}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacevision_abad6f424df1e515f2cf8c9c6a6118844}{vision.\+is\+Up}} (h)
+\begin{DoxyCompactList}\small\item\em return true if the block is up false if it si relaxed \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a3343c1488dd9a996a6a005ca32904d35}{vision.\+distanza}} (p1, p2)
+\begin{DoxyCompactList}\small\item\em this function calculate the distance between two point \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_aa4895840e97579201a7470353bd94c29}{vision.\+find\+\_\+dimension}} (v1, v2, v3, zmax)
+\begin{DoxyCompactList}\small\item\em This function return the three lego\textquotesingle{}s dimensions (width, length and height) \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9562cf1a8663019ca4493a8894342643}{vision.\+find\+\_\+orientation}} (dimension, v1, v2, v3)
+\begin{DoxyCompactList}\small\item\em This function find lego\textquotesingle{}s position and orientation. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9d848a8c56d32bcac0df01d6a29ba887}{vision.\+correction}} (dimension, nome, v1, v2, v3)
+\begin{DoxyCompactList}\small\item\em This function correct the name for classification of blocks based on his dimensions. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a9ee4d711b9ebdbeb02a4367caf55b935}{vision.\+lego\+\_\+processing}} (actual\+\_\+detection, posizioni, results\+\_\+data)
+\begin{DoxyCompactList}\small\item\em This function take the point of Pointcloud and calculate the position and rotation of the lego and made some corrections. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a8e326d7a559bd7a2b0676cb52634cbc3}{vision.\+receive\+\_\+pointcloud}} (results\+\_\+data, Objects, point\+\_\+count\+\_\+for\+\_\+item)
+\begin{DoxyCompactList}\small\item\em For each pixel of the list created by \mbox{\hyperlink{namespacevision_a6d8194936785c87616be062615ea4105}{recognition()}}, this function takes all the corresponding points of the pointcloud ~\newline
+ \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a6d8194936785c87616be062615ea4105}{vision.\+recognition}} ()
+\begin{DoxyCompactList}\small\item\em This function use the photo saved before and recognizes lego with Y\+O\+L\+Ov5, then it saves all the inner points of the bounding box into a list. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{namespacevision_a7ea24d72e724dcd3aaa4471e5e41583b}{vision.\+receive\+\_\+image}} (msg)
+\begin{DoxyCompactList}\small\item\em This function take a photo with Z\+E\+D2, cropped it and finally save the result. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacevision_ae26d7e1e651c56826f35ef8777884000}{vision.\+threshold}}
+\item 
+\mbox{\hyperlink{namespacevision_a163d8754c0213a56700646e31b6c3762}{vision.\+inf}}
+\item 
+\mbox{\hyperlink{namespacevision_a01382879abd45cfee09ab7c5bbb39926}{vision.\+precision}}
+\item 
+\mbox{\hyperlink{namespacevision_a1bdb8c23925c89e8119ef1568855dea5}{vision.\+linewidth}}
+\item 
+\mbox{\hyperlink{namespacevision_adbd1662a9eb2ff011d8c6b6f213f3998}{vision.\+suppress}}
+\item 
+\mbox{\hyperlink{namespacevision_aa9a9163530bd32b2d963c4214419cb42}{vision.\+pub}} = rospy.\+Publisher(\textquotesingle{}lego\+\_\+position\textquotesingle{}, lego\+Group, queue\+\_\+size=10)
+\item 
+list \mbox{\hyperlink{namespacevision_a6e735a1994f88e61a1ebeb28a2d54cc4}{vision.\+list}} = \mbox{[}$\,$\mbox{]}
+\item 
+float \mbox{\hyperlink{namespacevision_afa8e4626478c16bb5e173e01aaf861bd}{vision.\+D\+I\+M\+\_\+\+B\+L\+O\+CK}} = 0.\+03
+\item 
+\mbox{\hyperlink{namespacevision_a5dbf34269c56a6c42f25bfabc4dfd3a0}{vision.\+real\+\_\+robot}} = true
+\item 
+\mbox{\hyperlink{namespacevision_a2ad03c6560be2f40b733938ba8413215}{vision.\+msg}} = rospy.\+Subscriber(\char`\"{}/ur5/zed\+\_\+node/left\+\_\+raw/image\+\_\+raw\+\_\+color\char`\"{}, Image, callback = receive\+\_\+image, queue\+\_\+size=1)
+\item 
+\mbox{\hyperlink{namespacevision_a5d92a9238b8ed11499d1f40cb2ad956e}{vision.\+loop\+\_\+rate}} = rospy.\+Rate(1.)
+\item 
+\mbox{\hyperlink{namespacevision_a11ff96269b907d78488969e4800dee3a}{vision.\+message}} = lego\+Group(\char`\"{}Assigment 1\char`\"{},list)
+\end{DoxyCompactItemize}

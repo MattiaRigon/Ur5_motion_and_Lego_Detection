@@ -1,0 +1,237 @@
+\hypertarget{publisher__node_8cpp}{}\doxysection{/home/bonnie/ros\+\_\+ws/src/progetto\+\_\+robotica/publisher\+\_\+pkg/src/publisher\+\_\+node.cpp File Reference}
+\label{publisher__node_8cpp}\index{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/src/publisher\_node.cpp@{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/src/publisher\_node.cpp}}
+
+
+This file is where it recive the position and orientation (of the lego) , and it publish on the right topic in order to reach the reach the desidered position I\+M\+P\+O\+R\+T\+A\+NT \+: set properly the value of the real\+\_\+robot variable in \mbox{\hyperlink{publisher__node_8h}{publisher\+\_\+node.\+h}}.  
+
+
+{\ttfamily \#include $<$ros/ros.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+String.\+h$>$}\newline
+{\ttfamily \#include $<$sensor\+\_\+msgs/\+Joint\+State.\+h$>$}\newline
+{\ttfamily \#include $<$std\+\_\+msgs/\+Float64\+Multi\+Array.\+h$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$control\+\_\+msgs/\+Joint\+Trajectory\+Controller\+State.\+h$>$}\newline
+{\ttfamily \#include $<$realtime\+\_\+tools/realtime\+\_\+publisher.\+h$>$}\newline
+{\ttfamily \#include $<$list$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$numeric$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include \char`\"{}publisher\+\_\+pkg/publisher\+\_\+node.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$jsoncpp/json/json.\+h$>$}\newline
+{\ttfamily \#include $<$spawn\+Lego\+\_\+pkg/lego\+Detection.\+h$>$}\newline
+{\ttfamily \#include $<$spawn\+Lego\+\_\+pkg/lego\+Group.\+h$>$}\newline
+{\ttfamily \#include $<$ros\+\_\+impedance\+\_\+controller/generic\+\_\+float.\+h$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+Include dependency graph for publisher\+\_\+node.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{publisher__node_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} \mbox{\hyperlink{publisher__node_8cpp_a04bf7d084f47ac001aea855adf2651ed}{To\+Euler\+Angles}} (\mbox{\hyperlink{structQuaternion}{Quaternion}} q)
+\begin{DoxyCompactList}\small\item\em Convert from \mbox{\hyperlink{structQuaternion}{Quaternion}} to Euler Angles,this implementation assumes normalized quaternion. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{publisher__node_8cpp_a779edffb67ee08941bfa4bae9b2a9739}{send\+\_\+des\+\_\+jstate}} (const \mbox{\hyperlink{publisher__node_8h_a2f45518a9f2f205e5b8ea36f61c06e59}{Joint\+State\+Gripper\+Vector}} \&joint\+\_\+pos)
+\begin{DoxyCompactList}\small\item\em posts on the topic the vector joint\+\_\+pos , which contains the value of the angles of all joints must reach \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} \mbox{\hyperlink{publisher__node_8cpp_a7be436ef2a738f80932eff9b263ee3f6}{return\+\_\+joint\+\_\+states}} ()
+\begin{DoxyCompactList}\small\item\em Read from the topic the actual value of the joint. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{publisher__node_8cpp_a15eeb25c3567e969961ea70d2951f29b}{move\+\_\+to}} (\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} pos, \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} e, ros\+::\+Rate rate, bool turn)
+\begin{DoxyCompactList}\small\item\em Move the robot to the position pos, with e orientation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{publisher__node_8cpp_ae8325b3dc7c025a70bbaac4540b91cc6}{listen\+\_\+lego\+\_\+detection\+\_\+turn}} (ros\+::\+Rate rate)
+\begin{DoxyCompactList}\small\item\em Listen to the /lego\+\_\+position topic if messages arrives from the vision node , for each lego detected it send the robot to the lego position knowing which type of lego is , it can know which move it has to do, if it has to turn or not . \end{DoxyCompactList}\item 
+\mbox{\hyperlink{publisher__node_8h_afbf0a5b89313fd2d23dd3325025947c0}{Gripper\+State}} \mbox{\hyperlink{publisher__node_8cpp_ada65fe1037499b5664495439ecaa41d9}{return\+\_\+gripper\+\_\+states}} ()
+\begin{DoxyCompactList}\small\item\em Read from the topic the actual value of the gripper joint (used only for simulation) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{publisher__node_8cpp_a5cbc1c744be11dff48535cac2a0577d7}{check\+\_\+point}} (\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} \+\_\+pos, \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} e)
+\begin{DoxyCompactList}\small\item\em check that the position, with e orientation, entered is reachable by the robot , to do so check that at least one resultant of the inverse kinematics put inside the ~\newline
+ direct kinematics gives the same position that we have put inside the inverse kinematics Is important to notice that the results of this control have 2 parameters, beacuse also the orientation that we want to achive has a lot of importance in this control \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{publisher__node_8cpp_ac3e03bc2bc3a4db44b1ed2555f05f661}{open\+\_\+gripper}} ()
+\begin{DoxyCompactList}\small\item\em Open the gripper of the robot, in the real robot it use the service call to move\+\_\+gripper, in the simulation we public directly on the topic the angles that we want to reach with the fingers of the gripper. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{publisher__node_8cpp_a4c118f97eae007bb2691b1676c0c6b75}{close\+\_\+gripper}} ()
+\begin{DoxyCompactList}\small\item\em Close the gripper of the robot, in the real robot it use the service call to move\+\_\+gripper, in the simulation we public directly on the topic the angles that we want to reach with the fingers of the gripper. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{publisher__node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file is where it recive the position and orientation (of the lego) , and it publish on the right topic in order to reach the reach the desidered position I\+M\+P\+O\+R\+T\+A\+NT \+: set properly the value of the real\+\_\+robot variable in \mbox{\hyperlink{publisher__node_8h}{publisher\+\_\+node.\+h}}. 
+
+\begin{DoxyAuthor}{Author}
+Rigon Mattia (\href{mailto:mattia.rigon@studenti.unitn.it}{\texttt{ mattia.\+rigon@studenti.\+unitn.\+it}}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/02-\/17
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2023 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{publisher__node_8cpp_a5cbc1c744be11dff48535cac2a0577d7}\label{publisher__node_8cpp_a5cbc1c744be11dff48535cac2a0577d7}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!check\_point@{check\_point}}
+\index{check\_point@{check\_point}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{check\_point()}{check\_point()}}
+{\footnotesize\ttfamily bool check\+\_\+point (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}}]{\+\_\+pos,  }\item[{\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}}]{e }\end{DoxyParamCaption})}
+
+
+
+check that the position, with e orientation, entered is reachable by the robot , to do so check that at least one resultant of the inverse kinematics put inside the ~\newline
+ direct kinematics gives the same position that we have put inside the inverse kinematics Is important to notice that the results of this control have 2 parameters, beacuse also the orientation that we want to achive has a lot of importance in this control 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+pos} & position that you want to know if is reachable or not \\
+\hline
+{\em e} & Orientation that you want to have in the position \+\_\+pos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true 
+
+false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_a4c118f97eae007bb2691b1676c0c6b75}\label{publisher__node_8cpp_a4c118f97eae007bb2691b1676c0c6b75}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!close\_gripper@{close\_gripper}}
+\index{close\_gripper@{close\_gripper}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{close\_gripper()}{close\_gripper()}}
+{\footnotesize\ttfamily void close\+\_\+gripper (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Close the gripper of the robot, in the real robot it use the service call to move\+\_\+gripper, in the simulation we public directly on the topic the angles that we want to reach with the fingers of the gripper. 
+
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_ae8325b3dc7c025a70bbaac4540b91cc6}\label{publisher__node_8cpp_ae8325b3dc7c025a70bbaac4540b91cc6}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!listen\_lego\_detection\_turn@{listen\_lego\_detection\_turn}}
+\index{listen\_lego\_detection\_turn@{listen\_lego\_detection\_turn}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{listen\_lego\_detection\_turn()}{listen\_lego\_detection\_turn()}}
+{\footnotesize\ttfamily void listen\+\_\+lego\+\_\+detection\+\_\+turn (\begin{DoxyParamCaption}\item[{ros\+::\+Rate}]{rate }\end{DoxyParamCaption})}
+
+
+
+Listen to the /lego\+\_\+position topic if messages arrives from the vision node , for each lego detected it send the robot to the lego position knowing which type of lego is , it can know which move it has to do, if it has to turn or not . 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rate} & ros rate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{publisher__node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!main@{main}}
+\index{main@{main}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{publisher__node_8cpp_a15eeb25c3567e969961ea70d2951f29b}\label{publisher__node_8cpp_a15eeb25c3567e969961ea70d2951f29b}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!move\_to@{move\_to}}
+\index{move\_to@{move\_to}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{move\_to()}{move\_to()}}
+{\footnotesize\ttfamily bool move\+\_\+to (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}}]{pos,  }\item[{\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}}]{e,  }\item[{ros\+::\+Rate}]{rate,  }\item[{bool}]{turn }\end{DoxyParamCaption})}
+
+
+
+Move the robot to the position pos, with e orientation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & position that we want to reach \\
+\hline
+{\em e} & orientatin that we want to reach \\
+\hline
+{\em rate} & ros rate \\
+\hline
+{\em turn} & bool value that decide if this movement will end with the end effector turned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_ac3e03bc2bc3a4db44b1ed2555f05f661}\label{publisher__node_8cpp_ac3e03bc2bc3a4db44b1ed2555f05f661}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!open\_gripper@{open\_gripper}}
+\index{open\_gripper@{open\_gripper}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{open\_gripper()}{open\_gripper()}}
+{\footnotesize\ttfamily void open\+\_\+gripper (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Open the gripper of the robot, in the real robot it use the service call to move\+\_\+gripper, in the simulation we public directly on the topic the angles that we want to reach with the fingers of the gripper. 
+
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_ada65fe1037499b5664495439ecaa41d9}\label{publisher__node_8cpp_ada65fe1037499b5664495439ecaa41d9}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!return\_gripper\_states@{return\_gripper\_states}}
+\index{return\_gripper\_states@{return\_gripper\_states}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{return\_gripper\_states()}{return\_gripper\_states()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{publisher__node_8h_afbf0a5b89313fd2d23dd3325025947c0}{Gripper\+State}} return\+\_\+gripper\+\_\+states (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Read from the topic the actual value of the gripper joint (used only for simulation) 
+
+\begin{DoxyReturn}{Returns}
+Gripper\+State 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_a7be436ef2a738f80932eff9b263ee3f6}\label{publisher__node_8cpp_a7be436ef2a738f80932eff9b263ee3f6}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!return\_joint\_states@{return\_joint\_states}}
+\index{return\_joint\_states@{return\_joint\_states}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{return\_joint\_states()}{return\_joint\_states()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} return\+\_\+joint\+\_\+states (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Read from the topic the actual value of the joint. 
+
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Joint\+State\+Vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_a779edffb67ee08941bfa4bae9b2a9739}\label{publisher__node_8cpp_a779edffb67ee08941bfa4bae9b2a9739}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!send\_des\_jstate@{send\_des\_jstate}}
+\index{send\_des\_jstate@{send\_des\_jstate}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{send\_des\_jstate()}{send\_des\_jstate()}}
+{\footnotesize\ttfamily void send\+\_\+des\+\_\+jstate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{publisher__node_8h_a2f45518a9f2f205e5b8ea36f61c06e59}{Joint\+State\+Gripper\+Vector}} \&}]{joint\+\_\+pos }\end{DoxyParamCaption})}
+
+
+
+posts on the topic the vector joint\+\_\+pos , which contains the value of the angles of all joints must reach 
+
+
+\begin{DoxyParams}{Parameters}
+{\em joint\+\_\+pos} & vecort that conatins the values of each joint angle position that you\textquotesingle{}re going to publish \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{publisher__node_8cpp_a04bf7d084f47ac001aea855adf2651ed}\label{publisher__node_8cpp_a04bf7d084f47ac001aea855adf2651ed}} 
+\index{publisher\_node.cpp@{publisher\_node.cpp}!ToEulerAngles@{ToEulerAngles}}
+\index{ToEulerAngles@{ToEulerAngles}!publisher\_node.cpp@{publisher\_node.cpp}}
+\doxysubsubsection{\texorpdfstring{ToEulerAngles()}{ToEulerAngles()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} To\+Euler\+Angles (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQuaternion}{Quaternion}}}]{q }\end{DoxyParamCaption})}
+
+
+
+Convert from \mbox{\hyperlink{structQuaternion}{Quaternion}} to Euler Angles,this implementation assumes normalized quaternion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & \mbox{\hyperlink{structQuaternion}{Quaternion}} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Euler\+Vector 
+\end{DoxyReturn}

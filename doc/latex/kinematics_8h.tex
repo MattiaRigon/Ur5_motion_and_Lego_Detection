@@ -1,0 +1,297 @@
+\hypertarget{kinematics_8h}{}\doxysection{/home/bonnie/ros\+\_\+ws/src/progetto\+\_\+robotica/publisher\+\_\+pkg/include/publisher\+\_\+pkg/kinematics.h File Reference}
+\label{kinematics_8h}\index{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/include/publisher\_pkg/kinematics.h@{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/include/publisher\_pkg/kinematics.h}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Core$>$}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for kinematics.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{kinematics_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{kinematics_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structDirectResult}{Direct\+Result}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef Eigen\+::\+Matrix$<$ double, 1, 3 $>$ \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}
+\item 
+typedef Eigen\+::\+Matrix$<$ double, 1, 3 $>$ \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}
+\item 
+typedef Eigen\+::\+Matrix4d \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}}
+\item 
+typedef Eigen\+::\+Matrix3d \mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}}
+\item 
+typedef Eigen\+::\+Matrix$<$ double, 6, 1 $>$ \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}
+\item 
+typedef struct \mbox{\hyperlink{structDirectResult}{Direct\+Result}} \mbox{\hyperlink{kinematics_8h_a09abead69cbc57e25757dfbce18840fd}{Direct\+Result}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_ac029cc87fadd908ac61bc84508adedca}{T10f}} (const double th1)
+\begin{DoxyCompactList}\small\item\em Give th1 returns the transformation matrix from frame 0 to frame 1. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_a3cd5f00df0ae921d44db20c074f044fb}{T21f}} (const double th2)
+\begin{DoxyCompactList}\small\item\em Give th2 returns the transformation matrix from frame 1 to frame 2. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_acff5a340ed0abb6376887b584e6c2fac}{T32f}} (const double th3)
+\begin{DoxyCompactList}\small\item\em Give th3 returns the transformation matrix from frame 2 to frame 3. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_a21b37e44e9434d8ade4558b789cde0f9}{T43f}} (const double th4)
+\begin{DoxyCompactList}\small\item\em Give th4 returns the transformation matrix from frame 3 to frame 4. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_ae282629fa62b6e12c2284ce66a8f3ee1}{T54f}} (const double th5)
+\begin{DoxyCompactList}\small\item\em Give th5 returns the transformation matrix from frame 4 to frame 5. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} \mbox{\hyperlink{kinematics_8h_ac9c810e3bb3cb923794187bd821faff0}{T65f}} (const double th6)
+\begin{DoxyCompactList}\small\item\em Give th6 returns the transformation matrix from frame 5 to frame 6. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structDirectResult}{Direct\+Result}} \mbox{\hyperlink{kinematics_8h_aa61748e2dfa81fe27bb6598262798943}{direct\+\_\+kinematics}} (const double th1, const double th2, const double th3, const double th4, const double th5, const double th6)
+\begin{DoxyCompactList}\small\item\em Transform from the joint angles space to the operational space, which is specified in terms of position and orientation of the end-\/effector ~\newline
+ \end{DoxyCompactList}\item 
+vector$<$ \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} $>$ \mbox{\hyperlink{kinematics_8h_a4a5221e738a436b606017267a64bbeb9}{inverse\+\_\+kinematics}} (\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} pos, \mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}} \mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}})
+\begin{DoxyCompactList}\small\item\em Transform from the operational space, which is specified in terms of position and orientation of the end-\/effector , to the joint angles space. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const double \mbox{\hyperlink{kinematics_8h_a2d77012fd18c8363bb1b106f452144cd}{A}} \mbox{[}6\mbox{]} = \{0,-\/0.\+425,-\/0.\+3922,0,0, 0\}
+\item 
+const double \mbox{\hyperlink{kinematics_8h_a27605ec55d733f4428e61a3cee6fbe1c}{D}} \mbox{[}6\mbox{]} = \{0.\+1625, 0, 0, 0.\+1333, 0.\+0997, 0.\+0996 + 0.\+14\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Rigon Mattia (\href{mailto:mattia.rigon@studenti.unitn.it}{\texttt{ mattia.\+rigon@studenti.\+unitn.\+it}}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/02-\/17
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2023 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{kinematics_8h_a09abead69cbc57e25757dfbce18840fd}\label{kinematics_8h_a09abead69cbc57e25757dfbce18840fd}} 
+\index{kinematics.h@{kinematics.h}!DirectResult@{DirectResult}}
+\index{DirectResult@{DirectResult}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{DirectResult}{DirectResult}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structDirectResult}{Direct\+Result}} \mbox{\hyperlink{structDirectResult}{Direct\+Result}}}
+
+\mbox{\Hypertarget{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}\label{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}} 
+\index{kinematics.h@{kinematics.h}!EulerVector@{EulerVector}}
+\index{EulerVector@{EulerVector}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{EulerVector}{EulerVector}}
+{\footnotesize\ttfamily typedef Eigen\+::\+Matrix$<$double, 1, 3$>$ \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}}
+
+\mbox{\Hypertarget{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}\label{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}} 
+\index{kinematics.h@{kinematics.h}!JointStateVector@{JointStateVector}}
+\index{JointStateVector@{JointStateVector}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{JointStateVector}{JointStateVector}}
+{\footnotesize\ttfamily typedef Eigen\+::\+Matrix$<$double, 6, 1$>$ \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}
+
+\mbox{\Hypertarget{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}\label{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}} 
+\index{kinematics.h@{kinematics.h}!PositionVector@{PositionVector}}
+\index{PositionVector@{PositionVector}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{PositionVector}{PositionVector}}
+{\footnotesize\ttfamily typedef Eigen\+::\+Matrix$<$double, 1, 3$>$ \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}}
+
+\mbox{\Hypertarget{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}\label{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}} 
+\index{kinematics.h@{kinematics.h}!RotationMatrix@{RotationMatrix}}
+\index{RotationMatrix@{RotationMatrix}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{RotationMatrix}{RotationMatrix}}
+{\footnotesize\ttfamily typedef Eigen\+::\+Matrix3d \mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}}}
+
+\mbox{\Hypertarget{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}\label{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}} 
+\index{kinematics.h@{kinematics.h}!TransformationMatrix@{TransformationMatrix}}
+\index{TransformationMatrix@{TransformationMatrix}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{TransformationMatrix}{TransformationMatrix}}
+{\footnotesize\ttfamily typedef Eigen\+::\+Matrix4d \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}}}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{kinematics_8h_aa61748e2dfa81fe27bb6598262798943}\label{kinematics_8h_aa61748e2dfa81fe27bb6598262798943}} 
+\index{kinematics.h@{kinematics.h}!direct\_kinematics@{direct\_kinematics}}
+\index{direct\_kinematics@{direct\_kinematics}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{direct\_kinematics()}{direct\_kinematics()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDirectResult}{Direct\+Result}} direct\+\_\+kinematics (\begin{DoxyParamCaption}\item[{const double}]{th1,  }\item[{const double}]{th2,  }\item[{const double}]{th3,  }\item[{const double}]{th4,  }\item[{const double}]{th5,  }\item[{const double}]{th6 }\end{DoxyParamCaption})}
+
+
+
+Transform from the joint angles space to the operational space, which is specified in terms of position and orientation of the end-\/effector ~\newline
+ 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th1} & \\
+\hline
+{\em th2} & \\
+\hline
+{\em th3} & \\
+\hline
+{\em th4} & \\
+\hline
+{\em th5} & \\
+\hline
+{\em th6} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ \mbox{\hyperlink{structDirectResult}{Direct\+Result}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_a4a5221e738a436b606017267a64bbeb9}\label{kinematics_8h_a4a5221e738a436b606017267a64bbeb9}} 
+\index{kinematics.h@{kinematics.h}!inverse\_kinematics@{inverse\_kinematics}}
+\index{inverse\_kinematics@{inverse\_kinematics}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{inverse\_kinematics()}{inverse\_kinematics()}}
+{\footnotesize\ttfamily vector$<$\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}$>$ inverse\+\_\+kinematics (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}}]{pos,  }\item[{\mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}}}]{Rotation\+Matrix }\end{DoxyParamCaption})}
+
+
+
+Transform from the operational space, which is specified in terms of position and orientation of the end-\/effector , to the joint angles space. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & position you want to bring into the joint space ( associated with the rotation ) \\
+\hline
+{\em Rotation\+Matrix} & orientation we want to bring into the joint space ( associated with the position ) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ vector$<$\+Joint\+State\+Vector$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_ac029cc87fadd908ac61bc84508adedca}\label{kinematics_8h_ac029cc87fadd908ac61bc84508adedca}} 
+\index{kinematics.h@{kinematics.h}!T10f@{T10f}}
+\index{T10f@{T10f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T10f()}{T10f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T10f (\begin{DoxyParamCaption}\item[{const double}]{th1 }\end{DoxyParamCaption})}
+
+
+
+Give th1 returns the transformation matrix from frame 0 to frame 1. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th1} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_a3cd5f00df0ae921d44db20c074f044fb}\label{kinematics_8h_a3cd5f00df0ae921d44db20c074f044fb}} 
+\index{kinematics.h@{kinematics.h}!T21f@{T21f}}
+\index{T21f@{T21f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T21f()}{T21f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T21f (\begin{DoxyParamCaption}\item[{const double}]{th2 }\end{DoxyParamCaption})}
+
+
+
+Give th2 returns the transformation matrix from frame 1 to frame 2. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th2} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_acff5a340ed0abb6376887b584e6c2fac}\label{kinematics_8h_acff5a340ed0abb6376887b584e6c2fac}} 
+\index{kinematics.h@{kinematics.h}!T32f@{T32f}}
+\index{T32f@{T32f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T32f()}{T32f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T32f (\begin{DoxyParamCaption}\item[{const double}]{th3 }\end{DoxyParamCaption})}
+
+
+
+Give th3 returns the transformation matrix from frame 2 to frame 3. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th3} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_a21b37e44e9434d8ade4558b789cde0f9}\label{kinematics_8h_a21b37e44e9434d8ade4558b789cde0f9}} 
+\index{kinematics.h@{kinematics.h}!T43f@{T43f}}
+\index{T43f@{T43f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T43f()}{T43f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T43f (\begin{DoxyParamCaption}\item[{const double}]{th4 }\end{DoxyParamCaption})}
+
+
+
+Give th4 returns the transformation matrix from frame 3 to frame 4. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th4} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_ae282629fa62b6e12c2284ce66a8f3ee1}\label{kinematics_8h_ae282629fa62b6e12c2284ce66a8f3ee1}} 
+\index{kinematics.h@{kinematics.h}!T54f@{T54f}}
+\index{T54f@{T54f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T54f()}{T54f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T54f (\begin{DoxyParamCaption}\item[{const double}]{th5 }\end{DoxyParamCaption})}
+
+
+
+Give th5 returns the transformation matrix from frame 4 to frame 5. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th5} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{kinematics_8h_ac9c810e3bb3cb923794187bd821faff0}\label{kinematics_8h_ac9c810e3bb3cb923794187bd821faff0}} 
+\index{kinematics.h@{kinematics.h}!T65f@{T65f}}
+\index{T65f@{T65f}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{T65f()}{T65f()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a4977744742c30f75b6decac3150a4bfa}{Transformation\+Matrix}} T65f (\begin{DoxyParamCaption}\item[{const double}]{th6 }\end{DoxyParamCaption})}
+
+
+
+Give th6 returns the transformation matrix from frame 5 to frame 6. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th6} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Transformation\+Matrix 
+\end{DoxyReturn}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{kinematics_8h_a2d77012fd18c8363bb1b106f452144cd}\label{kinematics_8h_a2d77012fd18c8363bb1b106f452144cd}} 
+\index{kinematics.h@{kinematics.h}!A@{A}}
+\index{A@{A}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{A}{A}}
+{\footnotesize\ttfamily const double A\mbox{[}6\mbox{]} = \{0,-\/0.\+425,-\/0.\+3922,0,0, 0\}}
+
+\mbox{\Hypertarget{kinematics_8h_a27605ec55d733f4428e61a3cee6fbe1c}\label{kinematics_8h_a27605ec55d733f4428e61a3cee6fbe1c}} 
+\index{kinematics.h@{kinematics.h}!D@{D}}
+\index{D@{D}!kinematics.h@{kinematics.h}}
+\doxysubsubsection{\texorpdfstring{D}{D}}
+{\footnotesize\ttfamily const double D\mbox{[}6\mbox{]} = \{0.\+1625, 0, 0, 0.\+1333, 0.\+0997, 0.\+0996 + 0.\+14\}}
+

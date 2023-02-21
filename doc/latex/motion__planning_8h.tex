@@ -1,0 +1,236 @@
+\hypertarget{motion__planning_8h}{}\doxysection{/home/bonnie/ros\+\_\+ws/src/progetto\+\_\+robotica/publisher\+\_\+pkg/include/publisher\+\_\+pkg/motion\+\_\+planning.h File Reference}
+\label{motion__planning_8h}\index{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/include/publisher\_pkg/motion\_planning.h@{/home/bonnie/ros\_ws/src/progetto\_robotica/publisher\_pkg/include/publisher\_pkg/motion\_planning.h}}
+{\ttfamily \#include \char`\"{}kinematics.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Core$>$}\newline
+{\ttfamily \#include $<$eigen3/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$list$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$numeric$>$}\newline
+Include dependency graph for motion\+\_\+planning.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{motion__planning_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{motion__planning_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}} \mbox{\hyperlink{motion__planning_8h_a7ee83edb301741cb98ce28dd5f778da3}{eul2rot}} (\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} th)
+\begin{DoxyCompactList}\small\item\em Returns the rotation matrix corresponding to the given Euler angles. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} \mbox{\hyperlink{motion__planning_8h_a74331eb07b0847287917a0fd830c8af1}{rot2eul}} (\mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}} R)
+\begin{DoxyCompactList}\small\item\em Returns the euler vector associated to the R rotation Matrix. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{motion__planning_8h_afa13fa35979a8ce4b2fa5fff1c696060}{check\+\_\+singularity\+\_\+collision}} (const double th1, const double th2, const double th3, const double th4, const double th5, const double th6)
+\begin{DoxyCompactList}\small\item\em Given the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of all the 6 joints,then it checks that this postion is inside some defined range. In our case we have to avoid the collision with 3 plans \+: \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{motion__planning_8h_a4a4d8a6c0dab264694c191b294e13963}{check\+\_\+angles}} (const \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} Th)
+\begin{DoxyCompactList}\small\item\em check for each angles if the ur5 can apply it on the correspondent joiny,checking for each angle if is inside the associate range in max\+\_\+angles\+\_\+value \end{DoxyCompactList}\item 
+\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} \mbox{\hyperlink{motion__planning_8h_a88e06bf718501cc52ddf81454dd76189}{nearest}} (\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} q\+Es, vector$<$ \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} $>$ configurations)
+\begin{DoxyCompactList}\small\item\em It find the closest conifguration to the starting conifguration, which furthermore fulfills two conditions \+: \end{DoxyCompactList}\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{motion__planning_8h_aedb6e8f795d6defc8429adbbb817aebc}{theta\+Connect2\+Points}} (const double t\+Start, \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} q\+Es, \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} q\+Ef, const double dt, const double DtP, const double DtA)
+\begin{DoxyCompactList}\small\item\em Returns starting from t\+Start momement the trajectory to college togheter q\+Es e q\+Ef. \end{DoxyCompactList}\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{motion__planning_8h_a6900491f2bed3e9fc2c571f31fce5bfb}{p2p\+Motion\+Plan\+Intermediate\+Points}} (const \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} q\+Es, const \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} x\+Ef, const \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} phi\+Ef, vector$<$ \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} $>$ intermediate\+\_\+points, double dt, bool turn)
+\begin{DoxyCompactList}\small\item\em starting from q\+Es configurations, calculate all the intermediate configurations (that will change every dt), draw a trajector that passes through all the intermediate points, and make reach the x\+Ef position (with end effecor) with phi\+Ef final configurations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Rigon Mattia (\href{mailto:mattia.rigon@studenti.unitn.it}{\texttt{ mattia.\+rigon@studenti.\+unitn.\+it}}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2023-\/02-\/17
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2023 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{motion__planning_8h_a4a4d8a6c0dab264694c191b294e13963}\label{motion__planning_8h_a4a4d8a6c0dab264694c191b294e13963}} 
+\index{motion\_planning.h@{motion\_planning.h}!check\_angles@{check\_angles}}
+\index{check\_angles@{check\_angles}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{check\_angles()}{check\_angles()}}
+{\footnotesize\ttfamily bool check\+\_\+angles (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}]{Th }\end{DoxyParamCaption})}
+
+
+
+check for each angles if the ur5 can apply it on the correspondent joiny,checking for each angle if is inside the associate range in max\+\_\+angles\+\_\+value 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Th} & Vector which contains values of all 6 joints angles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true 
+
+false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_afa13fa35979a8ce4b2fa5fff1c696060}\label{motion__planning_8h_afa13fa35979a8ce4b2fa5fff1c696060}} 
+\index{motion\_planning.h@{motion\_planning.h}!check\_singularity\_collision@{check\_singularity\_collision}}
+\index{check\_singularity\_collision@{check\_singularity\_collision}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{check\_singularity\_collision()}{check\_singularity\_collision()}}
+{\footnotesize\ttfamily bool check\+\_\+singularity\+\_\+collision (\begin{DoxyParamCaption}\item[{const double}]{th1,  }\item[{const double}]{th2,  }\item[{const double}]{th3,  }\item[{const double}]{th4,  }\item[{const double}]{th5,  }\item[{const double}]{th6 }\end{DoxyParamCaption})}
+
+
+
+Given the 6 joint angles, it performs the direct kinematics for each joint, so we can know the position of all the 6 joints,then it checks that this postion is inside some defined range. In our case we have to avoid the collision with 3 plans \+: 
+
+
+\begin{DoxyItemize}
+\item the ceiling of our environment
+\item the floor of our environment
+\item the wall behind the robot
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em th1} & \\
+\hline
+{\em th2} & \\
+\hline
+{\em th3} & \\
+\hline
+{\em th4} & \\
+\hline
+{\em th5} & \\
+\hline
+{\em th6} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true 
+
+false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_a7ee83edb301741cb98ce28dd5f778da3}\label{motion__planning_8h_a7ee83edb301741cb98ce28dd5f778da3}} 
+\index{motion\_planning.h@{motion\_planning.h}!eul2rot@{eul2rot}}
+\index{eul2rot@{eul2rot}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{eul2rot()}{eul2rot()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}} eul2rot (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}}]{th }\end{DoxyParamCaption})}
+
+
+
+Returns the rotation matrix corresponding to the given Euler angles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em th} & Euler angles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Rotation\+Matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_a88e06bf718501cc52ddf81454dd76189}\label{motion__planning_8h_a88e06bf718501cc52ddf81454dd76189}} 
+\index{motion\_planning.h@{motion\_planning.h}!nearest@{nearest}}
+\index{nearest@{nearest}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{nearest()}{nearest()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} nearest (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}]{q\+Es,  }\item[{vector$<$ \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}} $>$}]{configurations }\end{DoxyParamCaption})}
+
+
+
+It find the closest conifguration to the starting conifguration, which furthermore fulfills two conditions \+: 
+
+
+\begin{DoxyItemize}
+\item the configuration must respect for each joint the limits it has
+\item the configuration must not have any collision with singularities
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em q\+Es} & intital joints configuration \\
+\hline
+{\em configurations} & all the 8 possible configurations , generated by the inverse kinematics \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Joint\+State\+Vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_a6900491f2bed3e9fc2c571f31fce5bfb}\label{motion__planning_8h_a6900491f2bed3e9fc2c571f31fce5bfb}} 
+\index{motion\_planning.h@{motion\_planning.h}!p2pMotionPlanIntermediatePoints@{p2pMotionPlanIntermediatePoints}}
+\index{p2pMotionPlanIntermediatePoints@{p2pMotionPlanIntermediatePoints}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{p2pMotionPlanIntermediatePoints()}{p2pMotionPlanIntermediatePoints()}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ p2p\+Motion\+Plan\+Intermediate\+Points (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}]{q\+Es,  }\item[{const \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}}}]{x\+Ef,  }\item[{\mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}}}]{phi\+Ef,  }\item[{vector$<$ \mbox{\hyperlink{kinematics_8h_ac0163313206228af2f4059cd88ec10aa}{Position\+Vector}} $>$}]{intermediate\+\_\+points,  }\item[{double}]{dt,  }\item[{bool}]{turn }\end{DoxyParamCaption})}
+
+
+
+starting from q\+Es configurations, calculate all the intermediate configurations (that will change every dt), draw a trajector that passes through all the intermediate points, and make reach the x\+Ef position (with end effecor) with phi\+Ef final configurations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em q\+Es} & initial joint configurations \\
+\hline
+{\em x\+Ef} & final position that we want to reach \\
+\hline
+{\em phi\+Ef} & final euler angles that we want to reach \\
+\hline
+{\em intermediate\+\_\+points} & vector of intermediate position that we want to cross \\
+\hline
+{\em dt} & time interval between a configuration n and n+1 \\
+\hline
+{\em turn} & bool value that decide if this movement will end with the end effector turned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ vector$<$vector$<$double$>$$>$ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_a74331eb07b0847287917a0fd830c8af1}\label{motion__planning_8h_a74331eb07b0847287917a0fd830c8af1}} 
+\index{motion\_planning.h@{motion\_planning.h}!rot2eul@{rot2eul}}
+\index{rot2eul@{rot2eul}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{rot2eul()}{rot2eul()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{kinematics_8h_ae4ae8145dc24ff9e4a7c517e0c4095e1}{Euler\+Vector}} rot2eul (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{kinematics_8h_a174da9ac0ece6546648462cca7bd141c}{Rotation\+Matrix}}}]{R }\end{DoxyParamCaption})}
+
+
+
+Returns the euler vector associated to the R rotation Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & Rotation\+Matrix 3x3 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$$\ast$ Euler\+Vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{motion__planning_8h_aedb6e8f795d6defc8429adbbb817aebc}\label{motion__planning_8h_aedb6e8f795d6defc8429adbbb817aebc}} 
+\index{motion\_planning.h@{motion\_planning.h}!thetaConnect2Points@{thetaConnect2Points}}
+\index{thetaConnect2Points@{thetaConnect2Points}!motion\_planning.h@{motion\_planning.h}}
+\doxysubsubsection{\texorpdfstring{thetaConnect2Points()}{thetaConnect2Points()}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ theta\+Connect2\+Points (\begin{DoxyParamCaption}\item[{const double}]{t\+Start,  }\item[{\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}]{q\+Es,  }\item[{\mbox{\hyperlink{kinematics_8h_a2b88a4d9cfab191ea145cb4e949e8069}{Joint\+State\+Vector}}}]{q\+Ef,  }\item[{const double}]{dt,  }\item[{const double}]{DtP,  }\item[{const double}]{DtA }\end{DoxyParamCaption})}
+
+
+
+Returns starting from t\+Start momement the trajectory to college togheter q\+Es e q\+Ef. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t\+Start} & t0 time \\
+\hline
+{\em q\+Es} & initial joints configuration \\
+\hline
+{\em q\+Ef} & final desidered joints configuration \\
+\hline
+{\em dt} & time interval between a configuration n and n+1 \\
+\hline
+{\em DtP} & time period that occur for connect q\+Es to q\+Ef \\
+\hline
+{\em DtA} & time period that each joint use for accelerate. Raccomanded value 1/4 DtP, M\+AX V\+A\+L\+UE 1/2 DtP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector$<$vector$<$double$>$$>$ matrix , where each row is an intemediate configuration that it will reach dt time after the row befor 
+\end{DoxyReturn}
