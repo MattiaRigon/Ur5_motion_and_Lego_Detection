@@ -49,7 +49,6 @@ spawned_lego = []
 # 	string : the name of the lego model
 def get_random_model():
 	 
-	
 	return random.choice(models)
 
 ##This function spawns the model in the position given 
@@ -111,6 +110,8 @@ def random_position(rotation = False):
 
 	r = int(s[1][1])*1.5*0.01
 
+	print("rotation = " + str(rotation))
+
 	while 1:
 		x = randNum(0.03, 0.4)   #0.42 + 0.5 
 		y = randNum(0.35, 0.74)   #0.2 + 0.35
@@ -124,16 +125,16 @@ def random_position(rotation = False):
 	initial_pose.position.z = z
 	# se metti pi/2 sulla x sono sorti ma in piedi 
 	# con pi/2 sulla y sono storti ma di lato
+	q = quaternion_from_euler(0, 0,randNum(0,2*pi))
 	if(rotation):
-		num = randNum(0, 2)
+		num = int(randNum(0, 2))
 		if num == 0:
 			q = quaternion_from_euler(pi/2,0,randNum(0,2*pi))
 		elif num == 1:
 			q = quaternion_from_euler(0,pi/2,randNum(0,2*pi))
 		elif num == 2:
 			q = quaternion_from_euler(pi/2,pi/2,randNum(0,2*pi))
-	else:
-		q = quaternion_from_euler(0, 0,randNum(0,2*pi))
+
 
 	initial_pose.orientation.x = q[0]
 	initial_pose.orientation.y = q[1]
@@ -223,7 +224,7 @@ if __name__ == "__main__":
 	elif(scelta =='3'):
 		for i in range(0,4):
 			while True:
-				lego = "X1-Y4-Z2"  #get_random_model()
+				lego = get_random_model()
 				pos=random_position(rotation=True)
 				if not check_sovrapposizioni(pos, lego): 
 					print(spawn_model(lego, pos))
