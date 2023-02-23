@@ -49,12 +49,12 @@ Now you can clone the repository inside the ROS workspace you just created:
 
 
 ```
-git clone https://github.com/MattiaRigon/progetto_robotica.git
+git clone https://github.com/MattiaRigon/Ur5_motion_and_Lego_Detection.git
 ```
 
 Once you have cloned it 
 ```
-cd $PWD/progetto_robotica
+cd $PWD/Ur5_motion_and_Lego_Detection
 ```
 ```
 git submodule update --init --recursive
@@ -71,7 +71,7 @@ catkin_make install
 Now you can continue to follow locosim https://github.com/mfocchi/locosim#configure-environment-variables , but remeber to change the locosim varivable in the .bashrc like this : 
 
 ```
-export LOCOSIM_DIR=$HOME/ros_ws/src/progetto_robotica/locosim
+export LOCOSIM_DIR=$HOME/ros_ws/src/Ur5_motion_and_Lego_Detection/locosim
 ```
 
 ### Run the project
@@ -79,7 +79,7 @@ export LOCOSIM_DIR=$HOME/ros_ws/src/progetto_robotica/locosim
 Move inside this directory:
 
 ```
-cd $HOME/ros_ws/src/progetto_robotica/locosim/robot_control/lab_exercises/lab_palopoli/
+cd $HOME/ros_ws/src/Ur5_motion_and_Lego_Detection/locosim/robot_control/lab_exercises/lab_palopoli/
 ```
 Run the ur5_generic file that will launch gazebo,rviz, and setup all the environment (pay attention to setup properly in params.py the params for run the ur5_generic.py, for example flag real_robot)
 
@@ -90,7 +90,7 @@ python3 ur5_generic.py
 If you are in simulation:
 
 ```
-cd $HOME/ros_ws/src/progetto_robotica/spawnLego_pkg/src/
+cd $HOME/ros_ws/src/Ur5_motion_and_Lego_Detection/spawnLego_pkg/src/
 ```
 
 ```
@@ -115,7 +115,7 @@ rosrun publisher_pkg publisher_node
 Run the vision script:
 
 ```
-cd $HOME/ros_ws/src/progetto_robotica/vision/
+cd $HOME/ros_ws/src/Ur5_motion_and_Lego_Detection/vision/
 ```
 
 ```
